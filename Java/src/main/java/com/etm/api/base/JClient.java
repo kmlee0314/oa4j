@@ -12,7 +12,7 @@ import com.etm.api.var.LangTextVar;
  *
  * @author vogler
  */
-public class JManagerClient {
+public class JClient {
     
     public static boolean isConnected() {
         return JManager.getInstance().isConnected();

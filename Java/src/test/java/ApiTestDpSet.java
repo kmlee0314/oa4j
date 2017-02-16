@@ -1,7 +1,7 @@
 
 
 
-import com.etm.api.base.JManagerClient;
+import com.etm.api.base.JClient;
 import com.etm.api.base.JManager;
 import com.etm.api.var.FloatVar;
 import com.etm.api.var.TextVar;
@@ -24,7 +24,7 @@ public class ApiTestDpSet {
         // add path to WCCOAjava.dll to your path environment!
         // logs are printed to WCCOAjava<num>.0.log and WCCOAjava10.err         
         JManager m = new JManager();
-        m.setProjName("BigData99").setManNum(10).init().start();
+        m.init(args).start();
         new ApiTestDpSet().run();
         m.stop();        
     }      
@@ -33,7 +33,7 @@ public class ApiTestDpSet {
         int ret;
         
         Debug.out.info("--- DPSET BEG ---");                
-        ret = JManagerClient.dpSet()
+        ret = JClient.dpSet()
                 .add("System1:ExampleDP_Trend1.:_original.._value", new FloatVar(Math.random()))
                 .add("System1:ExampleDP_SumAlert.:_original.._value", new TextVar("hello world"))
                 .await()
@@ -45,7 +45,7 @@ public class ApiTestDpSet {
         
         Debug.out.info("--- DPSETTIMED BEG ---");    
         Date t = new Date(new Date().getTime()+10000);
-        ret = JManagerClient.dpSet()
+        ret = JClient.dpSet()
                 .timed(t)
                 .add("System1:ExampleDP_Trend1.:_original.._value", new FloatVar(Math.random()))
                 .add("System1:ExampleDP_SumAlert.:_original.._value", new TextVar("hello timed world "+t.toString()))

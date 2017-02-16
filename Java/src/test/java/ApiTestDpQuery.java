@@ -1,7 +1,7 @@
 
 
 
-import com.etm.api.base.JManagerClient;
+import com.etm.api.base.JClient;
 import com.etm.api.base.JDpMsgAnswer;
 import com.etm.api.base.JManager;
 import com.etm.api.utils.Debug;
@@ -21,7 +21,7 @@ public class ApiTestDpQuery {
         // add path to WCCOAjava.dll to your path environment!
         // logs are printed to WCCOAjava<num>.0.log and WCCOAjava10.err         
         JManager m = new JManager();
-        m.setProjName("BigData99").setManNum(10).init().start();
+        m.init(args).start();
         new ApiTestDpQuery().run();        
         Debug.out.info("done");
         m.stop();
@@ -29,7 +29,7 @@ public class ApiTestDpQuery {
     
     public void run() throws InterruptedException {        
         Debug.out.info("dpQuery...");      
-        JManagerClient.dpQuery("SELECT '_online.._value','_online.._stime' FROM 'Test*.**'")
+        JClient.dpQuery("SELECT '_online.._value','_online.._stime' FROM 'Test*.**'")
                 .action((JDpMsgAnswer answer)->{
                     Debug.out.info(answer.toString());                    
                 })

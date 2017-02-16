@@ -1,7 +1,7 @@
 
 
 
-import com.etm.api.base.JManagerClient;
+import com.etm.api.base.JClient;
 import com.etm.api.base.JDpMsgAnswer;
 import com.etm.api.base.JManager;
 import com.etm.api.var.VariablePtr;
@@ -23,14 +23,14 @@ public class ApiTestDpGet {
         // add path to WCCOAjava.dll to your path environment!
         // logs are printed to WCCOAjava<num>.0.log and WCCOAjava10.err         
         JManager m = new JManager();
-        m.setProjName("BigData99").setManNum(10).init().start();
+        m.init(args).start();
         new ApiTestDpGet().run();
         m.stop();        
     }      
     
     private void run() throws InterruptedException {
         Debug.out.info("--- DPGET BEG ---");
-        JManagerClient.dpGet()
+        JClient.dpGet()
                 .add("System1:ExampleDP_Trend1.:_online.._value")
                 .add("System1:ExampleDP_SumAlert.:_online.._value")
                 .action((JDpMsgAnswer answer)->{
@@ -44,7 +44,7 @@ public class ApiTestDpGet {
         
         
         Debug.out.info("--- DPGET BEG ---");
-        JDpMsgAnswer answer = JManagerClient.dpGet()
+        JDpMsgAnswer answer = JClient.dpGet()
                 .add("System1:ExampleDP_Trend1.:_online.._value")
                 .add("System1:ExampleDP_SumAlert.:_online.._value")
                 .await();       
@@ -57,7 +57,7 @@ public class ApiTestDpGet {
         Debug.out.info("--- DPGET BEG ---");
         VariablePtr res1 = new VariablePtr();
         VariablePtr res2 = new  VariablePtr();        
-        JManagerClient.dpGet()
+        JClient.dpGet()
                 .add("System1:ExampleDP_Trend1.:_online.._value", res1)
                 .add("System1:ExampleDP_SumAlert.:_online.._value", res2)
                 .await();

@@ -1,7 +1,7 @@
 
 
 
-import com.etm.api.base.JManagerClient;
+import com.etm.api.base.JClient;
 import com.etm.api.base.JDpHLGroup;
 import com.etm.api.base.JDpMsgAnswer;
 import com.etm.api.base.JDpQueryConnect;
@@ -31,7 +31,7 @@ public class ApiThreadTest {
         // add path to WCCOAjava.dll to your path environment!
         // logs are printed to WCCOAjava<num>.0.log and WCCOAjava10.err         
         JManager m = new JManager();
-        m.setProjName("BigData99").setManNum(10).setLoopWaitUSec(1000).init().start();
+        m.init(args).start();
         new ApiThreadTest().run();
         m.stop();   
     }
@@ -66,7 +66,7 @@ public class ApiThreadTest {
         for ( int i=1; i<=100; i++ ) x.add(i);
         while ( true ) {
             x.parallelStream().forEach((i)->{
-                JManagerClient.dpGet()
+                JClient.dpGet()
                         .add("System1:Test_1_"+String.valueOf(i)+".Value:_online.._value")
                         .action((JDpMsgAnswer answer)->{
                             c_dpGet++;
@@ -85,7 +85,7 @@ public class ApiThreadTest {
     private void doDpGetComment(int delay) {
         while ( true ) {
             DpIdentifierVar dpid = new DpIdentifierVar("System1:ExampleDP_Result.");
-            String comment = JManagerClient.dpGetComment(dpid).toString();
+            String comment = JClient.dpGetComment(dpid).toString();
             //Debug.out.info("Comment: "+comment);
             c_dpGetComment++;
             try {
@@ -99,7 +99,7 @@ public class ApiThreadTest {
     public void doDpNames(int delay) {
         while ( true ) {
             //Debug.out.info("--- DPNAMES BEG ---");        
-            List<String> dps1 = Arrays.asList(JManagerClient.dpNames("ExampleDP*"));
+            List<String> dps1 = Arrays.asList(JClient.dpNames("ExampleDP*"));
             c_dpNames++;
             try {
                 //dps1.forEach((dp)->Debug.out.info(dp));
@@ -114,7 +114,7 @@ public class ApiThreadTest {
     
     public void doDpQueryConnect() {
         Debug.out.info("dpQueryConnect...");
-        JDpQueryConnect conn = JManagerClient.dpQueryConnectSingle("SELECT '_online.._value','_online.._stime' FROM 'Test*.**'")
+        JDpQueryConnect conn = JClient.dpQueryConnectSingle("SELECT '_online.._value','_online.._stime' FROM 'Test*.**'")
                 .action((JDpMsgAnswer answer)->{
 //                    Debug.out.info("--- ANSWER BEG ---");
 //                    Debug.out.info(answer.toString());

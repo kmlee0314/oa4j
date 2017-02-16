@@ -26,9 +26,9 @@ import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
  *
  * @author vogler
  */
-public class MqttDriver {
+public class DrvTestMqtt {
     public static void main(String[] args) throws Exception {                        
-        new MqttDriver().start(args);
+        new DrvTestMqtt().start(args);
     }            
     
     public void start(String[] args) {       

@@ -2,7 +2,7 @@
 
 
 import com.etm.api.base.JAlertConnect;
-import com.etm.api.base.JManagerClient;
+import com.etm.api.base.JClient;
 import com.etm.api.base.JDpHLGroup;
 import com.etm.api.base.JDpVCItem;
 import com.etm.api.base.JManager;
@@ -25,7 +25,7 @@ public class ApiTestAlertConnect {
         // add path to WCCOAjava.dll to your path environment!
         // logs are printed to WCCOAjava<num>.0.log and WCCOAjava10.err         
         JManager m = new JManager();
-        m.setProjName("BigData99").setManNum(10).init().start();
+        m.init(args).start();
         new ApiTestAlertConnect().run();        
         m.stop();
     }
@@ -33,7 +33,7 @@ public class ApiTestAlertConnect {
     public void run() throws InterruptedException {        
         Debug.out.info("alertConnect...");           
         
-        JAlertConnect conn = JManagerClient.alertConnect()
+        JAlertConnect conn = JClient.alertConnect()
                 .add(":_alert_hdl.._system_time")
                 .add(":_alert_hdl.._abbr")
                 .add(":_alert_hdl.._ack_state")

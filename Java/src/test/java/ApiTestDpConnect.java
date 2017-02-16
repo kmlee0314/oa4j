@@ -1,7 +1,7 @@
 
 
 
-import com.etm.api.base.JManagerClient;
+import com.etm.api.base.JClient;
 import com.etm.api.base.JDpConnect;
 import com.etm.api.base.JDpHLGroup;
 import com.etm.api.base.JDpMsgAnswer;
@@ -28,7 +28,7 @@ public class ApiTestDpConnect {
         // add path to WCCOAjava.dll to your path environment!
         // logs are printed to WCCOAjava<num>.0.log and WCCOAjava10.err         
         JManager m = new JManager();
-        m.setProjName("BigData99").setManNum(10).init().start();
+        m.init(args).start();
         new ApiTestDpConnect().run();        
         m.stop();
     }
@@ -36,7 +36,7 @@ public class ApiTestDpConnect {
     public void run() throws InterruptedException {        
         Debug.out.info("dpConnect...");
         final Counter c = new Counter();
-        JDpConnect conn = JManagerClient.dpConnect()
+        JDpConnect conn = JClient.dpConnect()
                 .add("ExampleDP_Trend1.:_online.._value")     
                 .action((JDpMsgAnswer answer)->{
                     Debug.out.info("--- ANSWER BEG ---");

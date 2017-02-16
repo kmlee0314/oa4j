@@ -2,6 +2,8 @@
 /Native/Manager/bin
 /Native/Manager/x64
 /Native/Manager/WCCOAJavaManager.sdf
+/Native/Manager/WCCOAJavaManager.v12.suo
 /Native/Driver/bin
 /Native/Driver/x64
-/Native/Driver/WCCOAJavaManager.sdf
+/Native/Driver/WCCOAJavaDrv.sdf
+/Native/Driver/WCCOAJavaDrv.v12.suo

@@ -1,6 +1,7 @@
 # oa4j - WinCC Open Architecture for Java
 WinCC Open Architecture for Java is an API to connect WinCC OA to Java.<br>
 It is based on the WinCC OA native API+JNI and works on Windows and Linux.<br>
+Because it's using the WinCC OA API you need to have a valid WinCC OA API license.<br>
 An example with a compiled version of oa4j is available in the project directory.<br>
 A version for Scala will maybe available in future releases.<br>
 ## Manager (oa4j/Native/Manager <-> com.etm.api.base)<br>

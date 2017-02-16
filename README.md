@@ -16,7 +16,7 @@ An API for a WinCC OA Ctrl Extension is under construction. It is possible to us
 // Example how to connect to WinCC OA and set some tags (datapoints)
 JManager m = new JManager();
 m.init(args).start(); 
-ret = JManagerClient.dpSet()
+ret = JClient.dpSet()
   .add("System1:ExampleDP_Trend1.:_original.._value", new FloatVar(Math.random()))
   .add("System1:ExampleDP_SumAlert.:_original.._value", new TextVar("hello world"))
   .await()

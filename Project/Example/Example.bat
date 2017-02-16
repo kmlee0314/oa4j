@@ -1,0 +1,1 @@
+java -Djava.library.path=C:\WinCC_OA_Proj\Example\bin -cp C:\WinCC_OA_Proj\Example\classes;C:\WinCC_OA_Proj\Example\bin\WCCOAjava-0.1.jar Example -proj Example

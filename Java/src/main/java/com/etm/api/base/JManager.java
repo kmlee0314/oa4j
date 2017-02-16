@@ -13,6 +13,7 @@ import com.etm.api.var.Variable;
 import com.etm.utils.SemaphoreDigital;
 import java.util.logging.Level;
 import com.etm.api.utils.Debug;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -74,8 +75,8 @@ public class JManager extends Manager implements Runnable {
     }
     
     public String getConfigDir() { return confDir; }
-    public String getLogDir() { return apiGetLogPath(); /*return projDir+"/log";*/ }
-    public String getLogFile() { return getLogDir()+"/"+getManName(); }
+    public String getLogDir() { return apiGetLogPath(); }
+    public String getLogFile() { return getLogDir()+getManName(); }
     
     public boolean isEnabled() { return apiEnabled; }
     public boolean isConnected() { return apiConnected; }
@@ -143,11 +144,11 @@ public class JManager extends Manager implements Runnable {
         }        
       
         // Set log file settings
-//        try {
-//            Debug.init("WCCOAjava"+manNum);
-//        } catch (IOException ex) {
-//            Debug.StackTrace(Level.SEVERE, ex);
-//        } 
+        try {
+            Debug.setOutput(getLogFile());
+        } catch (IOException ex) {
+            Debug.StackTrace(Level.SEVERE, ex);
+        } 
         
         if ( !apiEnabled ) {
             Debug.out.warning(errmsg);            

@@ -11,7 +11,7 @@ const bool WCCOAJavaDrv::DEBUG = false;
 
 const char *WCCOAJavaDrv::ManagerName = "WCCOAjavadrv";
 
-const char *WCCOAJavaDrv::ManagerClassName = "com/etm/api/base/JDriver";
+const char *WCCOAJavaDrv::ManagerClassName = "com/etm/api/driver/JDriver";
 
 //------------------------------------------------------------------------------------
 

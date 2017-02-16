@@ -1,2 +1,2 @@
 -Djava.library.path=C:\WinCC_OA_Proj\Example\bin
--Djava.class.path=C:\WinCC_OA_Proj\Example\classes;C:\WinCC_OA_Proj\Example\bin\WCCOAjava-0.1.jar
+-Djava.class.path=C:\WinCC_OA_Proj\Example\classes;C:\WinCC_OA_Proj\Example\lib\WCCOAjava-0.1.jar;C:\WinCC_OA_Proj\Example\lib\gson-2.7.jar;C:\WinCC_OA_Proj\Example\lib\json-simple-1.1.1.jar;C:\WinCC_OA_Proj\Example\lib\org.eclipse.paho.client.mqttv3-1.1.0.jar

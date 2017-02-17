@@ -23,7 +23,16 @@ import java.util.logging.LogRecord;
 public class Debug {    
     
     public static final java.util.logging.Logger out = java.util.logging.Logger.getLogger(Debug.class.getName());
-    public static final String fmtDate = "yyyy.MM.dd HH:mm:ss.SSS";    
+    public static final String fmtDate = "yyyy.MM.dd HH:mm:ss.SSS";
+
+    private static class LogFormatter extends Formatter {
+        @Override
+        public String format(LogRecord record) {
+            SimpleDateFormat fmt = new SimpleDateFormat(Debug.fmtDate);
+            String formattedMessage = formatMessage(record);
+            return fmt.format(new Date()) + " " + String.format("%-60s %-7s", record.getSourceClassName() + "." + record.getSourceMethodName(), record.getLevel()) + ": " + formattedMessage + "\n";
+        }
+    }
 
     public static void setOutput(String filename) throws IOException  {
         FileHandler fileHandler = new FileHandler(filename+".%g.log", 5242880, 5, true);        
@@ -68,12 +77,3 @@ public class Debug {
 }
 
 //-----------------------------------------------------------------------------------------
-final class LogFormatter extends Formatter {
-
-    @Override
-    public String format(LogRecord record) {
-        SimpleDateFormat fmt = new SimpleDateFormat(Debug.fmtDate);
-        String formattedMessage = formatMessage(record);
-        return fmt.format(new Date()) + " " + String.format("%-60s %-7s", record.getSourceClassName() + "." + record.getSourceMethodName(), record.getLevel()) + ": " + formattedMessage + "\n";
-    }
-}

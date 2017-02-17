@@ -10,7 +10,7 @@ import com.etm.api.base.JDpVCItem;
 import com.etm.api.jni.Manager;
 import com.etm.api.var.DpIdentifierVar;
 import com.etm.api.var.Variable;
-import com.etm.utils.SemaphoreDigital;
+import com.etm.api.utils.SemaphoreDigital;
 import java.util.logging.Level;
 import com.etm.api.utils.Debug;
 import java.io.IOException;

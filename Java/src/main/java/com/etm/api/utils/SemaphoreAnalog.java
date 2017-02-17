@@ -1,4 +1,4 @@
-package com.etm.utils;
+package com.etm.api.utils;
 
 import java.io.Serializable;
 import java.util.logging.Level;

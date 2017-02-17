@@ -12,7 +12,7 @@ import com.etm.api.base.JDpMsgAnswer;
 import com.etm.api.base.JDpVCGroup;
 import com.etm.api.base.JDpVCItem;
 import com.etm.api.utils.Debug;
-import com.etm.utils.SemaphoreDigital;
+import com.etm.api.utils.SemaphoreDigital;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 

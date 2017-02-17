@@ -35,7 +35,7 @@
 *) MQTT Example Driver
    + Import the dplist "dplist\JavaDrv.dpl"
    + Add a Java Driver to the console with the options:
-     WCCOAjavadrv -num 2 -class MqttDriver -url tcp://<mqtt-host> -cid <client-id>
+     WCCOAjavadrv -num 2 -class DrvTestMqtt -url tcp://<mqtt-host> -cid <client-id>
    + Create some datapoint and add a peripherial address config "Sample Driver" to it
      - Reference: e.g. "rpi2/temp" => mqtt tag name
      - Driver-Number: 2 => the number of your java driver (-num 2)

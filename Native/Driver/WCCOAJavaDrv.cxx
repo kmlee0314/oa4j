@@ -11,7 +11,7 @@ const bool WCCOAJavaDrv::DEBUG = false;
 
 const char *WCCOAJavaDrv::ManagerName = "WCCOAjavadrv";
 
-const char *WCCOAJavaDrv::ManagerClassName = "com/etm/api/driver/JDriver";
+const char *WCCOAJavaDrv::ManagerClassName = "at/rocworks/oc4j/driver/JDriver";
 
 //------------------------------------------------------------------------------------
 
@@ -63,7 +63,7 @@ void WCCOAJavaDrv::javaInitialize(JNIEnv *env, jobject obj)
 void WCCOAJavaDrv::answer4DpId(int index, Variable* varPtr)
 {
 	jclass cls = g_env->GetObjectClass(g_obj);
-	jmethodID jm = g_env->GetMethodID(cls, "answer4DpId", "(ILcom/etm/api/var/Variable;)V");
+	jmethodID jm = g_env->GetMethodID(cls, "answer4DpId", "(ILat/rocworks/oc4j/var/Variable;)V");
 	g_env->CallVoidMethod(g_obj, jm, index, Java::convertToJava(g_env, varPtr));
 	g_env->DeleteLocalRef(cls);
 }
@@ -71,7 +71,7 @@ void WCCOAJavaDrv::answer4DpId(int index, Variable* varPtr)
 void WCCOAJavaDrv::hotLink2Internal(int index, Variable* varPtr)
 {
 	jclass cls = g_env->GetObjectClass(g_obj);
-	jmethodID jm = g_env->GetMethodID(cls, "hotLink2Internal", "(ILcom/etm/api/var/Variable;)V");
+	jmethodID jm = g_env->GetMethodID(cls, "hotLink2Internal", "(ILat/rocworks/oc4j/var/Variable;)V");
 	g_env->CallVoidMethod(g_obj, jm, index, Java::convertToJava(g_env, varPtr));
 	g_env->DeleteLocalRef(cls);
 }
@@ -116,7 +116,7 @@ bool WCCOAJavaDrv::workProc(HWObject *hw)
 	int ret = PVSS_TRUE;
 
 	//jclass cls = g_env->GetObjectClass(g_obj);
-	jmethodID jm = g_env->GetMethodID(g_objClass, "readData", "()Lcom/etm/api/jni/HWObject;");
+	jmethodID jm = g_env->GetMethodID(g_objClass, "readData", "()Lat/rocworks/oc4j/jni/HWObject;");
 	jobject jhw = g_env->CallObjectMethod(g_obj, jm);
 	//g_env->DeleteLocalRef(cls);
 
@@ -177,7 +177,7 @@ bool WCCOAJavaDrv::workProc(HWObject *hw)
 	// Time
 	jboolean jTimeOfPeriphFlag = g_env->GetBooleanField(jhw, g_env->GetFieldID(cls, "timeOfPeriphFlag", "Z"));
 	if (jTimeOfPeriphFlag) {
-		jobject jOrgTime = g_env->GetObjectField(jhw, g_env->GetFieldID(cls, "orgTime", "Lcom/etm/api/var/TimeVar;"));
+		jobject jOrgTime = g_env->GetObjectField(jhw, g_env->GetFieldID(cls, "orgTime", "Lat/rocworks/oc4j/var/TimeVar;"));
 		if (jOrgTime == NULL){
 			std::cout << "WCCOAJavaDrv::workProc() hw object has time of periph flag, but no time is given!" << std::endl;
 			ret = PVSS_FALSE;
@@ -243,7 +243,7 @@ PVSSboolean WCCOAJavaDrv::writeData(HWObject *objPtr)
 
 	// Java Call
 	//jclass cls = g_env->GetObjectClass(g_obj);
-	jmethodID jm = g_env->GetMethodID(g_objClass, "writeData", "(Ljava/lang/String;I[BILcom/etm/api/var/TimeVar;)Z");
+	jmethodID jm = g_env->GetMethodID(g_objClass, "writeData", "(Ljava/lang/String;I[BILat/rocworks/oc4j/var/TimeVar;)Z");
 	ret = g_env->CallBooleanMethod(g_obj, jm, jAddress, jTransType, jBuffer, jSubindex, jOrgTime);
 	//g_env->DeleteLocalRef(cls);
 
@@ -270,7 +270,7 @@ void WCCOAJavaDrv::flushHW()
 void WCCOAJavaDrv::JavaAddDpPa(DpIdentifier &dpid, PeriphAddr *confPtr)
 {	
 	jclass cls = g_env->GetObjectClass(g_obj);
-	jmethodID jm = g_env->GetMethodID(cls, "addDpPa", "(Lcom/etm/api/var/DpIdentifierVar;Ljava/lang/String;B)V");
+	jmethodID jm = g_env->GetMethodID(cls, "addDpPa", "(Lat/rocworks/oc4j/var/DpIdentifierVar;Ljava/lang/String;B)V");
 
 	jobject jdpid = Java::convertToJava(g_env, dpid);
 
@@ -288,7 +288,7 @@ void WCCOAJavaDrv::JavaAddDpPa(DpIdentifier &dpid, PeriphAddr *confPtr)
 void WCCOAJavaDrv::JavaClrDpPa(DpIdentifier &dpid, PeriphAddr *confPtr)
 {	
 	jclass cls = g_env->GetObjectClass(g_obj);
-	jmethodID jm = g_env->GetMethodID(cls, "clrDpPa", "(Lcom/etm/api/var/DpIdentifierVar;Ljava/lang/String;B)V");
+	jmethodID jm = g_env->GetMethodID(cls, "clrDpPa", "(Lat/rocworks/oc4j/var/DpIdentifierVar;Ljava/lang/String;B)V");
 
 	jobject jdpid = Java::convertToJava(g_env, dpid);
 
@@ -312,13 +312,13 @@ jobject WCCOAJavaDrv::JavaTransformationNewObject(WCCOAJavaTrans *trans, const C
 	jint jtype = type;
 
 	jclass cls = g_env->GetObjectClass(g_obj);
-	jmethodID jm = g_env->GetMethodID(cls, "newTransformation", "(Ljava/lang/String;I)Lcom/etm/api/jni/Transformation;");
+	jmethodID jm = g_env->GetMethodID(cls, "newTransformation", "(Ljava/lang/String;I)Lat/rocworks/oc4j/jni/Transformation;");
 	jstring jname = Java::convertToJava(g_env, name);
 	jobject jobj = g_env->CallObjectMethod(g_obj, jm, jname, jtype);
 
 	
 	// with cptr
-	//jmethodID jm = g_env->GetMethodID(cls, "newTransformation", "(JI)Lcom/etm/api/jni/Transformation;");
+	//jmethodID jm = g_env->GetMethodID(cls, "newTransformation", "(JI)Lat/rocworks/oc4j/jni/Transformation;");
 	//jlong jtrans = (jlong)trans;
 	//jobject jobj = g_env->CallObjectMethod(g_obj, jm, jtrans, jtype);
 
@@ -360,7 +360,7 @@ PVSSboolean WCCOAJavaDrv::JavaTransformationToPeriph(jobject jtrans, PVSSchar *b
 	jobject jvar = Java::convertToJava(g_env, ptr);
 
 	jclass cls = g_env->GetObjectClass(jtrans);
-	jmethodID jm = g_env->GetMethodID(cls, "toPeriph", "(ILcom/etm/api/var/Variable;I)[B");
+	jmethodID jm = g_env->GetMethodID(cls, "toPeriph", "(ILat/rocworks/oc4j/var/Variable;I)[B");
 	jbyteArray result = (jbyteArray)g_env->CallObjectMethod(jtrans, jm, len, jvar, subix);
 	g_env->DeleteLocalRef(cls);
 
@@ -393,7 +393,7 @@ PVSSboolean WCCOAJavaDrv::JavaTransformationToPeriph(jobject jtrans, PVSSchar *b
 VariablePtr WCCOAJavaDrv::JavaTransformationToVar(jobject jtrans, const PVSSchar *buffer, const PVSSuint dlen, const PVSSuint subix)
 {
 	jclass cls = g_env->GetObjectClass(jtrans);
-	jmethodID jm = g_env->GetMethodID(cls, "toVar", "([BII)Lcom/etm/api/var/Variable;");
+	jmethodID jm = g_env->GetMethodID(cls, "toVar", "([BII)Lat/rocworks/oc4j/var/Variable;");
 	g_env->DeleteLocalRef(cls);
 
 	//// data length

@@ -12,7 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\LibJava\Java.cpp" />
-    <ClCompile Include="com_etm_api_jni_Driver.cpp" />
+    <ClCompile Include="at_rocworks_oc4j_jni_Driver.cpp" />
     <ClCompile Include="WCCOAJavaDRV.cxx" />
     <ClCompile Include="WCCOAJavaDrvIntDp.cxx" />
     <ClCompile Include="WCCOAJavaHWMapper.cxx" />
@@ -26,7 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\LibJava\Java.hxx" />
-    <ClInclude Include="com_etm_api_jni_Driver.h" />
+    <ClInclude Include="at_rocworks_oc4j_jni_Driver.h" />
     <ClInclude Include="WCCOAJavaDRV.hxx" />
     <ClInclude Include="WCCOAJavaDrvIntDp.hxx" />
     <ClInclude Include="WCCOAJavaHWMapper.hxx" />
@@ -53,7 +53,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <TargetName>WCCOAjavadrv</TargetName>
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>

@@ -8,7 +8,7 @@
 
 #include <jni.h>
 
-#include <com_etm_api_jni_Manager.h>
+#include <at_rocworks_oc4j_jni_Manager.h>
 
 class WCCOAJavaManager : public Manager
 {

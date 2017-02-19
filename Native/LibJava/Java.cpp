@@ -29,10 +29,10 @@
 const char *Java::NAME = "java";
 const bool Java::DEBUG = false;
 
-const char *Java::VariableClassName = "com/etm/api/var/Variable";
-const char *Java::DynVarClassName   = "com/etm/api/var/DynVar";
-const char *Java::DpIdentifierClassName = "com/etm/api/var/DpIdentifierVar"; 
-const char *Java::DpVCItemClassName     = "com/etm/api/base/JDpVCItem";
+const char *Java::VariableClassName = "at/rocworks/oc4j/var/Variable";
+const char *Java::DynVarClassName   = "at/rocworks/oc4j/var/DynVar";
+const char *Java::DpIdentifierClassName = "at/rocworks/oc4j/var/DpIdentifierVar"; 
+const char *Java::DpVCItemClassName     = "at/rocworks/oc4j/base/JDpVCItem";
 
 Mutex Java::dpIdMutex;
 
@@ -158,7 +158,7 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 	case DPIDENTIFIER_VAR: {
 		DpIdentifierVar value = ((DpIdentifierVar*)varptr)->getValue();
 
-		//jm = env->GetStaticMethodID(clsVariable, "newDpIdentifierVar", "(Lcom/etm/api/var/DpIdentifierVar;)Lcom/etm/api/var/Variable;");		
+		//jm = env->GetStaticMethodID(clsVariable, "newDpIdentifierVar", "(Lat/rocworks/oc4j/var/DpIdentifierVar;)Lat/rocworks/oc4j/var/Variable;");		
 		//jobject jValue = convertToJava(env, value);
 		//res = env->CallStaticObjectMethod(clsVariable, jm, jValue);
 
@@ -166,56 +166,56 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 		break;
 	}
 	case BIT_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newBitVar", "(Z)Lcom/etm/api/var/Variable;");
+		jm = env->GetStaticMethodID(clsVariable, "newBitVar", "(Z)Lat/rocworks/oc4j/var/Variable;");
 		bool value = ((BitVar*)varptr)->getValue();
 		res = env->CallStaticObjectMethod(clsVariable, jm, value);
 		break;
 	}
 	case BIT32_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newBit32Var", "(J)Lcom/etm/api/var/Variable;");
+		jm = env->GetStaticMethodID(clsVariable, "newBit32Var", "(J)Lat/rocworks/oc4j/var/Variable;");
 		PVSSulong value = ((Bit32Var*)varptr)->getValue();
 		res = env->CallStaticObjectMethod(clsVariable, jm, value);
 		break;
 	}
 	case BIT64_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newBit64Var", "(J)Lcom/etm/api/var/Variable;");
+		jm = env->GetStaticMethodID(clsVariable, "newBit64Var", "(J)Lat/rocworks/oc4j/var/Variable;");
 		PVSSulonglong value = ((Bit64Var*)varptr)->getValue();
 		res = env->CallStaticObjectMethod(clsVariable, jm, value);
 		break;
 	}
 	case FLOAT_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newFloatVar", "(D)Lcom/etm/api/var/Variable;");
+		jm = env->GetStaticMethodID(clsVariable, "newFloatVar", "(D)Lat/rocworks/oc4j/var/Variable;");
 		double value = ((FloatVar*)varptr)->getValue();
 		res = env->CallStaticObjectMethod(clsVariable, jm, value);
 		break;
 	}
 	case LONG_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newIntegerVar", "(J)Lcom/etm/api/var/Variable;");
+		jm = env->GetStaticMethodID(clsVariable, "newIntegerVar", "(J)Lat/rocworks/oc4j/var/Variable;");
 		PVSSlonglong value = ((LongVar*)varptr)->getValue();
 		jlong jValue = value;
 		res = env->CallStaticObjectMethod(clsVariable, jm, jValue);
 		break;
 	}
 	case INTEGER_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newIntegerVar", "(I)Lcom/etm/api/var/Variable;");
+		jm = env->GetStaticMethodID(clsVariable, "newIntegerVar", "(I)Lat/rocworks/oc4j/var/Variable;");
 		int value = ((IntegerVar*)varptr)->getValue();
 		res = env->CallStaticObjectMethod(clsVariable, jm, value);
 		break;
 	}
 	case UINTEGER_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newUIntegerVar", "(I)Lcom/etm/api/var/Variable;");
+		jm = env->GetStaticMethodID(clsVariable, "newUIntegerVar", "(I)Lat/rocworks/oc4j/var/Variable;");
 		unsigned int value = ((UIntegerVar*)varptr)->getValue();
 		res = env->CallStaticObjectMethod(clsVariable, jm, value);
 		break;
 	}
 	case CHAR_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newCharVar", "(C)Lcom/etm/api/var/Variable;");
+		jm = env->GetStaticMethodID(clsVariable, "newCharVar", "(C)Lat/rocworks/oc4j/var/Variable;");
 		PVSSuchar value = ((CharVar*)varptr)->getValue();
 		res = env->CallStaticObjectMethod(clsVariable, jm, (jchar)value);
 		break;
 	}
 	case TEXT_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newTextVar", "(Ljava/lang/String;)Lcom/etm/api/var/Variable;");
+		jm = env->GetStaticMethodID(clsVariable, "newTextVar", "(Ljava/lang/String;)Lat/rocworks/oc4j/var/Variable;");
 		const char *value = ((TextVar*)varptr)->getValue();
 		jstring jstr = env->NewStringUTF(value);
 		jobject jobj = env->CallStaticObjectMethod(clsVariable, jm, jstr);
@@ -224,7 +224,7 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 		break;
 	}
 	case LANGTEXT_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newLangTextVar", "()Lcom/etm/api/var/Variable;");
+		jm = env->GetStaticMethodID(clsVariable, "newLangTextVar", "()Lat/rocworks/oc4j/var/Variable;");
 		jobject jobj = env->CallStaticObjectMethod(clsVariable, jm);
 
 		jclass cls = env->GetObjectClass(jobj);
@@ -246,7 +246,7 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 		break;
 	}
 	case TIME_VAR: {
-		jm = env->GetStaticMethodID(clsVariable, "newTimeVar", "(J)Lcom/etm/api/var/Variable;");
+		jm = env->GetStaticMethodID(clsVariable, "newTimeVar", "(J)Lat/rocworks/oc4j/var/Variable;");
 		PVSSTime value = ((TimeVar*)varptr)->getValue();
 		jlong ms = (jlong)(value.getDouble() * 1000);
 		//std::cout << "TIME_VAR=" << ms << std::endl;
@@ -264,7 +264,7 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 	{
 		// gettimeofday(&tp, NULL); long int ms1 = tp.tv_usec; 
 		jclass clsDynVar = env->FindClass(DynVarClassName);
-		jm = env->GetStaticMethodID(clsVariable, "newDynVar", "()Lcom/etm/api/var/Variable;");
+		jm = env->GetStaticMethodID(clsVariable, "newDynVar", "()Lat/rocworks/oc4j/var/Variable;");
 		jobject jdyn = env->CallStaticObjectMethod(clsVariable, jm);
 		jobject jvar;
 		// gettimeofday(&tp, NULL); long int ms2 = tp.tv_usec;
@@ -289,7 +289,7 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 			default: jvar = NULL;
 			}
 			//if (jvar != NULL) {
-				jm = env->GetMethodID(clsDynVar, "add", "(Lcom/etm/api/var/Variable;)V");
+				jm = env->GetMethodID(clsDynVar, "add", "(Lat/rocworks/oc4j/var/Variable;)V");
 				env->CallVoidMethod(jdyn, jm, jvar);
 			//}
 		}
@@ -303,7 +303,7 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 	}
 	case DYNDYNANYTYPE_VAR: {
 		jclass clsDynVar = env->FindClass(DynVarClassName);
-		jm = env->GetStaticMethodID(clsVariable, "newDynVar", "()Lcom/etm/api/var/Variable;");
+		jm = env->GetStaticMethodID(clsVariable, "newDynVar", "()Lat/rocworks/oc4j/var/Variable;");
 		jobject jydyn = env->CallStaticObjectMethod(clsVariable, jm);
 		jobject jxdyn;
 		int y = 0;
@@ -320,7 +320,7 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 			}
 
 			jxdyn = convertToJava(env, yvar);
-			jm = env->GetMethodID(clsDynVar, "add", "(Lcom/etm/api/var/Variable;)V");
+			jm = env->GetMethodID(clsDynVar, "add", "(Lat/rocworks/oc4j/var/Variable;)V");
 			env->CallVoidMethod(jydyn, jm, jxdyn);
 		}
 		env->DeleteLocalRef(clsDynVar);
@@ -446,7 +446,7 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		DynVar *var = new DynVar();
 		jobject jValue;
 		VariablePtr varPtrTmp;
-		jm = env->GetMethodID(cls, "get", "(I)Lcom/etm/api/var/Variable;");
+		jm = env->GetMethodID(cls, "get", "(I)Lat/rocworks/oc4j/var/Variable;");
 		for (jint i = 0; i < size; i++) {
 			jValue = env->CallObjectMethod(jVariable, jm, i);
 			varPtrTmp = Java::convertJVariable(env, jValue);
@@ -674,7 +674,7 @@ DpIdValueList *Java::convertJArrayOfDpVCItemToDpIdValueList(JNIEnv *env, jobject
 		{
 			// Variable
 			//std::cout << "convertJArrayOfDpVCItemToDpIdValueList:getVariable..." << std::endl;
-			jm = env->GetMethodID(cls, "getVariable", "()Lcom/etm/api/var/Variable;");
+			jm = env->GetMethodID(cls, "getVariable", "()Lat/rocworks/oc4j/var/Variable;");
 			jobject jVariable = env->CallObjectMethod(jDpVCItem, jm);
 			VariablePtr varPtr = convertJVariable(env, jVariable);
 			env->DeleteLocalRef(jVariable);

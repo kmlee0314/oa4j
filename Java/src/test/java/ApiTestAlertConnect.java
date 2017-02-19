@@ -1,13 +1,13 @@
 
 
 
-import com.etm.api.base.JAlertConnect;
-import com.etm.api.base.JClient;
-import com.etm.api.base.JDpHLGroup;
-import com.etm.api.base.JDpVCItem;
-import com.etm.api.base.JManager;
-import com.etm.api.var.Variable;
-import com.etm.api.utils.Debug;
+import at.rocworks.oc4j.base.JAlertConnect;
+import at.rocworks.oc4j.base.JClient;
+import at.rocworks.oc4j.base.JDpHLGroup;
+import at.rocworks.oc4j.base.JDpVCItem;
+import at.rocworks.oc4j.base.JManager;
+import at.rocworks.oc4j.var.Variable;
+import at.rocworks.oc4j.utils.Debug;
 import java.util.logging.Level;
 
 /*

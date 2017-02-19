@@ -1,9 +1,9 @@
 
 
 
-import com.etm.api.base.JClient;
-import com.etm.api.base.JManager;
-import com.etm.api.utils.Debug;
+import at.rocworks.oc4j.base.JClient;
+import at.rocworks.oc4j.base.JManager;
+import at.rocworks.oc4j.utils.Debug;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;

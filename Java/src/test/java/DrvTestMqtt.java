@@ -1,11 +1,11 @@
-import com.etm.api.driver.JDriverSimple;
-import com.etm.api.driver.JDriverItem;
-import com.etm.api.driver.JDriverItemList;
-import com.etm.api.driver.JTransFloatVarJson;
-import com.etm.api.driver.JTransIntegerVarJson;
-import com.etm.api.driver.JTransTextVar;
-import com.etm.api.jni.Transformation;
-import com.etm.api.utils.Debug;
+import at.rocworks.oc4j.driver.JDriverSimple;
+import at.rocworks.oc4j.driver.JDriverItem;
+import at.rocworks.oc4j.driver.JDriverItemList;
+import at.rocworks.oc4j.driver.JTransFloatVarJson;
+import at.rocworks.oc4j.driver.JTransIntegerVarJson;
+import at.rocworks.oc4j.driver.JTransTextVar;
+import at.rocworks.oc4j.jni.Transformation;
+import at.rocworks.oc4j.utils.Debug;
 import java.util.logging.Level;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;

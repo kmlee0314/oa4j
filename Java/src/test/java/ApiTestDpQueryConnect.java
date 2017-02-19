@@ -1,16 +1,16 @@
 
 
 
-import com.etm.api.base.JClient;
-import com.etm.api.base.JDpHLGroup;
-import com.etm.api.base.JDpMsgAnswer;
-import com.etm.api.base.JDpQueryConnect;
-import com.etm.api.base.JDpVCItem;
-import com.etm.api.base.JManager;
-import com.etm.api.var.DynVar;
-import com.etm.api.var.TimeVar;
-import com.etm.api.var.Variable;
-import com.etm.api.utils.Debug;
+import at.rocworks.oc4j.base.JClient;
+import at.rocworks.oc4j.base.JDpHLGroup;
+import at.rocworks.oc4j.base.JDpMsgAnswer;
+import at.rocworks.oc4j.base.JDpQueryConnect;
+import at.rocworks.oc4j.base.JDpVCItem;
+import at.rocworks.oc4j.base.JManager;
+import at.rocworks.oc4j.var.DynVar;
+import at.rocworks.oc4j.var.TimeVar;
+import at.rocworks.oc4j.var.Variable;
+import at.rocworks.oc4j.utils.Debug;
 import java.util.Date;
 import java.util.logging.Level;
 

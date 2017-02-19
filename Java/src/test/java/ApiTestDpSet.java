@@ -1,11 +1,11 @@
 
 
 
-import com.etm.api.base.JClient;
-import com.etm.api.base.JManager;
-import com.etm.api.var.FloatVar;
-import com.etm.api.var.TextVar;
-import com.etm.api.utils.Debug;
+import at.rocworks.oc4j.base.JClient;
+import at.rocworks.oc4j.base.JManager;
+import at.rocworks.oc4j.var.FloatVar;
+import at.rocworks.oc4j.var.TextVar;
+import at.rocworks.oc4j.utils.Debug;
 import java.util.Date;
 import java.util.logging.Level;
 

@@ -1,12 +1,12 @@
 
 
 
-import com.etm.api.base.JClient;
-import com.etm.api.base.JDpConnect;
-import com.etm.api.base.JDpHLGroup;
-import com.etm.api.base.JDpMsgAnswer;
-import com.etm.api.base.JManager;
-import com.etm.api.utils.Debug;
+import at.rocworks.oc4j.base.JClient;
+import at.rocworks.oc4j.base.JDpConnect;
+import at.rocworks.oc4j.base.JDpHLGroup;
+import at.rocworks.oc4j.base.JDpMsgAnswer;
+import at.rocworks.oc4j.base.JManager;
+import at.rocworks.oc4j.utils.Debug;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

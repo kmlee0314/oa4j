@@ -21,14 +21,13 @@ const bool JavaExternHdl::DEBUG = false;
 
 const char *JavaExternHdl::ManagerName = "WCCOAjava";
 
-const char *JavaExternHdl::ExternHdlClassName = "com/etm/net/client/ExternHdl";
+const char *JavaExternHdl::ExternHdlClassName = "at/rocworks/oc4j/jni/ExternHdl";
+
 const char *JavaExternHdl::DpGetPeriodClassName = "com/etm/net/client/DpGetPeriod";
 const char *JavaExternHdl::DpGetPeriodResultClassName = "com/etm/net/server/DpGetPeriodResultJava";
 
-
 jclass JavaExternHdl::clsDpGetPeriod;
 jclass JavaExternHdl::clsDpGetPeriodResult;
-
 
 //------------------------------------------------------------------------------
 

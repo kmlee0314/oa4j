@@ -1,4 +1,6 @@
+/Java/.idea/
 /Java/target/
+/Java/out/
 /Native/Manager/bin
 /Native/Manager/x64
 /Native/Manager/WCCOAJavaManager.sdf

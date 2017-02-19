@@ -1,10 +1,10 @@
 
 
 
-import com.etm.api.base.JClient;
-import com.etm.api.base.JDpMsgAnswer;
-import com.etm.api.base.JManager;
-import com.etm.api.utils.Debug;
+import at.rocworks.oc4j.base.JClient;
+import at.rocworks.oc4j.base.JDpMsgAnswer;
+import at.rocworks.oc4j.base.JManager;
+import at.rocworks.oc4j.utils.Debug;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

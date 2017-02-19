@@ -10,5 +10,5 @@ package com.etm.api.base;
  * @author vogler
  */
 public interface IHotLink {
-    public void hotlink(JDpHLGroup hotlink);        
+    void hotlink(JDpHLGroup hotlink);
 }

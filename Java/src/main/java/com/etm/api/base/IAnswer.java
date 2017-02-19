@@ -10,5 +10,5 @@ package com.etm.api.base;
  * @author vogler
  */
 public interface IAnswer {
-    public void answer(JDpMsgAnswer answer);            
+    void answer(JDpMsgAnswer answer);
 }

@@ -19,15 +19,13 @@
 
 const bool JavaExternHdl::DEBUG = false;
 
-const char *JavaExternHdl::ManagerName = "WCCOAjava";
+const char *JavaExternHdl::ManagerName = "JavaCtrlExt";
 
 const char *JavaExternHdl::ExternHdlClassName = "at/rocworks/oc4j/jni/ExternHdl";
 
-const char *JavaExternHdl::DpGetPeriodClassName = "com/etm/net/client/DpGetPeriod";
-const char *JavaExternHdl::DpGetPeriodResultClassName = "com/etm/net/server/DpGetPeriodResultJava";
+const char *JavaExternHdl::JavaCallClassName = "at/rocworks/oc4j/jni/ExternHdlFunction";
 
-jclass JavaExternHdl::clsDpGetPeriod;
-jclass JavaExternHdl::clsDpGetPeriodResult;
+jclass JavaExternHdl::clsJavaCall;
 
 //------------------------------------------------------------------------------
 
@@ -36,8 +34,8 @@ static FunctionListRec fnList[] =
 	// TODO add for every new function an entry
 	{ INTEGER_VAR, "startJVM", "()", false },
 	{ INTEGER_VAR, "stopJVM", "()", false },
-	{ INTEGER_VAR, "dpGetPeriod", "(time t1, time t2, int count, ..)", false },
-	{ INTEGER_VAR, "xxx", "(time t1, time t2, int count, ..)", false }
+	{ INTEGER_VAR, "javaCall", "(string class, string function, dyn_anytype input, dyn_anytype &output)", false },
+	{ INTEGER_VAR, "javaCallAsync", "(string class, string function, dyn_anytype input, dyn_anytype &output)", false }
 };
 
 CTRL_EXTENSION(JavaExternHdl, fnList)
@@ -50,16 +48,16 @@ const Variable *JavaExternHdl::execute(ExecuteParamRec &param)
   {
     F_startJVM = 0,
 	F_stopJVM = 1,
-	F_dpGetPeriod = 2,
-	F_xxx
+	F_javaCall = 2,
+	F_javaCallAsync = 3
   };
 
   switch ( param.funcNum )
   {
 	case F_startJVM:		return startVM(param); 
 	case F_stopJVM:			return stopVM(param);
-	case F_dpGetPeriod:		return dpGetPeriod(param);  
-	case F_xxx:             return xxx(param);
+	case F_javaCall:	    return javaCall(param);
+	case F_javaCallAsync:	return javaCallAsync(param);  
     default:
       return &errorIntVar;
   }
@@ -67,11 +65,11 @@ const Variable *JavaExternHdl::execute(ExecuteParamRec &param)
 
 // ---------------------------------------------------------------------
 // WaitCond
-class DpGetPeriodWaitCond : public WaitCond
+class JavaCallWaitCond : public WaitCond
 {
 public:
-	DpGetPeriodWaitCond(JNIEnv *p_env, CtrlThread *thread, ExprList *args);
-	~DpGetPeriodWaitCond();
+	JavaCallWaitCond(JNIEnv *p_env, CtrlThread *thread, ExprList *args);
+	~JavaCallWaitCond();
 
 	virtual const TimeVar &nextCheck() const;
 	virtual int checkDone();
@@ -80,6 +78,7 @@ public:
 
 	CtrlThread *thread;
 	ExprList *args;
+	DynVar *out;
 
 private:
 	JNIEnv *env;
@@ -88,80 +87,92 @@ private:
 };
 
 //----------------------------------------------------------------------
-DpGetPeriodWaitCond::DpGetPeriodWaitCond(JNIEnv *p_env, CtrlThread *p_thread, ExprList *p_args)
+JavaCallWaitCond::JavaCallWaitCond(JNIEnv *p_env, CtrlThread *p_thread, ExprList *p_args)
 {
 	env = p_env;
 	thread = p_thread;
 	args = p_args;
 
-	//jclass jClass = env->FindClass(JavaExternHdl::DpGetPeriodClassName);
-	jclass jClass = Java::FindClass(env, JavaExternHdl::DpGetPeriodClassName);
-	if (jClass == nil) { result.setValue(-1); return; }
+	result.setValue(-99);
 
-	jmethodID jMethodInit = Java::GetMethodID(env, jClass, "<init>", "(JLjava/lang/String;Lcom/etm/api/var/Variable;Lcom/etm/api/var/Variable;Lcom/etm/api/var/Variable;)V");
-	if (jMethodInit == nil) { result.setValue(-1); return; }
+	const Variable *FunctionClass = (args->getFirst()->evaluate(thread)); // Class(Name) must be a subtype of ExternHdlFunction (T <: ExternHdlFunction)
 
-	jmethodID jMethodAddDp = Java::GetMethodID(env, jClass, "addDp", "(Lcom/etm/api/var/Variable;JJ)V");
-	if (jMethodAddDp == nil) { result.setValue(-2); return; }	
-
-	jmethodID jMethodStart = Java::GetMethodID(env, jClass, "start", "()V");
-	if (jMethodStart == nil) { result.setValue(-2); return; }	
-
-	const Variable *t1 = (args->getFirst()->evaluate(thread));
-	const Variable *t2 = (args->getNext()->evaluate(thread));
-	const Variable *cnt = (args->getNext()->evaluate(thread));
-	
-	jobject jt1 = Java::convertToJava(env, (VariablePtr)t1);
-	jobject jt2 = Java::convertToJava(env, (VariablePtr)t2);
-	jobject jcnt = Java::convertToJava(env, (VariablePtr)cnt);
-
-	jstring jUrl = env->NewStringUTF(JavaResources::getQueryServerURL().c_str());
-	jThread = env->NewObject(jClass, jMethodInit, (jlong)this, jUrl, jt1, jt2, jcnt);
-	env->DeleteLocalRef(jUrl);
-
-	//env->CallVoidMethod(jThread, jMethodSetCPtr, (jlong)this);
-
-	env->DeleteLocalRef(jt1);
-	env->DeleteLocalRef(jt2);
-	env->DeleteLocalRef(jcnt);
-
-	if (!jThread) {
-		result.setValue(-4);
+	jclass clsFunction = Java::FindClass(env, ((TextVar*)FunctionClass)->getString());
+	if (clsFunction == nil) {
+		std::string msg = "function class not found";
+		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+			JavaExternHdl::ManagerName, ((TextVar*)FunctionClass)->getString(), msg.c_str());
+		result.setValue(-1);
 	}
 	else {
-		CtrlExpr* expr;
-		for (int i = 1; expr=args->getNext(); i++) {
+		// public ExternHdlFunction(long waitCondPtr, boolean asThread) {
+		jmethodID jMethodInit = env->GetMethodID(clsFunction, "<init>", "(J)V");
+		if (jMethodInit == nil) {
+			std::string msg = "function constructor not found";
+			ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+				JavaExternHdl::ManagerName, "JavaCallWaitCond", msg.c_str());
+			result.setValue(-2);
+		}
+		else {
+			const Variable *fun = (args->getNext()->evaluate(thread));
+			const Variable *par = (args->getNext()->evaluate(thread));
 
-			//std::cout << "addDp " << dp->formatValue() << std::endl;
+			out = (DynVar*)args->getNext()->getTarget(thread); // TODO: check if it is a DynVar!
+			DynVar tmp(ANYTYPE_VAR);
+			*out = tmp;
 
-			//for (int j = 1; j <= 2 && (expr = args->getNext()); j++); // skip xa, ta
+			this->out = out;
 
-			DynVar *xa = (DynVar*)args->getNext()->getTarget(thread);
-			DynVar *ta = (DynVar*)args->getNext()->getTarget(thread);
-			xa->clear();
-			ta->clear();
+			jobject jfun = Java::convertToJava(env, (VariablePtr)fun);
+			jobject jpar = Java::convertToJava(env, (VariablePtr)par);
 
-			const Variable *dp = expr->evaluate(thread);
-			jobject jdp = Java::convertToJava(env, (VariablePtr)dp);
-			env->CallVoidMethod(jThread, jMethodAddDp, jdp, (jlong)ta, (jlong)xa);
-			env->DeleteLocalRef(jdp);
-		}		
+			jThread = env->NewObject(clsFunction, jMethodInit, (jlong)this); 
 
-		env->CallVoidMethod(jThread, jMethodStart);
-		result.setValue(0);
-	}
-
-	env->DeleteLocalRef(jClass);
+			if (env->ExceptionCheck()) {
+				std::string msg = "constructor java exception!";
+				ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+					JavaExternHdl::ManagerName, "JavaCallWaitCond", msg.c_str());
+				env->ExceptionDescribe();
+				result.setValue(-3);
+			}
+			else {
+				// public Variable execute(String function, Variable parameter);
+				jmethodID jMethodExecute = env->GetMethodID(clsFunction, "start", "(Ljava/lang/String;Lat/rocworks/oc4j/var/DynVar;)V");
+				if (jMethodExecute == nil) {
+					std::string msg = "method execute not found";
+					ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+						JavaExternHdl::ManagerName, "JavaCallWaitCond", msg.c_str());
+					result.setValue(-4);
+				}
+				else {
+					env->CallVoidMethod(jThread, jMethodExecute, jfun, jpar);
+					if (env->ExceptionCheck()) {
+						std::string msg = "start function java exception!";
+						ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+							JavaExternHdl::ManagerName, "JavaCallWaitCond", msg.c_str());
+						env->ExceptionDescribe();
+						result.setValue(-99);
+					}
+					else {
+						result.setValue(0);
+					}
+				}
+			}
+			env->DeleteLocalRef(jfun);
+			env->DeleteLocalRef(jpar);
+		}
+		env->DeleteLocalRef(clsFunction);
+	}	
 }
 
 //----------------------------------------------------------------------
-DpGetPeriodWaitCond::~DpGetPeriodWaitCond()
+JavaCallWaitCond::~JavaCallWaitCond()
 {
 	env->DeleteLocalRef(jThread);
 }
 
 //----------------------------------------------------------------------
-const TimeVar& DpGetPeriodWaitCond::nextCheck() const
+const TimeVar& JavaCallWaitCond::nextCheck() const
 {
 	static TimeVar timeOfNextCall;
 	timeOfNextCall.setCurrentTime();
@@ -170,103 +181,19 @@ const TimeVar& DpGetPeriodWaitCond::nextCheck() const
 }
 
 //----------------------------------------------------------------------
-int DpGetPeriodWaitCond::checkDone()
+int JavaCallWaitCond::checkDone()
 {
-	//jclass jClass = Java::FindClass(env, JavaExternHdl::DpGetPeriodClassName);
-	//if (jClass == nil) { result.setValue(-1); return true; }
-
-	jmethodID jMethod = Java::GetMethodID(env, JavaExternHdl::clsDpGetPeriod, "checkDone", "()Z");
-	if (jMethod == nil) { result.setValue(-2); return true; }
-
+	jmethodID jMethod = Java::GetMethodID(env, JavaExternHdl::clsJavaCall, "checkDone", "()Z");
+	if (jMethod == nil) { result.setValue(-98); return true; }
 	jboolean jDone = env->CallBooleanMethod(jThread, jMethod);
-
-	//env->DeleteLocalRef(jClass);
 	return jDone;
-}
-
-//----------------------------------------------------------------------
-JNIEXPORT jint JNICALL Java_com_etm_net_client_ExternHdl_apiReadChunk
-(JNIEnv *env, jclass, jlong jWaitCondPtr, jobject jChunk, jstring jDpName, jint jDpNr, jlong jTAPtr, jlong jXAPtr)
-{
-	// get pointer to waitCond object
-	DpGetPeriodWaitCond *waitCond = (DpGetPeriodWaitCond*)jWaitCondPtr;
-	ExprList *args = waitCond->args;
-	CtrlThread *thread = waitCond->thread;
-
-	jmethodID jMethodGetValues = Java::GetMethodID(env, JavaExternHdl::clsDpGetPeriodResult, "getValues", "(Ljava/lang/String;)Lcom/etm/api/var/DynVar;");
-	if (jMethodGetValues == nil) return -1;
-
-	jmethodID jMethodGetTimes = Java::GetMethodID(env, JavaExternHdl::clsDpGetPeriodResult, "getTimes", "(Ljava/lang/String;)Lcom/etm/api/var/DynVar;");
-	if (jMethodGetTimes == nil) return -1;
-
-
-	DynVar *xa = (DynVar*)jXAPtr;
-	DynVar *ta = (DynVar*)jTAPtr;
-
-	//DynVar *xa = (DynVar*)args->getNext()->getTarget(thread);
-	//DynVar *ta = (DynVar*)args->getNext()->getTarget(thread);
-
-
-	//TextVar *dpArg = (TextVar*)expr->evaluate(thread);
-	//CharString *dp = Java::convertJString(env, jDpName);
-
-	//if (strcmp(dpArg->getValue(), dp->c_str())!=0) continue;
-
-	jobject jvar;
-	Variable *var;
-	Variable *item;
-	AnyTypeVar *avar;
-
-	// Values						
-	if ((jvar = env->CallObjectMethod(jChunk, jMethodGetValues, jDpName)) != NULL) {
-		if ((var = Java::convertJVariable(env, jvar)) != NULL) {
-			if (var->isA(DYN_VAR) == DYN_VAR)
-			{
-				while (item = ((DynVar*)var)->cutFirstVar())
-				{
-					avar = new AnyTypeVar(item);
-					if (!xa->append(avar))
-					{
-						ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-							JavaExternHdl::ManagerName, "apiReadChunk", CharString("error adding value to dyn"));
-						delete avar;
-					}
-				}
-			}
-			delete var;
-		}
-	}
-	env->DeleteLocalRef(jvar);
-
-	// Times
-	if ((jvar = env->CallObjectMethod(jChunk, jMethodGetTimes, jDpName)) != NULL) {
-		if ((var = Java::convertJVariable(env, jvar)) != NULL) {
-			if (var->isA(DYN_VAR) == DYN_VAR)
-			{
-				while (item = ((DynVar*)var)->cutFirstVar())
-				{
-					avar = new AnyTypeVar(item);
-					if (!ta->append(avar))
-					{
-						ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-							JavaExternHdl::ManagerName, "apiReadChunk", CharString("error adding time to dyn"));
-						delete item;
-					}
-				}
-			}
-			delete var;
-		}
-	}
-	env->DeleteLocalRef(jvar);
-	
-	return 0;
 }
 
 // ---------------------------------------------------------------------
 // startJVM
 const Variable* JavaExternHdl::startVM(ExecuteParamRec &param)
 {
-	static IntegerVar result(-1);
+	static IntegerVar result(-99);
 
 	param.thread->clearLastError();
 
@@ -285,23 +212,26 @@ const Variable* JavaExternHdl::startVM(ExecuteParamRec &param)
 		int idx = -1;
 
 		// 0) jvmOption e.g. -Xmx512m
-		options[++idx].optionString = JavaResources::getJvmOption();
-		std::cout << "jmvOption=" << options[0].optionString << std::endl;
-		
+		if (strlen(JavaResources::getJvmOption().c_str()) > 0)
+		{
+			options[++idx].optionString = JavaResources::getJvmOption();
+			std::cout << "jvmOption='" << options[0].optionString << "'" << std::endl;
+		}
+
 		// 1) jvmClassPath
 		if (strlen(JavaResources::getJvmClassPath().c_str()) > 0)
 		{
-			std::string cp = "-Djava.class.path=" + JavaResources::getJvmClassPath();
+			std::string cp = "-Djava.class.path=" + (const char&)JavaResources::getJvmClassPath();
 			options[++idx].optionString = (char*)cp.c_str();
-			std::cout << "jmvClassPath=" << options[idx].optionString << std::endl;
+			std::cout << "jvmClassPath=" << options[idx].optionString << std::endl;
 		}
 
 		// 2) jvmLibraryPath
 		if (strlen(JavaResources::getJvmLibraryPath().c_str()) > 0)
 		{
-			std::string lp = "-Djava.library.path=" + JavaResources::getJvmLibraryPath();
+			std::string lp = "-Djava.library.path=" + (const char&)JavaResources::getJvmLibraryPath();
 			options[++idx].optionString = (char*)lp.c_str();
-			std::cout << "jmvLibraryPath=" << options[idx].optionString << std::endl;
+			std::cout << "jvmLibraryPath=" << options[idx].optionString << std::endl;
 		}
 
 		// config.java
@@ -315,24 +245,10 @@ const Variable* JavaExternHdl::startVM(ExecuteParamRec &param)
 			options[idx].optionString = cstr;
 		}
 
-		//std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
-		//options[1].optionString = (char*)str.c_str();
-		//std::cout << "config.java=" << options[1].optionString << std::endl;
-
-		// queryServer
-		std::cout << "queryServer=" << JavaResources::getQueryServerURL().c_str() << std::endl;
-
-		//CharString jvmoption1 = CharString("-Xmx32m");
-		//CharString jvmoption2 = CharString("-Djava.class.path=.;C:/Workspace/BigDataLogger/Java/lib/json-simple-1.1.1.jar;C:/Workspace/BigDataLogger/Java/lib/json-simple-1.1.1.jar;C:/Workspace/BigDataLogger/Java/build/classes");
-		//CharString jvmoption3 = CharString("-Djava.library.path=.;C:/Workspace/BigDataLogger/WinCCOA/bin");
-		//options[0].optionString = jvmoption1;
-		//options[1].optionString = jvmoption2;
-		//options[2].optionString = jvmoption3;
-
 		vm_args.version = JNI_VERSION_1_8;             // minimum Java version
-		vm_args.nOptions = 3;                          // number of options
+		vm_args.nOptions = idx + 1;                          // number of options
 		vm_args.options = options;
-		vm_args.ignoreUnrecognized = false;     // invalid options make the JVM init fail 
+		vm_args.ignoreUnrecognized = true;     // invalid options make the JVM init fail 
 
 		//=============== load and initialize Java VM and JNI interface =============
 		jvmState = JNI_CreateJavaVM(&jvm, (void**)&env, &vm_args);
@@ -350,10 +266,10 @@ const Variable* JavaExternHdl::startVM(ExecuteParamRec &param)
 
 			// register native callbacks from java to c++
 			const JNINativeMethod methods[] = { 
-				{ "apiGetManType", "()I", (void*)&Java_com_etm_net_client_ExternHdl_apiGetManType },
-				{ "apiGetManNum", "()I", (void*)&Java_com_etm_net_client_ExternHdl_apiGetManNum },
-				{ "apiGetLogDir", "()Ljava/lang/String;", (void*)&Java_com_etm_net_client_ExternHdl_apiGetLogDir },
-				{ "apiReadChunk", "(JLcom/etm/net/server/DpGetPeriodResultJava;Ljava/lang/String;IJJ)I", (void*)&Java_com_etm_net_client_ExternHdl_apiReadChunk }
+				{ "apiGetManType", "()I", (void*)&Java_at_rocworks_oc4j_jni_ExternHdl_apiGetManType },
+				{ "apiGetManNum", "()I", (void*)&Java_at_rocworks_oc4j_jni_ExternHdl_apiGetManNum },
+				{ "apiGetLogDir", "()Ljava/lang/String;", (void*)&Java_at_rocworks_oc4j_jni_ExternHdl_apiGetLogDir },
+				{ "apiAddResult", "(JLat/rocworks/oc4j/var/Variable;)I", (void*)&Java_at_rocworks_oc4j_jni_ExternHdl_apiAddResult }
 			};
 
 
@@ -372,17 +288,14 @@ const Variable* JavaExternHdl::startVM(ExecuteParamRec &param)
 				if (jMethodInit == nil) result.setValue(-3);
 				else {
 					env->CallStaticVoidMethod(jClass, jMethodInit);
-					std::cout << "JVM init done" << std::endl;
+					//std::cout << "JVM init done" << std::endl;
 					result.setValue(0);
 				}
 				env->DeleteLocalRef(jClass);
 
 				// Get/Cache Java Classes
-				clsDpGetPeriod = Java::FindClass(env, JavaExternHdl::DpGetPeriodClassName);
-				if (jClass == nil) result.setValue(-2);
-
-				clsDpGetPeriodResult = Java::FindClass(env, JavaExternHdl::DpGetPeriodResultClassName);
-				if (jClass == nil) result.setValue(-2);
+				clsJavaCall = Java::FindClass(env, JavaExternHdl::JavaCallClassName);
+				if (jClass == nil) result.setValue(-4);
 			}
 		}
 	}
@@ -393,7 +306,7 @@ const Variable* JavaExternHdl::startVM(ExecuteParamRec &param)
 // stopJVM
 const Variable* JavaExternHdl::stopVM(ExecuteParamRec &param)
 {
-	static IntegerVar result(-1);
+	static IntegerVar result(-99);
 
 	if (jvmState == JNI_OK && jvm != NULL) {
 		jint ret;
@@ -410,191 +323,185 @@ const Variable* JavaExternHdl::stopVM(ExecuteParamRec &param)
 }
 
 // ---------------------------------------------------------------------
-// dpGetPeriod
-const Variable* JavaExternHdl::dpGetPeriod(ExecuteParamRec &param)
+// javaCallAsync
+const Variable* JavaExternHdl::javaCallAsync(ExecuteParamRec &param)
 {
-	static IntegerVar result(-2);
+	static IntegerVar result(-99);
 
 	param.thread->clearLastError();
 
 	if (jvmState != JNI_OK) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-			ManagerName, "dpGetPeriod", CharString("jvm not started"));
+			ManagerName, "javaCallAsync", CharString("jvm not started"));
 		result.setValue(-1);
 		return &result;
 	}	
 
-	DpGetPeriodWaitCond *cond = new DpGetPeriodWaitCond(env, param.thread, param.args);
+	JavaCallWaitCond *cond = new JavaCallWaitCond(env, param.thread, param.args);
 	param.thread->setWaitCond(cond);	
 	
 	return &cond->result;
 }
 
-JNIEXPORT jstring JNICALL Java_com_etm_net_client_ExternHdl_apiGetLogDir
+// ---------------------------------------------------------------------
+// javaCall
+const Variable* JavaExternHdl::javaCall(ExecuteParamRec &param)
+{
+	static IntegerVar result(-99);
+
+	if (jvmState != JNI_OK) {
+		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+			ManagerName, "javaCallAsync", CharString("jvm not started"));
+		result.setValue(-2);
+		return &result;
+	}
+
+	ExprList *args = param.args;
+	CtrlThread *thread = param.thread;
+
+	const Variable *FunctionClass = (args->getFirst()->evaluate(thread)); // Class(Name) must be a subtype of ExternHdlFunction (T <: ExternHdlFunction)
+
+	jclass clsFunction = Java::FindClass(env, ((TextVar*)FunctionClass)->getString());
+	if (clsFunction == nil) {
+		std::string msg = "function class not found";
+		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+			JavaExternHdl::ManagerName, ((TextVar*)FunctionClass)->getString().c_str(), msg.c_str());
+		result.setValue(-1);
+	}
+	else {
+		// public ExternHdlFunction(long waitCondPtr, boolean asThread) {
+		jmethodID jMethodInit = env->GetMethodID(clsFunction, "<init>", "(J)V");
+		if (jMethodInit == nil) {
+			std::string msg = "constructor not found";
+			ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+				JavaExternHdl::ManagerName, "javaCall", msg.c_str());
+			result.setValue(-2);
+		} 
+		else {
+			const Variable *fun = (args->getNext()->evaluate(thread));
+			const Variable *par = (args->getNext()->evaluate(thread));
+
+			jobject jfun = Java::convertToJava(env, (VariablePtr)fun);
+			jobject jpar = Java::convertToJava(env, (VariablePtr)par);
+
+			jobject jobj = env->NewObject(clsFunction, jMethodInit, 0L); // 0...not as thread
+			if (env->ExceptionCheck()) {
+				std::string msg = "constructor java exception";
+				ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+					JavaExternHdl::ManagerName, "javaCall", msg.c_str());
+				env->ExceptionDescribe();
+				result.setValue(-3);
+			}
+			else {
+				// public Variable execute(String function, Variable parameter);
+				jmethodID jMethodExecute = env->GetMethodID(clsFunction, "execute", "(Ljava/lang/String;Lat/rocworks/oc4j/var/DynVar;)Lat/rocworks/oc4j/var/DynVar;");
+				if (jMethodExecute == nil) {
+					std::string msg = "method execute not found";
+					ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+						JavaExternHdl::ManagerName, "javaCall", msg.c_str());
+					result.setValue(-4);
+				}
+				else {
+					jobject jvar = env->CallObjectMethod(jobj, jMethodExecute, jfun, jpar);
+					if (env->ExceptionCheck()) {
+						std::string msg = "execute java exception!";
+						ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+							JavaExternHdl::ManagerName, "javaCall", msg.c_str());
+						env->ExceptionDescribe();
+						result.setValue(-5);
+					}
+					else {
+						DynVar *out = (DynVar*)args->getNext()->getTarget(thread);
+						DynVar tmp(ANYTYPE_VAR);
+						*out = tmp;
+
+						Variable *var;
+						Variable *item;
+
+						if ((var = Java::convertJVariable(env, jvar)) != NULL)
+						{
+							//std::cout << var->isA(DYN_VAR) << " - " << var->isA() << std::endl;
+							if (var->isA(DYN_VAR) == DYN_VAR)
+							{
+								DynVar *dvar = (DynVar*)var;
+								while (item = dvar->cutFirstVar())
+								{
+									AnyTypeVar *avar = new AnyTypeVar(item);
+									if (!out->append(avar))
+									{
+										ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+											JavaExternHdl::ManagerName, "javaCallAsync", CharString("error adding value to dyn"));
+										delete avar;
+									}
+								}
+							}
+							delete var;
+						}
+						result.setValue(0);
+					}
+					env->DeleteLocalRef(jvar);
+				}				
+			}	
+			env->DeleteLocalRef(jobj);
+			env->DeleteLocalRef(jfun);
+			env->DeleteLocalRef(jpar);
+		}
+		env->DeleteLocalRef(clsFunction);
+	}
+	return &result;
+}
+
+
+JNIEXPORT jstring JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiGetLogDir
 (JNIEnv *env, jclass)
 {
 	return env->NewStringUTF(Resources::getLogDir());
 }
 
-JNIEXPORT jint JNICALL Java_com_etm_net_client_ExternHdl_apiGetManType
+JNIEXPORT jint JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiGetManType
 (JNIEnv *env, jclass)
 {
 	return (jint)Resources::getManType();
 }
 
-JNIEXPORT jint JNICALL Java_com_etm_net_client_ExternHdl_apiGetManNum
+JNIEXPORT jint JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiGetManNum
 (JNIEnv *env, jclass)
 {
 	return (jint)Resources::getManNum();
 }
 
-//----------------------------------------------------------------------
-// ---------------------------------------------------------------------
-// ---------------------------------------------------------------------
-// ---------------------------------------------------------------------
-const Variable* JavaExternHdl::xxx(ExecuteParamRec &param)
+JNIEXPORT jint JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiAddResult
+(JNIEnv *env, jclass, jlong jWaitCondPtr, jobject jvar)
 {
-	static IntegerVar result(-1);
+	// get pointer to waitCond object
+	JavaCallWaitCond *waitCond = (JavaCallWaitCond*)jWaitCondPtr;
 
-	ExprList *args = param.args;
-	CtrlThread *thread = param.thread;
+	DynVar *out = (DynVar*)((JavaCallWaitCond*)jWaitCondPtr)->out;
 
-	jmethodID jMethodInit = env->GetMethodID(clsDpGetPeriod, "<init>", "(Lcom/etm/api/var/Variable;Lcom/etm/api/var/Variable;Lcom/etm/api/var/Variable;)V");
-	//jmethodID jMethodInit = env->GetMethodID(jClass, "<init>", "()V");
-	if (jMethodInit == nil) {
-		std::string msg = "mid init not found";
-		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-			JavaExternHdl::ManagerName, "xxx", msg.c_str());
-		result.setValue(-2);
-		return &result;
-	}
-
-	jmethodID jMethodAddDp = env->GetMethodID(clsDpGetPeriod, "addDp", "(Lcom/etm/api/var/Variable;)V");
-	if (jMethodAddDp == nil) {
-		std::string msg = "mid addDp not found";
-		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-			JavaExternHdl::ManagerName, "xxx", msg.c_str());
-		result.setValue(-2);
-		return &result;
-	}
-
-	const Variable *t1 = (args->getFirst()->evaluate(thread));
-	const Variable *t2 = (args->getNext()->evaluate(thread));
-	const Variable *cnt = (args->getNext()->evaluate(thread));
-
-	jobject jt1 = Java::convertToJava(env, (VariablePtr)t1);
-	jobject jt2 = Java::convertToJava(env, (VariablePtr)t2);
-	jobject jcnt = Java::convertToJava(env, (VariablePtr)cnt);
-
-	jobject jObject = env->NewObject(clsDpGetPeriod, jMethodInit, jt1, jt2, jcnt);
-	//jobject jObject = env->NewObject(jClass, jMethodInit);
-
-	if (env->ExceptionCheck()) {
-		std::string msg = "java exception!";
-		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-			JavaExternHdl::ManagerName, "NewObject", msg.c_str());
-		result.setValue(-99);
-		env->ExceptionDescribe();
-		return &result;
-	}
-
-	env->DeleteLocalRef(jt1);
-	env->DeleteLocalRef(jt2);
-	env->DeleteLocalRef(jcnt);
-
-	// TESTPOINT
-	//env->DeleteLocalRef(jClass);
-	//env->DeleteLocalRef(jObject);
-	//return &result;
-
-	const Variable *dp = args->getNext()->evaluate(thread);
-	jobject jdp = Java::convertToJava(env, (VariablePtr)dp);
-	//std::cout << "addDp " << dp->formatValue() << std::endl;
-	env->CallVoidMethod(jObject, jMethodAddDp, jdp);
-	if (env->ExceptionCheck()) {
-		std::string msg = "java exception!";
-		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-			JavaExternHdl::ManagerName, "convertToJava", msg.c_str());
-		result.setValue(-99);
-		env->ExceptionDescribe();
-		return &result;
-	}
-	env->DeleteLocalRef(jdp);
-
-	// TESTPOINT
-	//env->DeleteLocalRef(jClass);
-	//env->DeleteLocalRef(jObject);
-	//return &result;
-
-	jmethodID jMethodStart = env->GetMethodID(clsDpGetPeriod, "test", "()V");
-	if (jMethodStart == nil) {
-		std::string msg = "mid start not found";
-		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-			JavaExternHdl::ManagerName, "xxx", msg.c_str());
-		result.setValue(-2);
-		return &result;
-	}
-	env->CallVoidMethod(jObject, jMethodStart);
-
-	if (env->ExceptionCheck()) {
-		std::string msg = "java exception!";
-		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-			JavaExternHdl::ManagerName, "test", msg.c_str());
-		result.setValue(-99);
-		env->ExceptionDescribe();
-		return &result;
-	}
-
-	jmethodID jMethodGetValues = env->GetMethodID(clsDpGetPeriod, "getValues", "(I)Lcom/etm/api/var/DynVar;");
-	if (jMethodGetValues == nil) {
-		std::string msg = "mid getValues not found";
-		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-			JavaExternHdl::ManagerName, "xxx", msg.c_str());
-		result.setValue(-2);
-		return &result;
-	}
-
-	if (env->ExceptionCheck()) {
-		std::string msg = "java exception!";
-		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-			JavaExternHdl::ManagerName, "getValues", msg.c_str());
-		result.setValue(-99);
-		env->ExceptionDescribe();
-		return &result;
-	}
-
-	DynVar *xa = (DynVar*)args->getNext()->getTarget(thread);
-	//xa->clear();
-
-	DynVar tmp(ANYTYPE_VAR);
-	*xa = tmp;
+	//DynVar tmp(ANYTYPE_VAR);
+	//*out = tmp;
 
 	Variable *var;
 	Variable *item;
-	jobject jvar;
-	if ((jvar = env->CallObjectMethod(jObject, jMethodGetValues, 0)) != NULL)
+
+	if ((var = Java::convertJVariable(env, jvar)) != NULL)
 	{
-		if ((var = Java::convertJVariable(env, jvar)) != NULL)
+		//std::cout << var->isA(DYN_VAR) << " - " << var->isA() << std::endl;
+		if (var->isA(DYN_VAR) == DYN_VAR)
 		{
-			//std::cout << var->isA(DYN_VAR) << " - " << var->isA() << std::endl;
-			if (var->isA(DYN_VAR) == DYN_VAR)
+			DynVar *dvar = (DynVar*)var;
+			while (item = dvar->cutFirstVar())
 			{
-				DynVar *dvar = (DynVar*)var;
-				while (item = dvar->cutFirstVar())
+				AnyTypeVar *avar = new AnyTypeVar(item);
+				if (!out->append(avar))
 				{
-					AnyTypeVar *avar = new AnyTypeVar(item);
-					if (!xa->append(avar))
-					{						
-						ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-							JavaExternHdl::ManagerName, "dpGetPeriod", CharString("error adding value to dyn"));
-						delete avar;
-					}
+					ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+						JavaExternHdl::ManagerName, "javaCallAsync", CharString("error adding value to dyn"));
+					delete avar;
 				}
 			}
-			delete var;
 		}
+		delete var;
 	}
-	env->DeleteLocalRef(jvar);
-	env->DeleteLocalRef(jObject);
-	return &result;
+	return 0;
 }

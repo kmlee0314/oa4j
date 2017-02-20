@@ -7,7 +7,6 @@
 CharString JavaResources::jvmOption = "";
 CharString JavaResources::jvmClassPath = "";
 CharString JavaResources::jvmLibraryPath = "";
-CharString JavaResources::queryServerURL = "";
 
 
 // Wrapper to read config file
@@ -45,8 +44,6 @@ void  JavaResources::init()
 				jvmClassPath = (value.dup());
 			else if (!key.icmp("libraryPath"))
 				jvmLibraryPath = (value.dup());
-			else if (!key.icmp("queryServer"))
-				queryServerURL = (value.dup());
 		}
 	}
 	config.close();

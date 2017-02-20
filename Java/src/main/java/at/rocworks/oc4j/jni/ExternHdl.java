@@ -7,6 +7,7 @@ package at.rocworks.oc4j.jni;
 
 import java.io.IOException;
 import at.rocworks.oc4j.utils.Debug;
+import at.rocworks.oc4j.var.Variable;
 
 /**
  *
@@ -16,8 +17,9 @@ public class ExternHdl {
       
     public static native String apiGetLogDir();
     public static native int apiGetManType();        
-    public static native int apiGetManNum();       
-    
+    public static native int apiGetManNum();
+    public static native int apiAddResult(long cptr, Variable data);
+
     public static void init() throws IOException {
         String name;
         int type = apiGetManType();
@@ -28,6 +30,6 @@ public class ExternHdl {
             default: name="java";
         }
         Debug.setOutput(apiGetLogDir()+"/WCCOA"+name+apiGetManNum()+"java");
-        Debug.out.info("java ExternHdl init done. ");
+        //Debug.out.info("java ExternHdl init done. ");
     }            
 }

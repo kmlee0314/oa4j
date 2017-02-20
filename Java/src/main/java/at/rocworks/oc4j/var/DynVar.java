@@ -16,8 +16,11 @@ import org.json.simple.JSONArray;
  */
 public class DynVar extends Variable implements Serializable {
     private final ArrayList<Variable> value = new ArrayList<>();
-    
-    public DynVar() {
+
+    public DynVar(Variable... vars) {
+        for(Variable var: vars){
+            value.add(var);
+        }
     }
        
     public void add(Variable value) {

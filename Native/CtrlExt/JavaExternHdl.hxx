@@ -18,11 +18,9 @@ public:
 	static const bool DEBUG;
 
 	static const char *ExternHdlClassName;
-	static const char *DpGetPeriodClassName;
-	static const char *DpGetPeriodResultClassName;
+	static const char *JavaCallClassName;
 
-	static jclass clsDpGetPeriod;
-	static jclass clsDpGetPeriodResult;
+	static jclass clsJavaCall;
 
 private:
 
@@ -32,21 +30,20 @@ private:
 
 	const Variable* startVM(ExecuteParamRec &param);
 	const Variable* stopVM(ExecuteParamRec &param);
-	const Variable* dpGetPeriod(ExecuteParamRec &param);
-	const Variable* xxx(ExecuteParamRec &param);
+	const Variable* javaCall(ExecuteParamRec &param);
+	const Variable* javaCallAsync(ExecuteParamRec &param);	
 };
 
-JNIEXPORT jstring JNICALL Java_com_etm_net_client_ExternHdl_apiGetLogDir
+JNIEXPORT jstring JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiGetLogDir
 (JNIEnv *, jclass);
 
-JNIEXPORT jint JNICALL Java_com_etm_net_client_ExternHdl_apiGetManType
+JNIEXPORT jint JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiGetManType
 (JNIEnv *, jclass);
 
-JNIEXPORT jint JNICALL Java_com_etm_net_client_ExternHdl_apiGetManNum
+JNIEXPORT jint JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiGetManNum
 (JNIEnv *, jclass);
 
-
-JNIEXPORT jint JNICALL Java_com_etm_net_client_ExternHdl_apiReadChunk
-(JNIEnv *env, jclass, jlong jWaitCondPtr, jobject jChunk, jstring jDpName, jint jDpNr, jlong jTAPtr, jlong jXAPtr);
+JNIEXPORT jint JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiAddResult
+(JNIEnv *, jclass, jlong jWaitCondPtr, jobject jvar);
 
 #endif

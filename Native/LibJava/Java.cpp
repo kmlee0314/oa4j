@@ -42,7 +42,7 @@ jclass Java::FindClass(JNIEnv *env, const char* name)
 	if (jClass == nil) {
 		std::string msg = "class " + std::string(name) + " not found";
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-			NAME, "java", msg.c_str());
+			NAME, "FindClass", msg.c_str());
 	}
 	return jClass;
 }
@@ -53,7 +53,7 @@ jmethodID Java::GetMethodID(JNIEnv *env, jclass clazz, const char *name, const c
 	if (jMethod == nil) {
 		std::string msg = "java method " + std::string(name) + std::string(sig) + " not found";
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-			NAME, "java", msg.c_str());
+			NAME, "GetMethodID", msg.c_str());
 	}
 	return jMethod;
 }
@@ -64,7 +64,7 @@ jmethodID Java::GetStaticMethodID(JNIEnv *env, jclass clazz, const char *name, c
 	if (jMethod == nil) {
 		std::string msg = "static java method " + std::string(name) + std::string(sig) + " not found";
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-			NAME, "java", msg.c_str());
+			NAME, "GetStaticMethodID", msg.c_str());
 	}
 	return jMethod;
 }
@@ -74,7 +74,7 @@ int Java::CheckException(JNIEnv *env, const char *msg)
 	if (env->ExceptionCheck()) {
 		std::string msg = "java exception! see .err file! " + std::string(msg);
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-			NAME, "java", msg.c_str());
+			NAME, "CheckException", msg.c_str());
 		env->ExceptionDescribe();
 		env->ExceptionClear();
 		return -1;
@@ -146,8 +146,6 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 {
 	jmethodID jm;
 	jobject res;
-
-	//struct timeval tp;
 
 	jclass clsVariable = env->FindClass(VariableClassName);
 
@@ -288,10 +286,9 @@ jobject Java::convertToJava(JNIEnv *env, VariablePtr varptr)
 			case DYNULONG_VAR: jvar = convertToJava(env, (ULongVar*)var); break;
 			default: jvar = NULL;
 			}
-			//if (jvar != NULL) {
-				jm = env->GetMethodID(clsDynVar, "add", "(Lat/rocworks/oc4j/var/Variable;)V");
-				env->CallVoidMethod(jdyn, jm, jvar);
-			//}
+			jm = env->GetMethodID(clsDynVar, "add", "(Lat/rocworks/oc4j/var/Variable;)V");
+			env->CallVoidMethod(jdyn, jm, jvar);
+			if ( jvar != NULL ) env->DeleteLocalRef(jvar);
 		}
 
 		//gettimeofday(&tp, NULL); long int ms3 = tp.tv_usec;

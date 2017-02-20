@@ -1,12 +1,12 @@
 
 
 
-import at.rocworks.oc4j.base.JClient;
-import at.rocworks.oc4j.base.JDpConnect;
-import at.rocworks.oc4j.base.JDpHLGroup;
-import at.rocworks.oc4j.base.JDpMsgAnswer;
-import at.rocworks.oc4j.base.JManager;
-import at.rocworks.oc4j.utils.Debug;
+import at.rocworks.oa4j.base.JClient;
+import at.rocworks.oa4j.base.JDpConnect;
+import at.rocworks.oa4j.base.JDpHLGroup;
+import at.rocworks.oa4j.base.JDpMsgAnswer;
+import at.rocworks.oa4j.base.JManager;
+import at.rocworks.oa4j.utils.Debug;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

@@ -1,11 +1,11 @@
-import at.rocworks.oc4j.driver.JDriverSimple;
-import at.rocworks.oc4j.driver.JDriverItem;
-import at.rocworks.oc4j.driver.JDriverItemList;
-import at.rocworks.oc4j.driver.JTransFloatVarJson;
-import at.rocworks.oc4j.driver.JTransIntegerVarJson;
-import at.rocworks.oc4j.driver.JTransTextVar;
-import at.rocworks.oc4j.jni.Transformation;
-import at.rocworks.oc4j.utils.Debug;
+import at.rocworks.oa4j.driver.JDriverSimple;
+import at.rocworks.oa4j.driver.JDriverItem;
+import at.rocworks.oa4j.driver.JDriverItemList;
+import at.rocworks.oa4j.driver.JTransFloatVarJson;
+import at.rocworks.oa4j.driver.JTransIntegerVarJson;
+import at.rocworks.oa4j.driver.JTransTextVar;
+import at.rocworks.oa4j.jni.Transformation;
+import at.rocworks.oa4j.utils.Debug;
 import java.util.logging.Level;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;

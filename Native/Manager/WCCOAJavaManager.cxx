@@ -32,8 +32,8 @@ const bool WCCOAJavaManager::DEBUG = false;
 
 const char *WCCOAJavaManager::ManagerName = "WCCOAjava";
 
-const char *WCCOAJavaManager::ManagerClassName = "at/rocworks/oc4j/base/JManager";
-const char *WCCOAJavaManager::HotLinkWaitForAnswerClassName = "at/rocworks/oc4j/base/JHotLinkWaitForAnswer";
+const char *WCCOAJavaManager::ManagerClassName = "at/rocworks/oa4j/base/JManager";
+const char *WCCOAJavaManager::HotLinkWaitForAnswerClassName = "at/rocworks/oa4j/base/JHotLinkWaitForAnswer";
 
 //--------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------
@@ -74,7 +74,7 @@ void WCCOAJavaManager::startupManager(int &argc, char *argv[], JNIEnv *env, jobj
 void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 	// javap -s
 
-	std::cout << "javaInitialize" << std::endl;
+	//std::cout << "javaInitialize" << std::endl;
 
 	//----------------------------------------------------------------------------
 	javaManagerClass = env->FindClass(ManagerClassName);
@@ -83,7 +83,7 @@ void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 		return;
 	}
 
-	midJavaHotlink = env->GetMethodID(javaManagerClass, "callbackHotlink", "(IILat/rocworks/oc4j/var/DpIdentifierVar;Lat/rocworks/oc4j/var/Variable;)I");
+	midJavaHotlink = env->GetMethodID(javaManagerClass, "callbackHotlink", "(IILat/rocworks/oa4j/var/DpIdentifierVar;Lat/rocworks/oa4j/var/Variable;)I");
 	if (midJavaHotlink == nil) {
 		std::string msg = "mid callbackHotlink not found";
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
@@ -105,7 +105,7 @@ void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 		return;
 	}
 
-	midJavaAnswer = env->GetMethodID(javaManagerClass, "callbackAnswer", "(IILat/rocworks/oc4j/var/DpIdentifierVar;Lat/rocworks/oc4j/var/Variable;)I");
+	midJavaAnswer = env->GetMethodID(javaManagerClass, "callbackAnswer", "(IILat/rocworks/oa4j/var/DpIdentifierVar;Lat/rocworks/oa4j/var/Variable;)I");
 	if (midJavaAnswer == nil) {
 		ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
 			ManagerName, "javaInitialize", CharString("mid for callbackAnswer not found"));
@@ -165,7 +165,7 @@ void WCCOAJavaManager::javaInitialize(JNIEnv *env, jobject obj){
 		return;
 	}
 
-	std::cout << "javaInitialize...done" << std::endl;
+	//std::cout << "javaInitialize...done" << std::endl;
 }
 
 //--------------------------------------------------------------------------------
@@ -177,7 +177,7 @@ void WCCOAJavaManager::connectDataManager()
 	// First connect to Data manager.
 	// We want Typecontainer and Identification so we can resolve names
 	// This call succeeds or the manager will exit
-	std::cout << "connect to data manager..." << std::endl;
+	//std::cout << "connect to data manager..." << std::endl;
 	connectToData(StartDpInitSysMsg::TYPE_CONTAINER | StartDpInitSysMsg::DP_IDENTIFICATION);
 
 	// While we are in STATE_INIT we are initialized by the Data manager
@@ -194,16 +194,16 @@ void WCCOAJavaManager::connectDataManager()
 	// Request for the DM to send me the internal DPS	
 	SysMsg newMsg = SysMsg(Manager::dataId, START_MANAGER);
 	thisManager->send(newMsg, Manager::dataId);
-	std::cout << "connect to data manager...done" << std::endl;
+	//std::cout << "connect to data manager...done" << std::endl;
 }
 
 void WCCOAJavaManager::connectEventManager()
 {
-	std::cout << "connect to event manager..." << std::endl;
+	//std::cout << "connect to event manager..." << std::endl;
 	// We are now in STATE_ADJUST and can connect to Event manager
 	// This call will succeed or the manager will exit
 	connectToEvent();
-	std::cout << "connect to event manager...done" << std::endl;
+	//std::cout << "connect to event manager...done" << std::endl;
 }
 
 //--------------------------------------------------------------------------------
@@ -745,7 +745,7 @@ jobject WCCOAJavaManager::getJNIObj()
 void WCCOAJavaManager::javaSetHdlCptr(JNIEnv *env, jobject jHdl, jlong cptr)
 {
 	if (DEBUG) std::cout << "javaSetHdlCptr=" << cptr << std::endl;
-	jclass cls = env->FindClass("at/rocworks/oc4j/base/JHotLinkWaitForAnswer");
+	jclass cls = env->FindClass("at/rocworks/oa4j/base/JHotLinkWaitForAnswer");
 	jmethodID jm = env->GetMethodID(cls, "setCPtr", "(J)V");
 	env->CallVoidMethod(jHdl, jm, cptr);
 	env->DeleteLocalRef(cls);
@@ -753,7 +753,7 @@ void WCCOAJavaManager::javaSetHdlCptr(JNIEnv *env, jobject jHdl, jlong cptr)
 
 jlong WCCOAJavaManager::javaGetHdlCptr(JNIEnv *env, jobject jHdl)
 {
-	jclass cls = env->FindClass("at/rocworks/oc4j/base/JHotLinkWaitForAnswer");
+	jclass cls = env->FindClass("at/rocworks/oa4j/base/JHotLinkWaitForAnswer");
 	jmethodID jm = env->GetMethodID(cls, "getCPtr", "()J");
 	jlong cptr = env->CallLongMethod(jHdl, jm);
 	env->DeleteLocalRef(cls);
@@ -765,7 +765,7 @@ jlong WCCOAJavaManager::javaGetHdlCptr(JNIEnv *env, jobject jHdl)
 void WCCOAJavaManager::javaSetHdlCid(JNIEnv *env, jobject jHdl, jlong cid)
 {
 	if (DEBUG) std::cout << "javaSetHdlCid=" << cid << std::endl;
-	jclass cls = env->FindClass("at/rocworks/oc4j/base/JHotLinkWaitForAnswer");
+	jclass cls = env->FindClass("at/rocworks/oa4j/base/JHotLinkWaitForAnswer");
 	jmethodID jm = env->GetMethodID(cls, "setCId", "(J)V");
 	env->CallVoidMethod(jHdl, jm, cid);
 	env->DeleteLocalRef(cls);
@@ -773,7 +773,7 @@ void WCCOAJavaManager::javaSetHdlCid(JNIEnv *env, jobject jHdl, jlong cid)
 
 jlong WCCOAJavaManager::javaGetHdlCid(JNIEnv *env, jobject jHdl)
 {
-	jclass cls = env->FindClass("at/rocworks/oc4j/base/JHotLinkWaitForAnswer");
+	jclass cls = env->FindClass("at/rocworks/oa4j/base/JHotLinkWaitForAnswer");
 	jmethodID jm = env->GetMethodID(cls, "getCId", "()J");
 	jlong cid = env->CallLongMethod(jHdl, jm);
 	if (DEBUG) std::cout << "javaGetHdlCid=" << cid << std::endl;

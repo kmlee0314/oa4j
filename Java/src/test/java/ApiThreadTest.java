@@ -1,15 +1,15 @@
 
 
 
-import at.rocworks.oc4j.base.JClient;
-import at.rocworks.oc4j.base.JDpHLGroup;
-import at.rocworks.oc4j.base.JDpMsgAnswer;
-import at.rocworks.oc4j.base.JDpQueryConnect;
-import at.rocworks.oc4j.base.JDpVCItem;
-import at.rocworks.oc4j.base.JManager;
-import at.rocworks.oc4j.var.DpIdentifierVar;
-import at.rocworks.oc4j.var.DynVar;
-import at.rocworks.oc4j.utils.Debug;
+import at.rocworks.oa4j.base.JClient;
+import at.rocworks.oa4j.base.JDpHLGroup;
+import at.rocworks.oa4j.base.JDpMsgAnswer;
+import at.rocworks.oa4j.base.JDpQueryConnect;
+import at.rocworks.oa4j.base.JDpVCItem;
+import at.rocworks.oa4j.base.JManager;
+import at.rocworks.oa4j.var.DpIdentifierVar;
+import at.rocworks.oa4j.var.DynVar;
+import at.rocworks.oa4j.utils.Debug;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

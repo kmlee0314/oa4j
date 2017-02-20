@@ -34,16 +34,16 @@ private:
 	const Variable* javaCallAsync(ExecuteParamRec &param);	
 };
 
-JNIEXPORT jstring JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiGetLogDir
+JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiGetLogDir
 (JNIEnv *, jclass);
 
-JNIEXPORT jint JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiGetManType
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiGetManType
 (JNIEnv *, jclass);
 
-JNIEXPORT jint JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiGetManNum
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiGetManNum
 (JNIEnv *, jclass);
 
-JNIEXPORT jint JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiAddResult
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiAddResult
 (JNIEnv *, jclass, jlong jWaitCondPtr, jobject jvar);
 
 #endif

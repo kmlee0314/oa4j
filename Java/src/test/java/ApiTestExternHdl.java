@@ -1,7 +1,7 @@
-import at.rocworks.oc4j.jni.ExternHdlFunction;
-import at.rocworks.oc4j.utils.Debug;
-import at.rocworks.oc4j.var.DynVar;
-import at.rocworks.oc4j.var.IntegerVar;
+import at.rocworks.oa4j.jni.ExternHdlFunction;
+import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.var.DynVar;
+import at.rocworks.oa4j.var.IntegerVar;
 
 import java.util.logging.Level;
 

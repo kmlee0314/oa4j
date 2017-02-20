@@ -21,9 +21,9 @@ const bool JavaExternHdl::DEBUG = false;
 
 const char *JavaExternHdl::ManagerName = "JavaCtrlExt";
 
-const char *JavaExternHdl::ExternHdlClassName = "at/rocworks/oc4j/jni/ExternHdl";
+const char *JavaExternHdl::ExternHdlClassName = "at/rocworks/oa4j/jni/ExternHdl";
 
-const char *JavaExternHdl::JavaCallClassName = "at/rocworks/oc4j/jni/ExternHdlFunction";
+const char *JavaExternHdl::JavaCallClassName = "at/rocworks/oa4j/jni/ExternHdlFunction";
 
 jclass JavaExternHdl::clsJavaCall;
 
@@ -137,7 +137,7 @@ JavaCallWaitCond::JavaCallWaitCond(JNIEnv *p_env, CtrlThread *p_thread, ExprList
 			}
 			else {
 				// public Variable execute(String function, Variable parameter);
-				jmethodID jMethodExecute = env->GetMethodID(clsFunction, "start", "(Ljava/lang/String;Lat/rocworks/oc4j/var/DynVar;)V");
+				jmethodID jMethodExecute = env->GetMethodID(clsFunction, "start", "(Ljava/lang/String;Lat/rocworks/oa4j/var/DynVar;)V");
 				if (jMethodExecute == nil) {
 					std::string msg = "method execute not found";
 					ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
@@ -266,10 +266,10 @@ const Variable* JavaExternHdl::startVM(ExecuteParamRec &param)
 
 			// register native callbacks from java to c++
 			const JNINativeMethod methods[] = { 
-				{ "apiGetManType", "()I", (void*)&Java_at_rocworks_oc4j_jni_ExternHdl_apiGetManType },
-				{ "apiGetManNum", "()I", (void*)&Java_at_rocworks_oc4j_jni_ExternHdl_apiGetManNum },
-				{ "apiGetLogDir", "()Ljava/lang/String;", (void*)&Java_at_rocworks_oc4j_jni_ExternHdl_apiGetLogDir },
-				{ "apiAddResult", "(JLat/rocworks/oc4j/var/Variable;)I", (void*)&Java_at_rocworks_oc4j_jni_ExternHdl_apiAddResult }
+				{ "apiGetManType", "()I", (void*)&Java_at_rocworks_oa4j_jni_ExternHdl_apiGetManType },
+				{ "apiGetManNum", "()I", (void*)&Java_at_rocworks_oa4j_jni_ExternHdl_apiGetManNum },
+				{ "apiGetLogDir", "()Ljava/lang/String;", (void*)&Java_at_rocworks_oa4j_jni_ExternHdl_apiGetLogDir },
+				{ "apiAddResult", "(JLat/rocworks/oa4j/var/Variable;)I", (void*)&Java_at_rocworks_oa4j_jni_ExternHdl_apiAddResult }
 			};
 
 
@@ -394,7 +394,7 @@ const Variable* JavaExternHdl::javaCall(ExecuteParamRec &param)
 			}
 			else {
 				// public Variable execute(String function, Variable parameter);
-				jmethodID jMethodExecute = env->GetMethodID(clsFunction, "execute", "(Ljava/lang/String;Lat/rocworks/oc4j/var/DynVar;)Lat/rocworks/oc4j/var/DynVar;");
+				jmethodID jMethodExecute = env->GetMethodID(clsFunction, "execute", "(Ljava/lang/String;Lat/rocworks/oa4j/var/DynVar;)Lat/rocworks/oa4j/var/DynVar;");
 				if (jMethodExecute == nil) {
 					std::string msg = "method execute not found";
 					ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
@@ -452,25 +452,25 @@ const Variable* JavaExternHdl::javaCall(ExecuteParamRec &param)
 }
 
 
-JNIEXPORT jstring JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiGetLogDir
+JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiGetLogDir
 (JNIEnv *env, jclass)
 {
 	return env->NewStringUTF(Resources::getLogDir());
 }
 
-JNIEXPORT jint JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiGetManType
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiGetManType
 (JNIEnv *env, jclass)
 {
 	return (jint)Resources::getManType();
 }
 
-JNIEXPORT jint JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiGetManNum
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiGetManNum
 (JNIEnv *env, jclass)
 {
 	return (jint)Resources::getManNum();
 }
 
-JNIEXPORT jint JNICALL Java_at_rocworks_oc4j_jni_ExternHdl_apiAddResult
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiAddResult
 (JNIEnv *env, jclass, jlong jWaitCondPtr, jobject jvar)
 {
 	// get pointer to waitCond object

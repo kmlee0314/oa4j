@@ -8,7 +8,7 @@
 
 #include <WCCOAJavaManager.hxx>
 #include <WCCOAJavaResources.hxx>
-#include <at_rocworks_oc4j_jni_Manager.h>
+#include <at_rocworks_oa4j_jni_Manager.h>
 #include <signal.h>
 #include <cstring>
 

@@ -46,7 +46,7 @@ abstract public class ExternHdlFunction implements Runnable {
 
     /**
      * Internal, called from JNI in the case of threaded function
-     * @return
+     * @return true when thread is finished
      */
     public boolean checkDone() {
         return done;
@@ -56,23 +56,28 @@ abstract public class ExternHdlFunction implements Runnable {
      * Add a result values in the case when the function is called async
      * @param var Variable which should be passed out
      */
-    public void addResult(Variable var) {
+    public void addResult(Variable var) throws IllegalStateException {
         if ( waitCondPtr > 0 )
             ExternHdl.apiAddResult(waitCondPtr, var);
+        else
+            throw new IllegalStateException("no waitCondPtr available!");
     }
 
     /**
      * Start Control Function / Callback to Control
-     * @param name Functioname
+     * @param name Functionname
      * @param args Arguments
      * @return EXEC_OK=0, EXEC_ERROR=1, EXEC_DONE=2, -99..not an async call
      */
-    public int callback(String name, Variable args) {
-        return waitCondPtr > 0 ? ExternHdl.apiStartFunc(waitCondPtr, name, args) : -99;
+    public int callback(String name, Variable args) throws IllegalStateException {
+        if ( waitCondPtr > 0 )
+            return ExternHdl.apiStartFunc(waitCondPtr, name, args);
+        else
+            throw new IllegalStateException("no waitCondPtr available!");
     }
 
     /**
-     * Internal, called when funciton is called async
+     * Internal, called when function is called async
      */
     @Override
     public void run() {
@@ -81,7 +86,6 @@ abstract public class ExternHdlFunction implements Runnable {
         } catch (Exception ex) {
             Debug.StackTrace(Level.SEVERE, ex);
         }
-        //Debug.out.info("run done");
         done = true;
     }
 }

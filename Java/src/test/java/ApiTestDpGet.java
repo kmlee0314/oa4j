@@ -4,6 +4,7 @@
 import at.rocworks.oa4j.base.JClient;
 import at.rocworks.oa4j.base.JDpMsgAnswer;
 import at.rocworks.oa4j.base.JManager;
+import at.rocworks.oa4j.var.Variable;
 import at.rocworks.oa4j.var.VariablePtr;
 import at.rocworks.oa4j.utils.Debug;
 import java.util.logging.Level;
@@ -41,15 +42,21 @@ public class ApiTestDpGet {
                 .await();
         Debug.out.info("--- DPGET END ---");
         
-        
-        
         Debug.out.info("--- DPGET BEG ---");
         JDpMsgAnswer answer = JClient.dpGet()
                 .add("System1:ExampleDP_Trend1.:_online.._value")
                 .add("System1:ExampleDP_SumAlert.:_online.._value")
                 .await();       
         Debug.out.log(Level.INFO, "ret={0}", answer.getRetCode());
-        answer.getItems().forEach((vc)->{Debug.out.info(vc.toString());});
+        answer.forEach((vc)->{Debug.out.info(vc.toString());});
+        Debug.out.log(Level.INFO, "toDouble:");
+        try {
+            answer.forEach((vc) -> {
+                Debug.out.info(vc.getVariable().toDouble().toString());
+            });
+        } catch ( Exception ex ) {
+            Debug.StackTrace(Level.INFO, ex);
+        }
         Debug.out.info("--- DPGET END ---");                
         
         

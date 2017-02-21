@@ -58,7 +58,7 @@ public abstract class Variable implements Serializable {
             return new TimeVar(((Date) value).getTime());            
         } else {
             // TODO newVariable DynTypes
-            throw new UnsupportedOperationException("Type "+value.getClass().getName()+" ["+value.toString()+"] not supported yet."); //To change body of generated methods, choose Tools | Templates.            
+            throw new UnsupportedOperationException("Type "+value.getClass().getName()+" ["+value.toString()+"] not supported yet.");
         }
     }
 
@@ -74,7 +74,124 @@ public abstract class Variable implements Serializable {
     public LangTextVar     getLangTextVar() { return this instanceof LangTextVar ? (LangTextVar)this : null; }
     public TextVar         getTextVar() { return this instanceof TextVar ? (TextVar)this : null; }
     public TimeVar         getTimeVar() { return this instanceof TimeVar ? (TimeVar)this : null; }
-    public UIntegerVar     getUIntegerVar() { return this instanceof UIntegerVar? (UIntegerVar)this : null; }    
+    public UIntegerVar     getUIntegerVar() { return this instanceof UIntegerVar? (UIntegerVar)this : null; }
+
+    public Integer toInt() { return toInt(true, null); }
+    public Integer toInt(Integer valueIfNull) { return toInt(false, valueIfNull); }
+    public Integer toInt(boolean throwException, Integer valueIfNull) {
+        switch ( isA() ){
+            case Bit32Var:
+                return this.getBit32Var().getValue().intValue();
+            case Bit64Var:
+                return this.getBit64Var().getValue().intValue();
+            case BitVar:
+                return this.getBitVar().getValue() ? 1 : 0;
+            case BlobVar:
+                break;
+            case CharVar:
+                return new Integer(this.getCharVar().getValue());
+            case FloatVar:
+                return this.getFloatVar().getValue().intValue();
+            case IntegerVar:
+                return this.getIntegerVar().getValue();
+            case LangTextVar:
+                break;
+            case TextVar:
+                break;
+            case TimeVar:
+                break;
+            case UIntegerVar:
+                return this.getUIntegerVar().getValue();
+            case LongVar:
+                return this.getLongVar().getValue().intValue();
+            case ULongVar:
+                break;
+            case Unknown:
+                break;
+        }
+        if (throwException)
+            throw new java.lang.IllegalArgumentException("Type "+isA()+" cannot be converted.");
+        else
+            return valueIfNull;
+    }
+
+    public Long toLong() { return toLong(true, null); }
+    public Long toLong(Long valueIfNull) { return toLong(false, valueIfNull); }
+    public Long toLong(boolean throwException, Long valueIfNull) {
+        switch ( isA() ){
+            case Bit32Var:
+                return this.getBit32Var().getValue().longValue();
+            case Bit64Var:
+                return this.getBit64Var().getValue().longValue();
+            case BitVar:
+                return this.getBitVar().getValue() ? 1L : 0L;
+            case BlobVar:
+                break;
+            case CharVar:
+                return new Long(this.getCharVar().getValue());
+            case FloatVar:
+                return this.getFloatVar().getValue().longValue();
+            case IntegerVar:
+                return this.getIntegerVar().getValue().longValue();
+            case LangTextVar:
+                break;
+            case TextVar:
+                break;
+            case TimeVar:
+                return this.getTimeVar().getTime();
+            case UIntegerVar:
+                return this.getUIntegerVar().getValue().longValue();
+            case LongVar:
+                return this.getLongVar().getValue();
+            case ULongVar:
+                break;
+            case Unknown:
+                break;
+        }
+        if (throwException)
+            throw new java.lang.IllegalArgumentException("Type "+isA()+" cannot be converted.");
+        else
+            return valueIfNull;
+    }
+
+    public Double toDouble() { return toDouble(true, null); }
+    public Double toDouble(Double valueIfNull) { return toDouble(false, valueIfNull); }
+    public Double toDouble(boolean throwException, Double valueIfNull) {
+        switch ( isA() ){
+            case Bit32Var:
+                return this.getBit32Var().getValue().doubleValue();
+            case Bit64Var:
+                return this.getBit64Var().getValue().doubleValue();
+            case BitVar:
+                return this.getBitVar().getValue() ? 1.0 : 0.0;
+            case BlobVar:
+                break;
+            case CharVar:
+                return new Double(this.getCharVar().getValue());
+            case FloatVar:
+                return this.getFloatVar().getValue();
+            case IntegerVar:
+                return this.getIntegerVar().getValue().doubleValue();
+            case LangTextVar:
+                break;
+            case TextVar:
+                break;
+            case TimeVar:
+                return new Double(this.getTimeVar().getTime());
+            case UIntegerVar:
+                return this.getUIntegerVar().getValue().doubleValue();
+            case LongVar:
+                return this.getLongVar().getValue().doubleValue();
+            case ULongVar:
+                break;
+            case Unknown:
+                break;
+        }
+        if (throwException)
+            throw new java.lang.IllegalArgumentException("Type "+isA()+" cannot be converted.");
+        else
+            return valueIfNull;
+    }
 
     public static Variable newBit32Var(long value) {return new Bit32Var(value);}        
     public static Variable newBit64Var(long value) {return new Bit64Var(value);}            

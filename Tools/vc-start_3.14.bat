@@ -1,6 +1,6 @@
 echo off
 
-call vc-env.bat
+call vc-env_3.14.bat
 
 echo check...
 

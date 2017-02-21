@@ -5,7 +5,8 @@ Because it's using the WinCC OA API you need to have a valid WinCC OA API licens
 An example with a compiled version of oa4j is available in the project directory.<br>
 A version for Scala will maybe available in future releases.<br>
 ## Manager (oa4j/Native/Manager <-> at.rocworks.oa4j.base)<br>
-Examples can be found in the Java/src/test directory and in the project project directory. The JClient class is an easy to use static class. It should be thread safe and callback functions are processed in a separate thread, so that the main WinCC OA thread/loop will not be blocked by callback functions.<br>
+Examples can be found in the Java/src/test directory and in the project/example directory, please read the project/Example/Readme.txt. <br>
+The JClient class is an easy to use static class. It should be thread safe and callback functions are processed in a separate thread, so that the main WinCC OA thread/loop will not be blocked by callback functions.<br>
 ```
 // Example how to connect to WinCC OA and set some tags (datapoints)
 JManager m = new JManager();
@@ -19,7 +20,8 @@ m.stop();
 ```
 
 ## CtrlExt (oa4j\Native\CtrlExt <-> at.rocworks.oa4j.base.ExternHdl)<br>
-It is possible to call a Java function from WinCC OA control language. The control extension JavaCtrlExt must be loaded and a Subclass of ExternHdlFunction must be implemented. This class can be used to execute a function. Executing the Java function in Control is done with the control function "javaCall" and "javaCallAsync". E.g.: javaCall("ApiTestExternHdl", "myFunTest", makeDynAnytype("hello", 1, true), out); A list of variables can be passed as input parameters and a list of values can be passed out by the Java function (it is the return value of the Java function). <br>
+It is possible to call a Java function from WinCC OA control language. 
+The control extension JavaCtrlExt must be loaded and a Subclass of ExternHdlFunction must be implemented. This class can be used to execute a function. Executing the Java function in Control is done with the control function "javaCall" and "javaCallAsync". E.g.: javaCall("ApiTestExternHdl", "myFunTest", makeDynAnytype("hello", 1, true), out); A list of variables can be passed as input parameters and a list of values can be passed out by the Java function (it is the return value of the Java function). It is also possible to execute ctrl callback functions from Java. An example can be found in project/example/panels/JavaCtrlExt.pnl and the Java source src/test/java/ApiTestExternHdl.java. For each javaCall a new Java object of the given class is created (where a reference pointer to the WaitCond object in C++ is stored in the case of an async call).<br>
 ```
     // Java Code (Class ApiTestExternHdl)
     public DynVar execute(String function, DynVar parameter) {

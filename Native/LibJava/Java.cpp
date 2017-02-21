@@ -440,14 +440,16 @@ VariablePtr Java::convertJVariable(JNIEnv *env, jobject jVariable)
 		jint size = env->CallIntMethod(jVariable, jm);
 		if (DEBUG) std::cout << "convertJVariable:13:DynVar size=" << size << std::endl;
 
-		DynVar *var = new DynVar();
+		//DynVar *var = new DynVar();
+		DynVar *var = new DynVar(ANYTYPE_VAR);
 		jobject jValue;
 		VariablePtr varPtrTmp;
 		jm = env->GetMethodID(cls, "get", "(I)Lat/rocworks/oa4j/var/Variable;");
 		for (jint i = 0; i < size; i++) {
 			jValue = env->CallObjectMethod(jVariable, jm, i);
 			varPtrTmp = Java::convertJVariable(env, jValue);
-			var->append(varPtrTmp);
+			//var->append(varPtrTmp);
+			var->append(new AnyTypeVar(varPtrTmp));
 			env->DeleteLocalRef(jValue);
 		}
 

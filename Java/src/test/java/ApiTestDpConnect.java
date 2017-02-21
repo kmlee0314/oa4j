@@ -37,14 +37,14 @@ public class ApiTestDpConnect {
         Debug.out.info("dpConnect...");
         final Counter c = new Counter();
         JDpConnect conn = JClient.dpConnect()
-                .add("ExampleDP_Trend1.:_online.._value")     
+                .add("ExampleDP_Trend1.")
                 .action((JDpMsgAnswer answer)->{
                     Debug.out.info("--- ANSWER BEG ---");
                     Debug.out.info(answer.toString());
                     Debug.out.info("--- ANSWER END ---");
                 })                
                 .action((JDpHLGroup hotlink)->{
-                    c.value++;
+                    c.value+=hotlink.size();
                     //if (c.value % 1000 == 0) 
                     {
                         Debug.out.info("--- HOTLINK BEG ---");

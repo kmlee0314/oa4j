@@ -29,7 +29,7 @@ public class JDpVCItem {
         this.var = var;
     }
     
-    public JDpVCItem(String dp, Variable var) {   
+/*    public JDpVCItem(String dp, Variable var) {
         this(new DpIdentifierVar(dp), var);
     }    
     
@@ -55,7 +55,7 @@ public class JDpVCItem {
     
     public JDpVCItem(String dp, Date value) {
         this(dp, new TimeVar(value));
-    }       
+    }      */
 
     public DpIdentifierVar getDpIdentifier() {
         return dpid;

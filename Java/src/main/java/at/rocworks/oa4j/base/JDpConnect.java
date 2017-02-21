@@ -5,6 +5,8 @@
  */
 package at.rocworks.oa4j.base;
 
+import at.rocworks.oa4j.var.DpIdentifierVar;
+
 import java.util.ArrayList;
 
 /**
@@ -44,7 +46,7 @@ public class JDpConnect extends JHotLinkWaitForAnswerGroup {
     
     @Override
     public JDpConnect add(String dp) {
-        return (JDpConnect)super.add(dp);
+        return (JDpConnect)super.add(DpIdentifierVar.addConfigIfNotExists(dp, "_online.._value"));
     }
     
     @Override

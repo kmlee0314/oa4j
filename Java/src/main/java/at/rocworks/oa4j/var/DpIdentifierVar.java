@@ -15,22 +15,17 @@ import java.util.regex.Pattern;
 public class DpIdentifierVar extends Variable implements Serializable {
     String value;
     
-//    public DpIdentifierVar(JDpId value) {
-//        this.value=value;
-//    }
-    
     public DpIdentifierVar() {
         this.value="";
     }
-    
+
     public DpIdentifierVar(String name) {
-//        this.value = new JDpId(name);
         this.value=name;
     }
-        
-//    public void setValue(JDpId value) {
-//        this.value=value;
-//    }
+
+    public DpIdentifierVar(String name, String defaultConfig) {
+        this.value=addConfigIfNotExists(name, defaultConfig);
+    }
     
     public String getValue() {
         return this.value;
@@ -133,5 +128,10 @@ public class DpIdentifierVar extends Variable implements Serializable {
         for ( int i=0; i<dps.length; i++)
             res[i]=new DpIdentifierVar(dps[i]);        
         return res;
-    }    
+    }
+
+    public static String addConfigIfNotExists(String dp, String config) {
+        DpIdentifierVar dpid = new DpIdentifierVar(dp);
+        return dpid.getConfig().isEmpty() ? dpid.getName()+":"+config : dpid.getName();
+    }
 }

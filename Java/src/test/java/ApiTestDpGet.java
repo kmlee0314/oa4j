@@ -31,7 +31,7 @@ public class ApiTestDpGet {
     private void run() throws InterruptedException {
         Debug.out.info("--- DPGET BEG ---");
         JClient.dpGet()
-                .add("System1:ExampleDP_Trend1.:_online.._value")
+                .add("System1:ExampleDP_Trend1.")
                 .add("System1:ExampleDP_SumAlert.:_online.._value")
                 .action((JDpMsgAnswer answer)->{
                     Debug.out.info("--- ANSWER BEG ---");

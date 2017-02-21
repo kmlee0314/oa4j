@@ -5,6 +5,7 @@
  */
 package at.rocworks.oa4j.base;
 
+import at.rocworks.oa4j.var.DpIdentifierVar;
 import at.rocworks.oa4j.var.TimeVar;
 
 import java.util.List;
@@ -35,9 +36,14 @@ public class JDpSet extends JHotLinkWaitForAnswer {
         this.vcs.add(vc);
         return this;
     }
-    
+
+    public JDpSet add(DpIdentifierVar dpid, Variable var) {
+        this.vcs.add(new JDpVCItem(dpid, var));
+        return this;
+    }
+
     public JDpSet add(String dp, Variable var) {
-        this.vcs.add(new JDpVCItem(dp, var));
+        this.vcs.add(new JDpVCItem(new DpIdentifierVar(dp, "_original.._value"), var));
         return this;
     }    
     

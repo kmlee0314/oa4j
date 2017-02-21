@@ -7,6 +7,7 @@ package at.rocworks.oa4j.var;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.json.simple.JSONArray;
 
@@ -14,7 +15,7 @@ import org.json.simple.JSONArray;
  *
  * @author vogler
  */
-public class DynVar extends Variable implements Serializable {
+public class DynVar extends Variable implements Serializable, Iterable<Variable> {
     private final ArrayList<Variable> value = new ArrayList<>();
 
     public DynVar(Variable... vars) {
@@ -75,5 +76,15 @@ public class DynVar extends Variable implements Serializable {
             }            
         }
         return table;
+    }
+
+    /**
+     * Returns an iterator over elements of type {@code T}.
+     *
+     * @return an Iterator.
+     */
+    @Override
+    public Iterator<Variable> iterator() {
+        return asList().iterator();
     }
 }

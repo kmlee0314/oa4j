@@ -34,7 +34,7 @@ public class ApiTestDpSet {
         
         Debug.out.info("--- DPSET BEG ---");                
         ret = JClient.dpSet()
-                .add("System1:ExampleDP_Trend1.:_original.._value", new FloatVar(Math.random()))
+                .add("System1:ExampleDP_Trend1.", new FloatVar(Math.random()))
                 .add("System1:ExampleDP_SumAlert.:_original.._value", new TextVar("hello world"))
                 .await()
                 .getRetCode();

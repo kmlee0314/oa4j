@@ -6,13 +6,14 @@
 package at.rocworks.oa4j.base;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  *
  * @author vogler
  */
-public class JDpIdValueList {
+public class JDpIdValueList implements Iterable<JDpVCItem> {
     private final ArrayList<JDpVCItem> list = new ArrayList<>();
     
     @Override
@@ -39,7 +40,9 @@ public class JDpIdValueList {
     
     public int getNumberOfItems() { // wincc oa api like
         return list.size();
-    }
+    } // WinCC OA API Style
+
+    public int size() { return list.size(); } // Java Style
     
     public List<JDpVCItem> asList() {
         return list;
@@ -47,5 +50,15 @@ public class JDpIdValueList {
         
     public void clear() {
         list.clear();
-    }    
+    }
+
+    /**
+     * Returns an iterator over elements of type {@code T}.
+     *
+     * @return an Iterator.
+     */
+    @Override
+    public Iterator<JDpVCItem> iterator() {
+        return asList().iterator();
+    }
 }

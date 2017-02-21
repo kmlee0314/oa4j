@@ -39,7 +39,7 @@ public class JDpGet extends JHotLinkWaitForAnswer {
     }
     
     public JDpGet add(String dp) {
-        dps.add(new DpIdentifierVar(dp));
+        dps.add(new DpIdentifierVar(dp, "_original.._value"));
         return this;
     }
         
@@ -49,7 +49,7 @@ public class JDpGet extends JHotLinkWaitForAnswer {
     }
         
     public JDpGet add(String dp, VariablePtr var) {
-        DpIdentifierVar dpid = new DpIdentifierVar(dp);
+        DpIdentifierVar dpid = new DpIdentifierVar(dp, "_original.._value");
         dps.add(dpid);
         vcs.put(dpid.getName(), var);
         return this;

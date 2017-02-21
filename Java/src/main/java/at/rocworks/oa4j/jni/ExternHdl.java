@@ -18,7 +18,16 @@ public class ExternHdl {
     public static native String apiGetLogDir();
     public static native int apiGetManType();        
     public static native int apiGetManNum();
-    public static native int apiAddResult(long cptr, Variable data);
+    public static native int apiAddResult(long cptr, Variable result);
+
+    /**
+     * Start Control Function
+     * @param cptr WaitCondPtr
+     * @param name Functionname
+     * @param args Arguments
+     * @return EXEC_OK=0, EXEC_ERROR=1, EXEC_DONE=2
+     */
+    public static native int apiStartFunc(long cptr, String name, Variable args);
 
     public static void init() throws IOException {
         String name;

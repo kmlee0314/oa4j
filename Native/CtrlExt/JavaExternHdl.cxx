@@ -117,7 +117,7 @@ JavaCallWaitCond::JavaCallWaitCond(JNIEnv *p_env, CtrlThread *p_thread, ExprList
 			const Variable *fun = (args->getNext()->evaluate(thread));
 			const Variable *par = (args->getNext()->evaluate(thread));
 
-			out = (DynVar*)args->getNext()->getTarget(thread); // TODO: check if it is a DynVar!
+			out = (DynVar*)args->getNext()->getTarget(thread); // TODO: check if it is a DynVar and not NULL!
 			DynVar tmp(ANYTYPE_VAR);
 			*out = tmp;
 
@@ -137,7 +137,7 @@ JavaCallWaitCond::JavaCallWaitCond(JNIEnv *p_env, CtrlThread *p_thread, ExprList
 			}
 			else {
 				// public Variable execute(String function, Variable parameter);
-				jmethodID jMethodExecute = env->GetMethodID(clsFunction, "start", "(Ljava/lang/String;Lat/rocworks/oa4j/var/DynVar;)V");
+				jmethodID jMethodExecute = env->GetMethodID(clsFunction, "start", "(Lat/rocworks/oa4j/var/TextVar;Lat/rocworks/oa4j/var/DynVar;)V");
 				if (jMethodExecute == nil) {
 					std::string msg = "method execute not found";
 					ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
@@ -269,9 +269,9 @@ const Variable* JavaExternHdl::startVM(ExecuteParamRec &param)
 				{ "apiGetManType", "()I", (void*)&Java_at_rocworks_oa4j_jni_ExternHdl_apiGetManType },
 				{ "apiGetManNum", "()I", (void*)&Java_at_rocworks_oa4j_jni_ExternHdl_apiGetManNum },
 				{ "apiGetLogDir", "()Ljava/lang/String;", (void*)&Java_at_rocworks_oa4j_jni_ExternHdl_apiGetLogDir },
-				{ "apiAddResult", "(JLat/rocworks/oa4j/var/Variable;)I", (void*)&Java_at_rocworks_oa4j_jni_ExternHdl_apiAddResult }
+				{ "apiAddResult", "(JLat/rocworks/oa4j/var/Variable;)I", (void*)&Java_at_rocworks_oa4j_jni_ExternHdl_apiAddResult },
+				{ "apiStartFunc", "(JLjava/lang/String;Lat/rocworks/oa4j/var/Variable;)I", (void*)&Java_at_rocworks_oa4j_jni_ExternHdl_apiStartFunc }
 			};
-
 
 			const int methods_size = sizeof(methods) / sizeof(methods[0]);
 			jclass jExternHdlClass = env->FindClass(ExternHdlClassName);
@@ -394,7 +394,7 @@ const Variable* JavaExternHdl::javaCall(ExecuteParamRec &param)
 			}
 			else {
 				// public Variable execute(String function, Variable parameter);
-				jmethodID jMethodExecute = env->GetMethodID(clsFunction, "execute", "(Ljava/lang/String;Lat/rocworks/oa4j/var/DynVar;)Lat/rocworks/oa4j/var/DynVar;");
+				jmethodID jMethodExecute = env->GetMethodID(clsFunction, "execute", "(Lat/rocworks/oa4j/var/TextVar;Lat/rocworks/oa4j/var/DynVar;)Lat/rocworks/oa4j/var/DynVar;");
 				if (jMethodExecute == nil) {
 					std::string msg = "method execute not found";
 					ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
@@ -411,7 +411,7 @@ const Variable* JavaExternHdl::javaCall(ExecuteParamRec &param)
 						result.setValue(-5);
 					}
 					else {
-						DynVar *out = (DynVar*)args->getNext()->getTarget(thread);
+						DynVar *out = (DynVar*)args->getNext()->getTarget(thread); // TODO: check if it is a DynVar and not NULL!
 						DynVar tmp(ANYTYPE_VAR);
 						*out = tmp;
 
@@ -476,10 +476,7 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiAddResult
 	// get pointer to waitCond object
 	JavaCallWaitCond *waitCond = (JavaCallWaitCond*)jWaitCondPtr;
 
-	DynVar *out = (DynVar*)((JavaCallWaitCond*)jWaitCondPtr)->out;
-
-	//DynVar tmp(ANYTYPE_VAR);
-	//*out = tmp;
+	DynVar *out = (DynVar*)waitCond->out; // TODO: check if it is a DynVar and not NULL!
 
 	Variable *var;
 	Variable *item;
@@ -504,4 +501,18 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiAddResult
 		delete var;
 	}
 	return 0;
+}
+
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiStartFunc
+(JNIEnv *env, jclass, jlong jWaitCondPtr, jstring jname, jobject jargs) 
+{
+	// get pointer to waitCond object
+	JavaCallWaitCond *waitCond = (JavaCallWaitCond*)jWaitCondPtr;
+
+	const CharString *name = Java::convertJString(env, jname);
+	VariablePtr args = Java::convertJVariable(env, jargs);
+
+	ExecReturn ret = waitCond->thread->getScript()->startFunc(*name, args);
+
+	return ret;
 }

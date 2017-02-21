@@ -2,6 +2,7 @@ package at.rocworks.oa4j.jni;
 
 import at.rocworks.oa4j.utils.Debug;
 import at.rocworks.oa4j.var.DynVar;
+import at.rocworks.oa4j.var.TextVar;
 import at.rocworks.oa4j.var.Variable;
 
 import java.util.logging.Level;
@@ -14,7 +15,7 @@ abstract public class ExternHdlFunction implements Runnable {
 
     private final long waitCondPtr; // c++ pointer to waitCond object
 
-    private String function;
+    private TextVar function;
     private DynVar parameter;
 
     public ExternHdlFunction(long waitCondPtr) {
@@ -26,7 +27,7 @@ abstract public class ExternHdlFunction implements Runnable {
      * @param function Function name which will be passed to execute function
      * @param parameter Parameters which will be passed to execute function
      */
-    public void start(String function, DynVar parameter) {
+    public void start(TextVar function, DynVar parameter) {
         //Debug.out.log(Level.INFO, "start function={0} parameter={1}", new Object[] { function, parameter.formatValue() });
 
         this.function=function;
@@ -41,7 +42,7 @@ abstract public class ExternHdlFunction implements Runnable {
      * @param parameter List of parameter values
      * @return List of values
      */
-    abstract public DynVar execute(String function, DynVar parameter);
+    abstract public DynVar execute(TextVar function, DynVar parameter);
 
     /**
      * Internal, called from JNI in the case of threaded function
@@ -58,6 +59,16 @@ abstract public class ExternHdlFunction implements Runnable {
     public void addResult(Variable var) {
         if ( waitCondPtr > 0 )
             ExternHdl.apiAddResult(waitCondPtr, var);
+    }
+
+    /**
+     * Start Control Function / Callback to Control
+     * @param name Functioname
+     * @param args Arguments
+     * @return EXEC_OK=0, EXEC_ERROR=1, EXEC_DONE=2, -99..not an async call
+     */
+    public int callback(String name, Variable args) {
+        return waitCondPtr > 0 ? ExternHdl.apiStartFunc(waitCondPtr, name, args) : -99;
     }
 
     /**

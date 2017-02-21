@@ -6,11 +6,10 @@ copy ..\Native\Driver\bin\WCCOAjavadrv.exe ..\Project\Example\bin-3.14\
 
 copy ..\Native\CtrlExt\bin\JavaCtrlExt.dll ..\Project\Example\bin-3.14\
 
-copy ..\Java\out\artifacts\WCCOAjava_jar\WCCOAjava.jar ..\Project\Example\lib\
-copy ..\Java\target\test-classes                       ..\Project\Example\classes\
+copy ..\Java\target\WCCOAjava.jar   ..\Project\Example\bin\
+copy ..\Java\target\test-classes\*  ..\Project\Example\bin\
 
 copy ..\Project\Example\bin-3.14\* C:\WinCC_OA_Proj\Example\bin\
-copy ..\Project\Example\lib\*      C:\WinCC_OA_Proj\Example\lib\
-copy ..\Project\Example\classes\*  C:\WinCC_OA_Proj\Example\classes\
+copy ..\Project\Example\bin\*      C:\WinCC_OA_Proj\Example\bin\
 
 pause

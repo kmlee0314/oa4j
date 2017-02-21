@@ -46,4 +46,7 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiGetManNum
 JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiAddResult
 (JNIEnv *, jclass, jlong jWaitCondPtr, jobject jvar);
 
+JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiStartFunc
+(JNIEnv *, jclass, jlong jWaitCondPtr, jstring jname, jobject jargs);
+
 #endif

@@ -18,7 +18,7 @@ ret = JClient.dpSet()
 m.stop();
 ```
 
-## Control Extension (oa4j\Native\CtrlExt <-> at.rocworks.oa4j.base.ExternHdlFunction)<br>
+## CtrlExt (oa4j\Native\CtrlExt <-> at.rocworks.oa4j.base.ExternHdl)<br>
 It is possible to call a Java function from WinCC OA control language. The control extension JavaCtrlExt must be loaded and a Subclass of ExternHdlFunction must be implemented. This class can be used to execute a function. Executing the Java function in Control is done with the control function "javaCall" and "javaCallAsync". E.g.: javaCall("ApiTestExternHdl", "myFunTest", makeDynAnytype("hello", 1, true), out); A list of variables can be passed as input parameters and a list of values can be passed out by the Java function (it is the return value of the Java function). <br>
 ```
     // Java Code (Class ApiTestExternHdl)

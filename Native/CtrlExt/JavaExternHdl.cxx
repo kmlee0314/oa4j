@@ -114,17 +114,30 @@ JavaCallWaitCond::JavaCallWaitCond(JNIEnv *p_env, CtrlThread *p_thread, ExprList
 			result.setValue(-2);
 		}
 		else {
-			const Variable *fun = (args->getNext()->evaluate(thread));
-			const Variable *par = (args->getNext()->evaluate(thread));
+			CtrlExpr *next;
 
-			out = (DynVar*)args->getNext()->getTarget(thread); // TODO: check if it is a DynVar and not NULL!
-			DynVar tmp(ANYTYPE_VAR);
-			*out = tmp;
+			Variable *fun = ((next = args->getNext()) == 0) ? 0 : next->evaluate(thread)->clone();
+			Variable *par = ((next = args->getNext()) == 0) ? 0 : next->evaluate(thread)->clone();
 
-			this->out = out;
+			jobject jfun = (fun == 0) ? 0 : Java::convertToJava(env, fun);
+			jobject jpar = (par == 0) ? 0 : Java::convertToJava(env, par);
 
-			jobject jfun = Java::convertToJava(env, (VariablePtr)fun);
-			jobject jpar = Java::convertToJava(env, (VariablePtr)par);
+			delete fun;
+			delete par;
+
+			Variable *outVar = 0;
+			if ((next = args->getNext()) != 0) 
+				outVar = next->getTarget(thread);
+			if (outVar != 0 && outVar->isDynVar()) {
+				DynVar *out = (DynVar*)outVar;
+				DynVar tmp(ANYTYPE_VAR);
+				*out = tmp;
+				this->out = out; // memorize in object
+			}
+			else {
+				this->out = 0;
+			}
+			
 
 			jThread = env->NewObject(clsFunction, jMethodInit, (jlong)this); 
 
@@ -378,11 +391,16 @@ const Variable* JavaExternHdl::javaCall(ExecuteParamRec &param)
 			result.setValue(-2);
 		} 
 		else {
-			const Variable *fun = (args->getNext()->evaluate(thread));
-			const Variable *par = (args->getNext()->evaluate(thread));
+			CtrlExpr *next;
+			
+			Variable *fun = ((next = args->getNext()) == 0) ? 0 : next->evaluate(thread)->clone();
+			Variable *par = ((next = args->getNext()) == 0) ? 0 : next->evaluate(thread)->clone();		
+			
+			jobject jfun = (fun == 0) ? 0 : Java::convertToJava(env, fun);
+			jobject jpar = (par == 0) ? 0 : Java::convertToJava(env, par);
 
-			jobject jfun = Java::convertToJava(env, (VariablePtr)fun);
-			jobject jpar = Java::convertToJava(env, (VariablePtr)par);
+			delete fun;
+			delete par;
 
 			jobject jobj = env->NewObject(clsFunction, jMethodInit, 0L); // 0...not as thread
 			if (env->ExceptionCheck()) {
@@ -411,31 +429,37 @@ const Variable* JavaExternHdl::javaCall(ExecuteParamRec &param)
 						result.setValue(-5);
 					}
 					else {
-						DynVar *out = (DynVar*)args->getNext()->getTarget(thread); // TODO: check if it is a DynVar and not NULL!
-						DynVar tmp(ANYTYPE_VAR);
-						*out = tmp;
 
-						Variable *var;
-						Variable *item;
+						Variable *outVar = 0;
+						if ((next = args->getNext()) != 0)
+							outVar = next->getTarget(thread);
+						if (outVar != 0 && outVar->isDynVar()) {						
+							DynVar *out = (DynVar*)outVar; 
+							DynVar tmp(ANYTYPE_VAR);
+							*out = tmp;
 
-						if ((var = Java::convertJVariable(env, jvar)) != NULL)
-						{
-							//std::cout << var->isA(DYN_VAR) << " - " << var->isA() << std::endl;
-							if (var->isA(DYN_VAR) == DYN_VAR)
+							Variable *var;
+							Variable *item;
+
+							if ((var = Java::convertJVariable(env, jvar)) != NULL)
 							{
-								DynVar *dvar = (DynVar*)var;
-								while (item = dvar->cutFirstVar())
+								//std::cout << var->isA(DYN_VAR) << " - " << var->isA() << std::endl;
+								if (var->isA(DYN_VAR) == DYN_VAR)
 								{
-									AnyTypeVar *avar = new AnyTypeVar(item);
-									if (!out->append(avar))
+									DynVar *dvar = (DynVar*)var;
+									while (item = dvar->cutFirstVar())
 									{
-										ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
-											JavaExternHdl::ManagerName, "javaCallAsync", CharString("error adding value to dyn"));
-										delete avar;
+										AnyTypeVar *avar = new AnyTypeVar(item);
+										if (!out->append(avar))
+										{
+											ErrHdl::error(ErrClass::PRIO_SEVERE, ErrClass::ERR_IMPL, ErrClass::UNEXPECTEDSTATE,
+												JavaExternHdl::ManagerName, "javaCallAsync", CharString("error adding value to dyn"));
+											delete avar;
+										}
 									}
 								}
-							}
-							delete var;
+								delete var;
+							}							
 						}
 						result.setValue(0);
 					}
@@ -475,6 +499,8 @@ JNIEXPORT jint JNICALL Java_at_rocworks_oa4j_jni_ExternHdl_apiAddResult
 {
 	// get pointer to waitCond object
 	JavaCallWaitCond *waitCond = (JavaCallWaitCond*)jWaitCondPtr;
+
+	if (waitCond->out == 0) return -99;
 
 	DynVar *out = (DynVar*)waitCond->out; // TODO: check if it is a DynVar and not NULL!
 

@@ -38,5 +38,9 @@ public class TextVar extends Variable {
     @Override
     public Object getValueObject() {
         return value; 
-    }        
+    }
+
+    public boolean equals(String test) {
+        return value.equals(test);
+    }
 }

@@ -35,7 +35,7 @@ public abstract class JHotLinkWaitForAnswer implements Runnable {
     private boolean async = false;    
     private LinkedBlockingQueue<JDpVCGroup> msgQueue;
     //private SemaphoreAnalog msgWait;    
-    private final int MAX_QUEUE_SIZE = 1000;       
+    private final int MAX_QUEUE_SIZE = JManager.MAX_DEQUEUE_SIZE;
     private Thread thread;
     
     protected void setAsync() {

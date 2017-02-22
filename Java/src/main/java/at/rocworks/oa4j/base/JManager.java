@@ -27,6 +27,7 @@ public class JManager extends Manager implements Runnable {
     
     public static int MAX_ENQUEUE_SIZE_HIGH = 10000;
     public static int MAX_ENQUEUE_SIZE_LOW = 5000;
+    public static int MAX_DEQUEUE_SIZE = 1000; // used in JHotLinkWaitForAnswer
     
     private int maxEnqueueSizeReached=0;
     
@@ -55,7 +56,16 @@ public class JManager extends Manager implements Runnable {
         this.MAX_ENQUEUE_SIZE_LOW = low;
         return this;
     }
-    
+
+    public JManager setMaxDequeueSize(int size) {
+        this.MAX_DEQUEUE_SIZE = size;
+        return this;
+    }
+
+    public int getEnqueueSize() {
+        return hotlinkQueue.size();
+    }
+
     public static JManager getInstance() {
         return JManager.instance;
     }

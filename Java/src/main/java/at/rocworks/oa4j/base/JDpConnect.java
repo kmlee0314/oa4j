@@ -17,7 +17,11 @@ public class JDpConnect extends JHotLinkWaitForAnswerGroup {
     public JDpConnect async() {
         this.setAsync();
         return this;
-    }         
+    }
+
+    public JDpConnect answer(IAnswer answer) { return action(answer); }
+
+    public JDpConnect hotlink(IHotLink hotlink) { return action(hotlink); }
     
     @Override
     public JDpConnect action(IHotLink hotlink) {
@@ -27,8 +31,8 @@ public class JDpConnect extends JHotLinkWaitForAnswerGroup {
     @Override
     public JDpConnect action(IAnswer answer) {
         return (JDpConnect)super.action(answer);
-    }       
-    
+    }
+
     @Override
     public JDpConnect addGroup() {
         return (JDpConnect)super.addGroup();

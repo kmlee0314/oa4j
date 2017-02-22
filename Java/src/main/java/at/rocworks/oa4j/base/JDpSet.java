@@ -45,8 +45,12 @@ public class JDpSet extends JHotLinkWaitForAnswer {
     public JDpSet add(String dp, Variable var) {
         this.vcs.add(new JDpVCItem(new DpIdentifierVar(dp, "_original.._value"), var));
         return this;
-    }    
-    
+    }
+
+    public JDpSet add(String dp, Object var) {
+        return add(dp, Variable.newVariable(var));
+    }
+
     public JDpSet timed(TimeVar time) {
         this.time=time;
         return this;
@@ -67,7 +71,11 @@ public class JDpSet extends JHotLinkWaitForAnswer {
     public JDpSet action(IAnswer answer) {
         super.action(answer);
         return this;
-    }           
+    }
+
+    public JDpSet answer(IAnswer answer) {
+        return action(answer);
+    }
 
     public JDpMsgAnswer await() {
         if ( !sent ) this.send();

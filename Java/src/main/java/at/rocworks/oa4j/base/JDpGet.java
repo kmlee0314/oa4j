@@ -65,7 +65,11 @@ public class JDpGet extends JHotLinkWaitForAnswer {
     public JDpGet action(IAnswer answer) {
         super.action(answer);
         return this;
-    }           
+    }
+
+    public JDpGet answer(IAnswer answer) {
+        return action(answer);
+    }
     
     public JDpGet send() {
         this.sent=true;

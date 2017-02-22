@@ -1,6 +1,9 @@
-/Java/.idea/
-/Java/target/
-/Java/out/
+/Java/.idea
+/Java/target
+/Java/out
+/Scala/log
+/Scala/out
+/Scala/.idea
 /Native/Manager/bin
 /Native/Manager/x64
 /Native/Manager/Release

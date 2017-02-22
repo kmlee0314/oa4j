@@ -131,7 +131,6 @@ public class DpIdentifierVar extends Variable implements Serializable {
     }
 
     public static String addConfigIfNotExists(String dp, String config) {
-        DpIdentifierVar dpid = new DpIdentifierVar(dp);
-        return dpid.getConfig().isEmpty() ? dpid.getName()+":"+config : dpid.getName();
+        return dp.contains(":") ? dp : dp+":"+config;
     }
 }

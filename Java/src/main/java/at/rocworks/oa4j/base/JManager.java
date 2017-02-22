@@ -25,8 +25,8 @@ public class JManager extends Manager implements Runnable {
     public static final int DB_MAN = 3;        
     public static final int API_MAN = 7;
     
-    public static final int MAX_ENQUEUE_SIZE_HIGH = 10000;
-    public static final int MAX_ENQUEUE_SIZE_LOW = 5000; 
+    public static int MAX_ENQUEUE_SIZE_HIGH = 10000;
+    public static int MAX_ENQUEUE_SIZE_LOW = 5000;
     
     private int maxEnqueueSizeReached=0;
     
@@ -41,8 +41,7 @@ public class JManager extends Manager implements Runnable {
     private final ConcurrentLinkedQueue<JHotLinkWaitForAnswer> hotlinkQueue = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Callable> taskQueue = new ConcurrentLinkedQueue<>();
     
-    //private final Manager mgr = new Manager();
-    private int loopWaitUSec=10000;    
+    private int loopWaitUSec=10000;
     
     private String projName="<unknown>";
     private String projDir=".";        
@@ -50,11 +49,12 @@ public class JManager extends Manager implements Runnable {
     
     private int manType=API_MAN;
     private int manNum=1;  
-        
-    //private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
-    public JManager() {   
-    }        
+    public JManager setMaxEnqueueSize(int high, int low) {
+        this.MAX_ENQUEUE_SIZE_HIGH = high;
+        this.MAX_ENQUEUE_SIZE_LOW = low;
+        return this;
+    }
     
     public static JManager getInstance() {
         return JManager.instance;
@@ -129,7 +129,7 @@ public class JManager extends Manager implements Runnable {
         if (JManager.instance == null) {
             JManager.instance = this;
         } else {
-            throw new Exception("There can only be one manager!");
+            throw new IllegalStateException("There can only be one manager!");
         }   
         
         apiEnabled=false;        

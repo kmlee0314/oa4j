@@ -7,6 +7,8 @@ package at.rocworks.oa4j.base;
 
 import at.rocworks.oa4j.var.DpIdentifierVar;
 import at.rocworks.oa4j.var.LangTextVar;
+import at.rocworks.oa4j.var.Variable;
+import at.rocworks.oa4j.var.VariablePtr;
 
 /**
  *
@@ -23,12 +25,28 @@ public class JClient {
     public static JDpGet dpGet() {
         return (new JDpGet());
     }
+    public static Variable dpGet(String dp) {
+        JDpMsgAnswer answer = (new JDpGet()).add(dp).await();
+        return ( answer.size()>0 ) ? answer.getItem(0).getVariable() : null;
+    }
+    public static int dpGet(String dp, VariablePtr var) {
+        JDpMsgAnswer answer = (new JDpGet()).add(dp).await();
+        if ( answer.size()>0 ) var.set(answer.getItem(0).getVariable());
+        return answer.getRetCode();
+    }
     
     // dpSet
     
     public static JDpSet dpSet() {
         return (new JDpSet());
-    }    
+    }
+    public static JDpSet dpSet(String dp, Object var) {
+        return (new JDpSet()).add(dp, Variable.newVariable(var)).send();
+    }
+    public static int dpSetWait(String dp, Object var) {
+        return dpSet(dp, var).await().getRetCode();
+    }
+
 
     // dpConnect
             

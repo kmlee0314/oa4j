@@ -3,7 +3,7 @@ WinCC Open Architecture for Java is an API to connect WinCC OA to Java.<br>
 It is based on the WinCC OA native API+JNI and works on Windows and Linux.<br>
 Because it's using the WinCC OA API you need to have a valid WinCC OA API license.<br>
 An example with a compiled version of oa4j is available in the project directory.<br>
-A version for Scala will maybe available in future releases.<br>
+An example for Scala can be found in the Scala directory.<br>
 ## Manager (oa4j/Native/Manager <-> at.rocworks.oa4j.base)<br>
 Examples can be found in the Java/src/test directory and in the project/example directory, please read the project/Example/Readme.txt. <br>
 The JClient class is an easy to use static class. It should be thread safe and callback functions are processed in a separate thread, so that the main WinCC OA thread/loop will not be blocked by callback functions.<br>

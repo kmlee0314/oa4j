@@ -56,6 +56,8 @@ public abstract class Variable implements Serializable {
             return new TimeVar(((Timestamp) value).getTime());
         } else if (value instanceof Date) {
             return new TimeVar(((Date) value).getTime());            
+        } else if (value instanceof Variable) {
+            return (Variable)value;
         } else {
             // TODO newVariable DynTypes
             throw new UnsupportedOperationException("Type "+value.getClass().getName()+" ["+value.toString()+"] not supported yet.");

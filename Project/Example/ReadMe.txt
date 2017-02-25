@@ -1,17 +1,17 @@
 1) Java 8+ JRE must be installed
    http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html
 
-2) C:\WinCC_OA_Proj\Example\bin + bin_<version>
+2) Add the path to the jvm.dll of your Java installation to the PATH environment variable 
+   e.g. PATH=C:\Program Files\Java\jre1.8.0_72\bin\server
+   you have to restart the pmon/console afterwards
+
+3) C:\WinCC_OA_Proj\Example\bin + bin_<version>
    Copy the bins from the "bin" directory to your project bin directory    
    The files are already pre compiled for the WinCC OA version bin-<version>. 
    The Manager Sources are compiled as .dll and additionall as .exe which is used by WinCC OA console for java startup
    (to change the compilation target in Visual Studio go to: Project/Properties, Configuratoin Properties/General, Configuration Type)
 
-3) Copy and adapt the config/config.java file so that the paths fit to your project path
-
-4) Add the path to the jvm.dll of your Java installation to the PATH environment variable 
-   e.g. PATH=C:\Program Files\Java\jre1.8.0_72\bin\server
-   you have to restart the pmon/console afterwards
+4) Copy the config.level file to your project directory (or include this example project as sub directory)
 
 5) Add a new manager "WCCOAjava" in the console with the parameter "-class ApiTestDpConnect"
    or start the java program as a normal java program, see bin/Example.bat

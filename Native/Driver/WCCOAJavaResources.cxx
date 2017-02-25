@@ -4,11 +4,13 @@
 #include "WCCOAJavaResources.hxx"
 #include <ErrHdl.hxx>
 
-// TODO you likely have different things in the config file
 CharString WCCOAJavaResources::jvmOption = "";
+CharString WCCOAJavaResources::jvmUserDir = "";
 CharString WCCOAJavaResources::jvmClassPath = "";
 CharString WCCOAJavaResources::jvmLibraryPath = "";
+CharString WCCOAJavaResources::jvmConfigFile = "";
 CharString WCCOAJavaResources::drvDpName = CharString("_JavaDrv");
+
 
 //-------------------------------------------------------------------------------
 // init is a wrapper around begin, readSection and end
@@ -59,13 +61,16 @@ PVSSboolean WCCOAJavaResources::readSection()
   while ( (cfgState != CFG_SECT_START) && (cfgState != CFG_EOF) )
   {
     // TODO whatever you have to read from the config file
-	if (!keyWord.icmp("jvmOption"))             // It matches
-		cfgStream >> jvmOption;                   // read the value
-	else if (!keyWord.icmp("classPath"))             // It matches
-		cfgStream >> jvmClassPath;                   // read the value
-	else if (!keyWord.icmp("libraryPath"))             // It matches
-		cfgStream >> jvmLibraryPath;                   // read the value
-
+	if (!keyWord.icmp("jvmOption"))             
+		cfgStream >> jvmOption;                  
+	else if (!keyWord.icmp("userDir"))            
+		cfgStream >> jvmUserDir;                   
+	else if (!keyWord.icmp("classPath"))            
+		cfgStream >> jvmClassPath;                  
+	else if (!keyWord.icmp("libraryPath"))            
+		cfgStream >> jvmLibraryPath;                  
+	else if (!keyWord.icmp("configFile"))             
+		cfgStream >> jvmConfigFile;                   
     else if ( !commonKeyWord() )
     {
       ErrHdl::error(ErrClass::PRIO_WARNING,    // Not that bad

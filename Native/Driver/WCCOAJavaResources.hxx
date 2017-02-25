@@ -16,22 +16,21 @@ public:
 	static PVSSboolean readSection();          // read config file
 
 	// Get our static Variables
-	// TODO you likely have different things in the config file
 	static const CharString & getJvmOption() { return jvmOption; }
+	static const CharString & getJvmUserDir() { return  jvmUserDir; }
 	static const CharString & getJvmClassPath() { return  jvmClassPath; }
 	static const CharString & getJvmLibraryPath() { return jvmLibraryPath; }
+	static const CharString & getJvmConfigFile() { return jvmConfigFile; }
 
 	// Get the number of names we need the DpId for
 	virtual int getNumberOfDpNames();
 
-	// TODO in this template we do not use internal DPs in the driver
-	// If you need DPs, then also some other methods must be implemented
-
 private:
-	// TODO you likely have different things in the config file
 	static CharString jvmOption;
+	static CharString jvmUserDir;
 	static CharString jvmClassPath;
 	static CharString jvmLibraryPath;
+	static CharString jvmConfigFile;
 	WCCOAJavaDrvIntDp drvIntDp;
 
 public:

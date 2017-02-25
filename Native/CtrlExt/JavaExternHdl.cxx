@@ -224,44 +224,107 @@ const Variable* JavaExternHdl::startVM(ExecuteParamRec &param)
 
 		int idx = -1;
 
-		// 0) jvmOption e.g. -Xmx512m
+		int iUserDirSet = 0;
+		int iLibPathSet = 0;
+		int iClassPathSet = 0;
+
+		// defaults 
+
+		// user.dir
+		{
+			CharString *s = new CharString("-Duser.dir=" + JavaResources::getProjDir());
+			iUserDirSet = ++idx;
+			options[iUserDirSet].optionString = (char*)s->c_str();
+			std::cout << "default: " << options[idx].optionString << std::endl;
+		}
+
+		// java.library.path
+		{
+			CharString *s = new CharString("-Djava.library.path=" + JavaResources::getProjBinDir());
+			iLibPathSet = ++idx;
+			options[iLibPathSet].optionString = (char*)s->c_str();
+			std::cout << "default: " << options[idx].optionString << std::endl;
+		}
+
+		// java.class.path
+		{
+			CharString *s = WIN32
+				? new CharString("-Djava.class.path=./bin;./bin/WCCOAjava.jar")
+				: new CharString("-Djava.class.path=./bin:./bin/WCCOAjava.jar");
+			iLibPathSet = ++idx;
+			options[iLibPathSet].optionString = (char*)s->c_str();
+			std::cout << "default: " << options[idx].optionString << std::endl;
+		}
+
+		// config 
+
+		// jvmOption e.g. -Xmx512m
 		if (strlen(JavaResources::getJvmOption().c_str()) > 0)
 		{
 			options[++idx].optionString = JavaResources::getJvmOption();
-			std::cout << "jvmOption='" << options[0].optionString << "'" << std::endl;
+			std::cout << "config: " << options[idx].optionString << "'" << std::endl;
 		}
 
-		// 1) jvmClassPath
-		if (strlen(JavaResources::getJvmClassPath().c_str()) > 0)
+		// user.dir
+		if (strlen(JavaResources::getJvmUserDir().c_str()) > 0)
 		{
-			std::string cp = "-Djava.class.path=" + (const char&)JavaResources::getJvmClassPath();
-			options[++idx].optionString = (char*)cp.c_str();
-			std::cout << "jvmClassPath=" << options[idx].optionString << std::endl;
+			CharString *s = new CharString("-Duser.dir=" + JavaResources::getJvmUserDir());
+			if (iUserDirSet == 0) iUserDirSet = ++idx;
+			options[iUserDirSet].optionString = *s; // (char*)s->c_str();
+			std::cout << "config: " << options[iUserDirSet].optionString << std::endl;
 		}
 
-		// 2) jvmLibraryPath
+		// java.library.path
 		if (strlen(JavaResources::getJvmLibraryPath().c_str()) > 0)
 		{
-			std::string lp = "-Djava.library.path=" + (const char&)JavaResources::getJvmLibraryPath();
-			options[++idx].optionString = (char*)lp.c_str();
-			std::cout << "jvmLibraryPath=" << options[idx].optionString << std::endl;
+			CharString *s = new CharString("-Djava.library.path=" + JavaResources::getJvmLibraryPath());
+			if (iLibPathSet == 0) iLibPathSet = ++idx;
+			options[iLibPathSet].optionString = *s; // (char*)s->c_str();
+			std::cout << "config: " << options[iLibPathSet].optionString << std::endl;
 		}
 
-		// config.java
-		std::ifstream t(Resources::getConfigDir() + "config.java");
-		std::string line;
-		while (std::getline(t, line) && ++idx<99)
+		// java.class.path
+		if (strlen(JavaResources::getJvmClassPath().c_str()) > 0)
 		{
-			std::cout << "config.java: " << line << std::endl;
-			char * cstr = new char[line.length() + 1];
-			std::strcpy(cstr, line.c_str());
-			options[idx].optionString = cstr;
+			CharString *s = new CharString("-Djava.class.path=" + JavaResources::getJvmClassPath());
+			if (iClassPathSet == 0) iClassPathSet = ++idx;
+			options[iClassPathSet].optionString = *s; // (char*)s->c_str();
+			std::cout << "config: " << options[iClassPathSet].optionString << std::endl;
+		}
+
+		// config file
+		CharString fileName = Resources::getConfigDir();
+		if ((strlen(JavaResources::getJvmConfigFile().c_str()) > 0)) {
+			fileName += JavaResources::getJvmConfigFile();
+			std::cout << "config file: " << fileName << std::endl;
+			std::ifstream t(fileName);
+			std::string line;
+			while (std::getline(t, line) && idx < 99)
+			{
+				std::cout << "config.java: " << line << std::endl;
+				char * cstr = new char[line.length() + 1];
+				std::strcpy(cstr, line.c_str());
+
+				if (line.find("-Duser.dir") == 0) {
+					options[iUserDirSet].optionString = cstr;
+				}
+				else if (line.find("-Djava.class.path") == 0) {
+					options[iClassPathSet].optionString = cstr;
+				}
+
+				else if (line.find("-Djava.library.path") == 0) {
+					options[iLibPathSet].optionString = cstr;
+				}
+				else {
+					options[++idx].optionString = cstr;
+				}
+			}
 		}
 
 		vm_args.version = JNI_VERSION_1_8;             // minimum Java version
 		vm_args.nOptions = idx + 1;                          // number of options
 		vm_args.options = options;
-		vm_args.ignoreUnrecognized = true;     // invalid options make the JVM init fail 
+		vm_args.ignoreUnrecognized = false;     // invalid options make the JVM init fail 
 
 		//=============== load and initialize Java VM and JNI interface =============
 		jvmState = JNI_CreateJavaVM(&jvm, (void**)&env, &vm_args);

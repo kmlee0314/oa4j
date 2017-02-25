@@ -5,8 +5,10 @@
 
 // Our static Variable
 CharString JavaResources::jvmOption = "";
+CharString JavaResources::jvmUserDir = "";
 CharString JavaResources::jvmClassPath = "";
 CharString JavaResources::jvmLibraryPath = "";
+CharString JavaResources::jvmConfigFile = "";
 
 
 // Wrapper to read config file
@@ -40,10 +42,14 @@ void  JavaResources::init()
 		{
 			if (!key.icmp("jvmOption"))
 				jvmOption = (value.dup());
+			else if (!key.icmp("userDir"))
+				jvmUserDir = (value.dup());
 			else if (!key.icmp("classPath"))
 				jvmClassPath = (value.dup());
 			else if (!key.icmp("libraryPath"))
 				jvmLibraryPath = (value.dup());
+			else if (!key.icmp("configFile"))
+				jvmConfigFile = (value.dup());
 		}
 	}
 	config.close();

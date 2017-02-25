@@ -1,2 +1,2 @@
--Djava.library.path=C:\WinCC_OA_Proj\Example\bin
--Djava.class.path=C:\WinCC_OA_Proj\Example\bin;C:\WinCC_OA_Proj\Example\bin\WCCOAjava.jar;C:\WinCC_OA_Proj\Example\bin\json-simple-1.1.1.jar
+-Djava.library.path=C:/WinCC_OA_Proj/Example/bin
+-Djava.class.path=./bin;./bin/WCCOAjava.jar;./bin/json-simple-1.1.1.jar

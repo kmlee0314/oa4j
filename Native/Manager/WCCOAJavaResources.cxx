@@ -4,8 +4,10 @@
 
 // Our static Variable
 CharString  WCCOAJavaResources::jvmOption = "";
+CharString  WCCOAJavaResources::jvmUserDir = "";
 CharString  WCCOAJavaResources::jvmClassPath = "";
 CharString  WCCOAJavaResources::jvmLibraryPath = "";
+CharString  WCCOAJavaResources::jvmConfigFile = "";
 
 // Wrapper to read config file
 void  WCCOAJavaResources::init(int &argc, char *argv[])
@@ -50,13 +52,16 @@ PVSSboolean  WCCOAJavaResources::readSection()
   while ( (cfgState != CFG_SECT_START) &&  // Not next section
           (cfgState != CFG_EOF) )          // End of config file
   {
-    // Compare keyword with "dpNameSet" and dpNameConnect
     if (!keyWord.icmp("jvmOption"))             // It matches
 		cfgStream >> jvmOption;                   // read the value
+	else if (!keyWord.icmp("userDir"))             // It matches
+		cfgStream >> jvmUserDir;                   // read the value
 	else if (!keyWord.icmp("classPath"))             // It matches
 		cfgStream >> jvmClassPath;                   // read the value
 	else if (!keyWord.icmp("libraryPath"))             // It matches
 		cfgStream >> jvmLibraryPath;                   // read the value
+	else if (!keyWord.icmp("configFile"))             // It matches
+		cfgStream >> jvmConfigFile;                   // read the value
     else if (!readGeneralKeyWords())            // keywords handled in Resources
     {
       ErrHdl::error(ErrClass::PRIO_WARNING,     // not that bad

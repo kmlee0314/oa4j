@@ -5,7 +5,7 @@ import at.rocworks.oa4j.base.JClient;
 import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.FloatVar;
 import at.rocworks.oa4j.var.TextVar;
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 import java.util.Date;
 import java.util.logging.Level;
 
@@ -32,18 +32,18 @@ public class ApiTestDpSet {
     private void run() throws InterruptedException {
         int ret;
         
-        Debug.out.info("--- DPSET BEG ---");                
+        JDebug.out.info("--- DPSET BEG ---");
         ret = JClient.dpSet()
                 .add("System1:ExampleDP_Trend1.", new FloatVar(Math.random()))
                 .add("System1:ExampleDP_SumAlert.:_original.._value", new TextVar("hello world"))
                 .await()
                 .getRetCode();
-        Debug.out.log(Level.INFO, "retCode={0}", ret);        
-        Debug.out.info("--- DPSET END ---");                              
+        JDebug.out.log(Level.INFO, "retCode={0}", ret);
+        JDebug.out.info("--- DPSET END ---");
         
         Thread.sleep(1000);
         
-        Debug.out.info("--- DPSETTIMED BEG ---");    
+        JDebug.out.info("--- DPSETTIMED BEG ---");
         Date t = new Date(new Date().getTime()+10000);
         ret = JClient.dpSet()
                 .timed(t)
@@ -51,7 +51,7 @@ public class ApiTestDpSet {
                 .add("System1:ExampleDP_SumAlert.:_original.._value", new TextVar("hello timed world "+t.toString()))
                 .await()
                 .getRetCode();
-        Debug.out.log(Level.INFO, "retCode={0}", ret);        
-        Debug.out.info("--- DPSETTIMED END ---");              
+        JDebug.out.log(Level.INFO, "retCode={0}", ret);
+        JDebug.out.info("--- DPSETTIMED END ---");
     }    
 }

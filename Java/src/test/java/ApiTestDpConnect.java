@@ -6,7 +6,7 @@ import at.rocworks.oa4j.base.JDpConnect;
 import at.rocworks.oa4j.base.JDpHLGroup;
 import at.rocworks.oa4j.base.JDpMsgAnswer;
 import at.rocworks.oa4j.base.JManager;
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -34,31 +34,31 @@ public class ApiTestDpConnect {
     }
     
     public void run() throws InterruptedException {        
-        Debug.out.info("dpConnect...");
+        JDebug.out.info("dpConnect...");
         final Counter c = new Counter();
         JDpConnect conn = JClient.dpConnect()
                 .add("ExampleDP_Trend1.")
                 .action((JDpMsgAnswer answer)->{
-                    Debug.out.info("--- ANSWER BEG ---");
-                    Debug.out.info(answer.toString());
-                    Debug.out.info("--- ANSWER END ---");
+                    JDebug.out.info("--- ANSWER BEG ---");
+                    JDebug.out.info(answer.toString());
+                    JDebug.out.info("--- ANSWER END ---");
                 })                
                 .action((JDpHLGroup hotlink)->{
                     c.value+=hotlink.size();
                     //if (c.value % 1000 == 0) 
                     {
-                        Debug.out.info("--- HOTLINK BEG ---");
-                        Debug.out.info(hotlink.toString());
-                        Debug.out.info("--- HOTLINK END ---");
+                        JDebug.out.info("--- HOTLINK BEG ---");
+                        JDebug.out.info(hotlink.toString());
+                        JDebug.out.info("--- HOTLINK END ---");
                     }
                 })
                 .connect();
         
-        Debug.out.info("sleep...");
+        JDebug.out.info("sleep...");
         Thread.sleep(1000*60);
-        Debug.out.info("done");
+        JDebug.out.info("done");
         conn.disconnect();
-        Debug.out.info("end");   
+        JDebug.out.info("end");
     }          
 }
 

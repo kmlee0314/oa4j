@@ -7,7 +7,7 @@ package at.rocworks.oa4j.driver;
 
 import at.rocworks.oa4j.base.JDpAttrAddrDirection;
 import at.rocworks.oa4j.jni.Driver;
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 import at.rocworks.oa4j.var.DpIdentifierVar;
 import at.rocworks.oa4j.var.Variable;
 
@@ -31,7 +31,6 @@ public abstract class JDriver extends Driver implements Runnable {
     private int manNum=1;  
         
     public JDriver(String args[]) throws Exception {         
-//        this.transformationFactory=factory;
         initArgs(args);
         initDriver();
     }
@@ -99,13 +98,13 @@ public abstract class JDriver extends Driver implements Runnable {
 
         // Set log file settings
         try {
-            Debug.setOutput(getLogFile());
+            JDebug.setOutput(getLogFile());
         } catch (IOException ex) {
-            Debug.StackTrace(Level.SEVERE, ex);
+            JDebug.StackTrace(Level.SEVERE, ex);
         }
 
         if ( !apiEnabled ) {
-            Debug.out.warning(errmsg);            
+            JDebug.out.warning(errmsg);
         } 
     }    
             
@@ -131,12 +130,12 @@ public abstract class JDriver extends Driver implements Runnable {
 
     @Override
     public void answer4DpId(int index, Variable var) {
-//        Debug.out.log(Level.INFO, "answer4DpId {0}: {1}", new Object[]{index, var.formatValue()});
+//        JDebug.out.log(Level.INFO, "answer4DpId {0}: {1}", new Object[]{index, var.formatValue()});
     }
 
     @Override
     public void hotLink2Internal(int index, Variable var) {
-//        Debug.out.log(Level.INFO, "hotLink2Internal {0}: {1}", new Object[]{index, var.formatValue()});
+//        JDebug.out.log(Level.INFO, "hotLink2Internal {0}: {1}", new Object[]{index, var.formatValue()});
     }
 
     @Override

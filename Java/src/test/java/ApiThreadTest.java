@@ -9,7 +9,7 @@ import at.rocworks.oa4j.base.JDpVCItem;
 import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.DpIdentifierVar;
 import at.rocworks.oa4j.var.DynVar;
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +54,7 @@ public class ApiThreadTest {
         //new Thread(()->doDpGetComment(delay)).start();
         int k=5;
         while ( true ) {
-            Debug.out.log(Level.INFO, "dpGet {0} dpNames {1} dpConnect {2} dpGetComment {3}", 
+            JDebug.out.log(Level.INFO, "dpGet {0} dpNames {1} dpConnect {2} dpGetComment {3}",
                     new Object[] {c_dpGet/k, c_dpNames/k, c_dpConnect/k, c_dpGetComment/k});
             c_dpGet=c_dpNames=c_dpConnect=c_dpGetComment=0;
             Thread.sleep(k*1000);
@@ -70,7 +70,7 @@ public class ApiThreadTest {
                         .add("System1:Test_1_"+String.valueOf(i)+".Value:_online.._value")
                         .action((JDpMsgAnswer answer)->{
                             c_dpGet++;
-                            //Debug.out.info(answer.toString());
+                            //JDebug.out.info(answer.toString());
                         })
                         .await();
             });
@@ -86,7 +86,7 @@ public class ApiThreadTest {
         while ( true ) {
             DpIdentifierVar dpid = new DpIdentifierVar("System1:ExampleDP_Result.");
             String comment = JClient.dpGetComment(dpid).toString();
-            //Debug.out.info("Comment: "+comment);
+            //JDebug.out.info("Comment: "+comment);
             c_dpGetComment++;
             try {
                 Thread.sleep(delay);
@@ -98,12 +98,12 @@ public class ApiThreadTest {
     
     public void doDpNames(int delay) {
         while ( true ) {
-            //Debug.out.info("--- DPNAMES BEG ---");        
+            //JDebug.out.info("--- DPNAMES BEG ---");
             List<String> dps1 = Arrays.asList(JClient.dpNames("ExampleDP*"));
             c_dpNames++;
             try {
-                //dps1.forEach((dp)->Debug.out.info(dp));
-                //Debug.out.info("--- DPNAMES END ---");
+                //dps1.forEach((dp)->JDebug.out.info(dp));
+                //JDebug.out.info("--- DPNAMES END ---");
                 Thread.sleep(delay);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ApiThreadTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -113,17 +113,17 @@ public class ApiThreadTest {
 
     
     public void doDpQueryConnect() {
-        Debug.out.info("dpQueryConnect...");
+        JDebug.out.info("dpQueryConnect...");
         JDpQueryConnect conn = JClient.dpQueryConnectSingle("SELECT '_online.._value','_online.._stime' FROM 'Test*.**'")
                 .action((JDpMsgAnswer answer)->{
-//                    Debug.out.info("--- ANSWER BEG ---");
-//                    Debug.out.info(answer.toString());
-//                    Debug.out.info("--- ANSWER END ---");
+//                    JDebug.out.info("--- ANSWER BEG ---");
+//                    JDebug.out.info(answer.toString());
+//                    JDebug.out.info("--- ANSWER END ---");
                     
                 })
                 .action((JDpHLGroup hotlink)->{
                     {                                                
-                        //Debug.out.log(Level.INFO, "--- HOTLINK BEG --- {0}", hotlink.getNumberOfItems());
+                        //JDebug.out.log(Level.INFO, "--- HOTLINK BEG --- {0}", hotlink.getNumberOfItems());
                         // first item is the header, it is a dyn of the selected attributes
                         if ( hotlink.getNumberOfItems() > 0 ) {
                             // second item contains the result data
@@ -148,10 +148,10 @@ public class ApiThreadTest {
 //                                TimeVar stime = (TimeVar) row.get(2); // column two is the second colum '_online.._stime'                                      
 //                                
 //                                
-//                                //Debug.out.log(Level.INFO, "dp={0} value={1} stime={2}", new Object[]{dp, value.toString(), stime.toString()});
+//                                //JDebug.out.log(Level.INFO, "dp={0} value={1} stime={2}", new Object[]{dp, value.toString(), stime.toString()});
 //                            }
                         }
-                        //Debug.out.log(Level.INFO, "--- HOTLINK END --- ");                        
+                        //JDebug.out.log(Level.INFO, "--- HOTLINK END --- ");
                     }
                 })
                 .connect();         

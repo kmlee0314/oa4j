@@ -6,7 +6,7 @@ import at.rocworks.oa4j.base.JDpMsgAnswer;
 import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.Variable;
 import at.rocworks.oa4j.var.VariablePtr;
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 import java.util.logging.Level;
 
 /*
@@ -30,47 +30,45 @@ public class ApiTestDpGet {
     }      
     
     private void run() throws InterruptedException {
-        Debug.out.info("--- DPGET BEG ---");
+        JDebug.out.info("--- DPGET BEG ---");
         JClient.dpGet()
                 .add("System1:ExampleDP_Trend1.")
                 .add("System1:ExampleDP_SumAlert.:_online.._value")
                 .action((JDpMsgAnswer answer)->{
-                    Debug.out.info("--- ANSWER BEG ---");
-                    Debug.out.info(answer.toString());
-                    Debug.out.info("--- ANSWER END ---");
+                    JDebug.out.info("--- ANSWER BEG ---");
+                    JDebug.out.info(answer.toString());
+                    JDebug.out.info("--- ANSWER END ---");
                 })       
                 .await();
-        Debug.out.info("--- DPGET END ---");
+        JDebug.out.info("--- DPGET END ---");
         
-        Debug.out.info("--- DPGET BEG ---");
+        JDebug.out.info("--- DPGET BEG ---");
         JDpMsgAnswer answer = JClient.dpGet()
                 .add("System1:ExampleDP_Trend1.:_online.._value")
                 .add("System1:ExampleDP_SumAlert.:_online.._value")
                 .await();       
-        Debug.out.log(Level.INFO, "ret={0}", answer.getRetCode());
-        answer.forEach((vc)->{Debug.out.info(vc.toString());});
-        Debug.out.log(Level.INFO, "toDouble:");
+        JDebug.out.log(Level.INFO, "ret={0}", answer.getRetCode());
+        answer.forEach((vc)->JDebug.out.info(vc.toString()));
+        JDebug.out.log(Level.INFO, "toDouble:");
         try {
-            answer.forEach((vc) -> {
-                Debug.out.info(vc.getVariable().toDouble().toString());
-            });
+            answer.forEach((vc) -> JDebug.out.info(vc.getVariable().toDouble().toString()));
         } catch ( Exception ex ) {
-            Debug.StackTrace(Level.INFO, ex);
+            JDebug.StackTrace(Level.INFO, ex);
         }
-        Debug.out.info("--- DPGET END ---");                
+        JDebug.out.info("--- DPGET END ---");
         
         
         
-        Debug.out.info("--- DPGET BEG ---");
+        JDebug.out.info("--- DPGET BEG ---");
         VariablePtr res1 = new VariablePtr();
         VariablePtr res2 = new  VariablePtr();        
         JClient.dpGet()
                 .add("System1:ExampleDP_Trend1.:_online.._value", res1)
                 .add("System1:ExampleDP_SumAlert.:_online.._value", res2)
                 .await();
-        Debug.out.log(Level.INFO, "res1 is a {0} value={1}", new Object[] {res1.get().isA(), res1.get()});
-        Debug.out.log(Level.INFO, "res2 is a {0} value={1}", new Object[] {res2.get().isA(), res2.get()});
-        Debug.out.info("--- DPGET END ---");      
+        JDebug.out.log(Level.INFO, "res1 is a {0} value={1}", new Object[] {res1.get().isA(), res1.get()});
+        JDebug.out.log(Level.INFO, "res2 is a {0} value={1}", new Object[] {res2.get().isA(), res2.get()});
+        JDebug.out.info("--- DPGET END ---");
         
         
 //        int i=0;
@@ -79,7 +77,7 @@ public class ApiTestDpGet {
 //            JDpId dpid = new JDpId("System1:ExampleDP_Result.");
 //            newc=JClient.dpGetComment(dpid).toString();
 //            if ( !newc.equals(oldc) && ++i % 1000 == 0 ) {
-//                Debug.out.log(Level.INFO, "comment: {0} {1}", new Object[] {i, newc});
+//                JDebug.out.log(Level.INFO, "comment: {0} {1}", new Object[] {i, newc});
 //                oldc=newc;
 //            }
 //        }

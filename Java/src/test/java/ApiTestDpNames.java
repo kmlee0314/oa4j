@@ -3,7 +3,7 @@
 
 import at.rocworks.oa4j.base.JClient;
 import at.rocworks.oa4j.base.JManager;
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -30,23 +30,23 @@ public class ApiTestDpNames {
     
     public void run() throws InterruptedException {               
         // variant 1
-        Debug.out.info("--- DPNAMES BEG ---");        
+        JDebug.out.info("--- DPNAMES BEG ---");
         List<String> dps1 = Arrays.asList(JClient.dpNames("ExampleDP*"));
-        dps1.forEach((dp)->Debug.out.info(dp));
-        Debug.out.info("--- DPNAMES END ---");        
+        dps1.forEach((dp)->JDebug.out.info(dp));
+        JDebug.out.info("--- DPNAMES END ---");
         
         // variant 2
-        Debug.out.info("--- DPNAMES BEG ---");        
+        JDebug.out.info("--- DPNAMES BEG ---");
         String[] dps2 = JClient.dpNames("*");   
-        Debug.out.log(Level.INFO, "found {0} datapoints.", dps2.length);
-        Debug.out.info("--- DPNAMES END ---");        
+        JDebug.out.log(Level.INFO, "found {0} datapoints.", dps2.length);
+        JDebug.out.info("--- DPNAMES END ---");
 
         // variant 3 with dpType
-        Debug.out.info("--- DPNAMES BEG ---");        
+        JDebug.out.info("--- DPNAMES BEG ---");
         String[] dps3 = JClient.dpNames("*", "ExampleDP_Float");
-        Debug.out.log(Level.INFO, "found {0} datapoints.", (dps3==null ? "no" : dps3.length));
+        JDebug.out.log(Level.INFO, "found {0} datapoints.", (dps3==null ? "no" : dps3.length));
         List<String> lst3 = Arrays.asList(dps3);
-        lst3.forEach((dp)->Debug.out.info(dp));
-        Debug.out.info("--- DPNAMES END ---");        
+        lst3.forEach((dp)->JDebug.out.info(dp));
+        JDebug.out.info("--- DPNAMES END ---");
     }              
 }

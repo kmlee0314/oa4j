@@ -20,21 +20,21 @@ public abstract class JTransBaseVar extends Transformation {
         super(name, type);
         this.varType = varType;
         this.itemSize = itemSize;
-        //Debug.out.log(Level.INFO, "JTransformationBaseVar: name={0} type={1} var={2} size={3}", new Object[]{name, type, varType, itemSize});   
-        //Debug.sleep(100);         
+        //JDebug.out.log(Level.INFO, "JTransformationBaseVar: name={0} type={1} var={2} size={3}", new Object[]{name, type, varType, itemSize});
+        //JDebug.sleep(100);
     }       
 
     @Override
     public int itemSize() {
-        //Debug.out.log(Level.INFO, "itemSize");
-        //Debug.sleep(100);
+        //JDebug.out.log(Level.INFO, "itemSize");
+        //JDebug.sleep(100);
         return itemSize;
     }        
 
     @Override
     public int getVariableTypeAsInt() {
-//        Debug.out.log(Level.INFO, "getVariableTypeAsInt");
-//        Debug.sleep(100);
+//        JDebug.out.log(Level.INFO, "getVariableTypeAsInt");
+//        JDebug.sleep(100);
         return varType.value;
     }    
     
@@ -44,6 +44,6 @@ public abstract class JTransBaseVar extends Transformation {
     
     @Override
     public void delete() {
-        //Debug.out.log(Level.INFO, "delete {0}", getName());
+        //JDebug.out.log(Level.INFO, "delete {0}", getName());
     }
 }

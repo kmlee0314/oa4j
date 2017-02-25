@@ -6,7 +6,7 @@
 package at.rocworks.oa4j.jni;
 
 import java.io.IOException;
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 import at.rocworks.oa4j.var.Variable;
 
 /**
@@ -38,7 +38,7 @@ public class ExternHdl {
             case 7: name="api"; break;
             default: name="java";
         }
-        Debug.setOutput(apiGetLogDir()+"/WCCOA"+name+apiGetManNum()+"java");
-        //Debug.out.info("java ExternHdl init done. ");
+        JDebug.setOutput(apiGetLogDir()+"/WCCOA"+name+apiGetManNum()+"java");
+        //JDebug.out.info("java ExternHdl init done. ");
     }            
 }

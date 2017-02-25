@@ -4,7 +4,7 @@
 import at.rocworks.oa4j.base.JClient;
 import at.rocworks.oa4j.base.JDpMsgAnswer;
 import at.rocworks.oa4j.base.JManager;
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -23,17 +23,17 @@ public class ApiTestDpQuery {
         JManager m = new JManager();
         m.init(args).start();
         new ApiTestDpQuery().run();        
-        Debug.out.info("done");
+        JDebug.out.info("done");
         m.stop();
     }    
     
     public void run() throws InterruptedException {        
-        Debug.out.info("dpQuery...");      
+        JDebug.out.info("dpQuery...");
         JClient.dpQuery("SELECT '_online.._value','_online.._stime' FROM 'Test*.**'")
                 .action((JDpMsgAnswer answer)->{
-                    Debug.out.info(answer.toString());                    
+                    JDebug.out.info(answer.toString());
                 })
                 .await();
-        Debug.out.info("dpQuery...done");
+        JDebug.out.info("dpQuery...done");
     }                  
 }

@@ -8,9 +8,9 @@ package at.rocworks.oa4j.base;
 import at.rocworks.oa4j.jni.Manager;
 import at.rocworks.oa4j.var.DpIdentifierVar;
 import at.rocworks.oa4j.var.Variable;
-import at.rocworks.oa4j.utils.SemaphoreDigital;
+import at.rocworks.oa4j.base.JSemaphore;
 import java.util.logging.Level;
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
@@ -33,7 +33,7 @@ public class JManager extends Manager implements Runnable {
     
     private static JManager instance = null; // Singleton
     
-    protected SemaphoreDigital loopPaused = new SemaphoreDigital(true);    
+    protected JSemaphore loopPaused = new JSemaphore(true);
     protected volatile boolean apiEnabled = false;
     protected volatile boolean apiConnected = false;    
     protected volatile boolean loopBreak = false;
@@ -153,13 +153,13 @@ public class JManager extends Manager implements Runnable {
       
         // Set log file settings
         try {
-            Debug.setOutput(getLogFile());
+            JDebug.setOutput(getLogFile());
         } catch (IOException ex) {
-            Debug.StackTrace(Level.SEVERE, ex);
+            JDebug.StackTrace(Level.SEVERE, ex);
         } 
         
         if ( !apiEnabled ) {
-            Debug.out.warning(errmsg);            
+            JDebug.out.warning(errmsg);
         }        
 
         return this;
@@ -186,7 +186,7 @@ public class JManager extends Manager implements Runnable {
     
     public void stop() {
         if ( apiEnabled ) {
-            Debug.out.log(Level.INFO, "api manager stop.");
+            JDebug.out.log(Level.INFO, "api manager stop.");
             apiConnected = false; // stop run loop
             pause();
             apiShutdown();
@@ -196,9 +196,9 @@ public class JManager extends Manager implements Runnable {
     @Override
     public void run() {
         while (apiConnected) {
-            Debug.out.log(Level.INFO, "api manager loop waiting.");
+            JDebug.out.log(Level.INFO, "api manager loop waiting.");
             loopPaused.awaitFalse();
-            Debug.out.log(Level.INFO, "api manager loop started.");
+            JDebug.out.log(Level.INFO, "api manager loop started.");
             while ( !loopBreak ) {                
                 synchronized ( this ) {                                    
                     apiDispatch(0, loopWaitUSec); 
@@ -206,40 +206,40 @@ public class JManager extends Manager implements Runnable {
                 }
             }
             loopPaused.sendTrue();
-            Debug.out.log(Level.INFO, "api manager loop stopped.");
+            JDebug.out.log(Level.INFO, "api manager loop stopped.");
         }
     }   
 
     public void pause() {
-        //Debug.out.finest("api manager pause ....");
+        //JDebug.out.finest("api manager pause ....");
         loopBreak=true;
         loopPaused.awaitTrue();
-        //Debug.out.finest("api manager pause done");
+        //JDebug.out.finest("api manager pause done");
     }
 
     public void resume() {
-        //Debug.out.finest("api manager resume ....");
+        //JDebug.out.finest("api manager resume ....");
         loopBreak=false;
         loopPaused.sendFalse();
-        //Debug.out.finest("api manager resume done");
+        //JDebug.out.finest("api manager resume done");
     }    
     
     protected void enqueueHotlink(JHotLinkWaitForAnswer hl) {
         if ( hotlinkQueue.size() >= MAX_ENQUEUE_SIZE_HIGH )  {
             maxEnqueueSizeReached++;
             if (maxEnqueueSizeReached % 100==1)
-                Debug.out.log(Level.WARNING, "max enqueue size reached {0} discarding hotlink...", hotlinkQueue.size());
+                JDebug.out.log(Level.WARNING, "max enqueue size reached {0} discarding hotlink...", hotlinkQueue.size());
 //            try {
 //                Thread.sleep(100);
 //            } catch (InterruptedException ex) {
-//                Debug.StackTrace(Level.SEVERE, ex);
+//                JDebug.StackTrace(Level.SEVERE, ex);
 //            }
         } else if ( maxEnqueueSizeReached == 0 ) {
             hotlinkQueue.add(hl);
         } else if ( hotlinkQueue.size() <= MAX_ENQUEUE_SIZE_LOW ) {
             hotlinkQueue.add(hl);            
             maxEnqueueSizeReached=0;        
-            Debug.out.log(Level.WARNING, "enqueue below threshold size {0} processing hotlink...", hotlinkQueue.size());
+            JDebug.out.log(Level.WARNING, "enqueue below threshold size {0} processing hotlink...", hotlinkQueue.size());
         }
     }   
     
@@ -267,7 +267,7 @@ public class JManager extends Manager implements Runnable {
                 task.call();
             }
         } catch (Exception ex) {
-            Debug.StackTrace(Level.SEVERE, ex);
+            JDebug.StackTrace(Level.SEVERE, ex);
         }                        
     }
     
@@ -277,7 +277,7 @@ public class JManager extends Manager implements Runnable {
     
     public Object executeTask(Callable task) {
         ArrayList<Object> res = new ArrayList<>();
-        SemaphoreDigital sem = new SemaphoreDigital(false);
+        JSemaphore sem = new JSemaphore(false);
         enqueueTask(()->{
             res.add(task.call());
             sem.sendTrue();
@@ -289,11 +289,11 @@ public class JManager extends Manager implements Runnable {
     
     @Override
     public int callbackAnswer(int id, int idx, DpIdentifierVar dpid, Variable var) {
-        //Debug.out.log(Level.INFO, "java got answer id={0} idx={1} dpid={2} var={3}", new Object[]{id, idx, dpid, var});
+        //JDebug.out.log(Level.INFO, "java got answer id={0} idx={1} dpid={2} var={3}", new Object[]{id, idx, dpid, var});
         JHotLinkWaitForAnswer hdl;
         hdl = hotlinkList.get(id);
  
-        //Debug.out.log(Level.INFO, "java found answer id={0} idx={1} dpid={2} var={3} hdl={4}", new Object[]{id, idx, dpid, var, hdl});
+        //JDebug.out.log(Level.INFO, "java found answer id={0} idx={1} dpid={2} var={3} hdl={4}", new Object[]{id, idx, dpid, var, hdl});
 
         if (hdl != null) {                      
             //threadPool.execute(ForkJoinTask.adapt(()->{
@@ -316,11 +316,11 @@ public class JManager extends Manager implements Runnable {
     
     @Override
     public int callbackHotlink(int id, int idx, DpIdentifierVar dpid, Variable var) {
-        //Debug.out.log(Level.INFO, "java got hotlink id={0} idx={1} dpid={2} var={3}", new Object[]{id, idx, dpid, var});
+        //JDebug.out.log(Level.INFO, "java got hotlink id={0} idx={1} dpid={2} var={3}", new Object[]{id, idx, dpid, var});
         JHotLinkWaitForAnswer hdl;
         hdl = hotlinkList.get(id);
         
-        //Debug.out.log(Level.INFO, "java found hotlink id={0} idx={1} dpid={2} var={3} hdl={4}", new Object[]{id, idx, dpid, var, hdl});
+        //JDebug.out.log(Level.INFO, "java found hotlink id={0} idx={1} dpid={2} var={3} hdl={4}", new Object[]{id, idx, dpid, var, hdl});
 
         if (hdl != null) {
             //threadPool.execute(ForkJoinTask.adapt(()->{
@@ -346,10 +346,10 @@ public class JManager extends Manager implements Runnable {
     @Override
     public boolean doReceiveSysMsg(long cPtrSysMsg) {
 //        SysMsg msg = new SysMsg(cPtrSysMsg);
-//        Debug.out.info("------------SYSMSG DEBUG BEGIN-------------------------");
-//        Debug.out.log(Level.INFO, "isA => {0}", msg.isA());        
-//        Debug.out.info(msg.toDebug(99));
-//        Debug.out.info("------------SYSMSG DEBUG END  -------------------------");   
+//        JDebug.out.info("------------SYSMSG DEBUG BEGIN-------------------------");
+//        JDebug.out.log(Level.INFO, "isA => {0}", msg.isA());
+//        JDebug.out.info(msg.toDebug(99));
+//        JDebug.out.info("------------SYSMSG DEBUG END  -------------------------");
         this.apiDoReceiveSysMsg(cPtrSysMsg);
         return true;
     }
@@ -357,10 +357,10 @@ public class JManager extends Manager implements Runnable {
     @Override
     public boolean doReceiveDpMsg(long cPtrDpMsg) {
 //        DpMsg msg = new DpMsg(cPtrDpMsg);
-//        Debug.out.info("------------DPMSG DEBUG BEGIN-------------------------");
-//        Debug.out.log(Level.INFO, "isA => {0}", msg.isA());        
-//        Debug.out.info(msg.toDebug(99));
-//        Debug.out.info("------------DPMSG DEBUG END  -------------------------");          
+//        JDebug.out.info("------------DPMSG DEBUG BEGIN-------------------------");
+//        JDebug.out.log(Level.INFO, "isA => {0}", msg.isA());
+//        JDebug.out.info(msg.toDebug(99));
+//        JDebug.out.info("------------DPMSG DEBUG END  -------------------------");
         this.apiDoReceiveDpMsg(cPtrDpMsg);
         return true;
     }

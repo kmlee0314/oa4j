@@ -7,7 +7,7 @@ import at.rocworks.oa4j.base.JDpHLGroup;
 import at.rocworks.oa4j.base.JDpVCItem;
 import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.Variable;
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 import java.util.logging.Level;
 
 /*
@@ -31,7 +31,7 @@ public class ApiTestAlertConnect {
     }
     
     public void run() throws InterruptedException {        
-        Debug.out.info("alertConnect...");           
+        JDebug.out.info("alertConnect...");
         
         JAlertConnect conn = JClient.alertConnect()
                 .add(":_alert_hdl.._system_time")
@@ -65,20 +65,20 @@ public class ApiTestAlertConnect {
                 .add(":_alert_hdl.._value")
                 .add(":_alert_hdl.._visible" )
                 .action((JDpHLGroup hotlink) -> {
-                    Debug.out.info("--- HOTLINK BEG ---");
+                    JDebug.out.info("--- HOTLINK BEG ---");
                     hotlink.getItems().forEach((JDpVCItem vc)->{
                         Variable var = vc.getVariable();
-                        Debug.out.log(Level.INFO, "{0}: {1} [{2}]", new Object[]{vc.getDpName(), var.formatValue(), var.isA()});
+                        JDebug.out.log(Level.INFO, "{0}: {1} [{2}]", new Object[]{vc.getDpName(), var.formatValue(), var.isA()});
                     });
-                    //Debug.out.info(hotlink.toString());
-                    Debug.out.info("--- HOTLINK END ---");                    
+                    //JDebug.out.info(hotlink.toString());
+                    JDebug.out.info("--- HOTLINK END ---");
                 })
                 .connect();
         
-        Debug.out.info("sleep...");
+        JDebug.out.info("sleep...");
         Thread.sleep(1000*60*60);
-        Debug.out.info("done");
+        JDebug.out.info("done");
         conn.disconnect();
-        Debug.out.info("end");   
+        JDebug.out.info("end");
     }              
 }

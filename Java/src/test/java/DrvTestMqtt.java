@@ -5,7 +5,7 @@ import at.rocworks.oa4j.driver.JTransFloatVarJson;
 import at.rocworks.oa4j.driver.JTransIntegerVarJson;
 import at.rocworks.oa4j.driver.JTransTextVar;
 import at.rocworks.oa4j.jni.Transformation;
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 import java.util.logging.Level;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -34,43 +34,12 @@ public class DrvTestMqtt {
     public void start(String[] args) {       
         try {
             MyDriver driver = new MyDriver(args);
-
-            Debug.setOutput(driver.getLogDir()+"/"+driver.getManName());
-            Debug.setLevel(Level.INFO);        
-
-            driver.startup();             
-        //simInputData(driver);
+            JDebug.setLevel(Level.INFO);
+            driver.startup();
         } catch ( Exception ex ) {
-            Debug.StackTrace(Level.SEVERE, ex);
+            JDebug.StackTrace(Level.SEVERE, ex);
         }
     }
-    
-//    public void simInputData(MyDriver driver) {
-//        // test input in a loop
-//        new Thread(()->{
-//            Integer i=0;
-//            while ( true ) {
-//                if ( driver.readQueue.size() > 10 ) {
-//                    try {
-//                        //Debug.out.warning("Input queue size > 10!");
-//                        Thread.sleep(100);
-//                    } catch (InterruptedException ex) {
-//                        Logger.getLogger(MqttDriver.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-//                } else {
-//                    JDriverItemCollection block=new JDriverItemCollection(100);                
-//                    for ( int j=1; j<=block.getSize(); j++) {
-//                        JDriverItem item = new JDriverItem();
-//                        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
-//                        buffer.putInt(++i);
-//                        item.fromBytesDataOnly(buffer.array());
-//                        block.addItem(item);                
-//                    }
-//                    driver.readQueue.add(block);                              
-//                }
-//            }
-//        }).start();        
-//    }           
     
     public class MyDriver extends JDriverSimple {         
 
@@ -102,7 +71,7 @@ public class DrvTestMqtt {
                 case 1002:
                     return new JTransFloatVarJson(name, type);
                 default:
-                    Debug.out.log(Level.WARNING, "unhandled transformation type {0} for {1}", new Object[]{type, name});
+                    JDebug.out.log(Level.WARNING, "unhandled transformation type {0} for {1}", new Object[]{type, name});
                     return null;
             }
         }        
@@ -110,58 +79,25 @@ public class DrvTestMqtt {
         @Override
         public boolean start() {
             try {
-                Debug.out.log(Level.INFO, "connect to mqtt...{0}", System.getProperty("java.io.tmpdir"));
+                JDebug.out.log(Level.INFO, "connect to mqtt...{0}", System.getProperty("java.io.tmpdir"));
                 MqttDefaultFilePersistence dataStore = new MqttDefaultFilePersistence(System.getProperty("java.io.tmpdir"));                           
                 mqtt = new MqttClient(url, cid, dataStore);
                
                 // receive values
                 mqtt.setCallback(new MqttCallbackImpl());
                                 
-                // connect
+                // connect to mqtt
                 MqttConnectOptions options  = new MqttConnectOptions();     
                 options.setAutomaticReconnect(true);
-                mqtt.connect(options); 
-                Debug.out.info("connect to mqtt...done");                                                                              
-                
-                // -------------------------------------------------------------
-                // send values
-//                new Thread(()->processOutput()).start();                   
+                mqtt.connect(options);
+                JDebug.out.info("connect to mqtt...done");
                 
                 return super.start();
             } catch (MqttException ex) {
-                Debug.StackTrace(Level.SEVERE, ex);
+                JDebug.StackTrace(Level.SEVERE, ex);
                 return false;
             }
-        }                
-
-//        private void processOutput() {
-//            while (true) {
-//                try {
-//                    JDriverItemList data;
-//                    peekOutputBlock();
-//                    if (!mqtt.isConnected()) {
-//                        Debug.out.warning("mqtt writer: not connected!");
-//                        continue;
-//                    }
-//                    data=takeOutputBlock();
-//                    
-//                    if ( data != null ) {
-//                        JDriverItem item;
-//                        while ((item=data.getNextItem())!=null) {
-//                            MqttMessage message = new MqttMessage(item.getData());
-//                            try {
-//                                //Debug.out.info("publish "+item.toString());
-//                                mqtt.publish(item.getName(), message);
-//                            } catch (MqttException ex) {
-//                                Debug.StackTrace(Level.SEVERE, ex);
-//                            }
-//                        }
-//                    }
-//                } catch (InterruptedException ex) {
-//                    Debug.StackTrace(Level.SEVERE, ex);
-//                }
-//            }
-//        }
+        }
         
         @Override
         public void sendOutputBlock(JDriverItemList data) {
@@ -169,34 +105,34 @@ public class DrvTestMqtt {
             while ((item=data.pollFirst())!=null) {
                 MqttMessage message = new MqttMessage(item.getData());
                 try {
-                    //Debug.out.info("publish "+item.toString());
+                    //JDebug.out.info("publish "+item.toString());
                     mqtt.publish(item.getName(), message);
                 } catch (MqttException ex) {
-                    Debug.StackTrace(Level.SEVERE, ex);
+                    JDebug.StackTrace(Level.SEVERE, ex);
                 }
             }        
         }        
 
         @Override
         public void stop() {
-            Debug.out.info("disconnect to mqtt...");
+            JDebug.out.info("disconnect to mqtt...");
             try {
                 mqtt.disconnect();
             } catch (MqttException ex) {
-                Debug.StackTrace(Level.SEVERE, ex);
+                JDebug.StackTrace(Level.SEVERE, ex);
             }
-            Debug.out.info("disconnect to mqtt...done");
+            JDebug.out.info("disconnect to mqtt...done");
         }                                                             
         
         @Override
         public boolean attachInput(String addr) {
             if ( mqtt != null && mqtt.isConnected() ) {
                 try {
-                    Debug.out.log(Level.INFO, "attachInput addr={0} ... subscribe", new Object[]{addr});
+                    JDebug.out.log(Level.INFO, "attachInput addr={0} ... subscribe", new Object[]{addr});
                     mqtt.subscribe(addr);
                     return true;
                 } catch (MqttException ex) {
-                    Debug.StackTrace(Level.SEVERE, ex);
+                    JDebug.StackTrace(Level.SEVERE, ex);
                     return false;
                 }
             } else {
@@ -208,11 +144,11 @@ public class DrvTestMqtt {
         public boolean detachInput(String addr) {
             if ( mqtt != null && mqtt.isConnected() ) {
                 try {
-                    Debug.out.log(Level.INFO, "detachInput addr={0} ... unsubscribe", new Object[]{addr});                                
+                    JDebug.out.log(Level.INFO, "detachInput addr={0} ... unsubscribe", new Object[]{addr});
                     mqtt.unsubscribe(addr);
                     return true;
                 } catch (MqttException ex) {
-                    Debug.StackTrace(Level.SEVERE, ex);
+                    JDebug.StackTrace(Level.SEVERE, ex);
                     return false;
                 }
             } else {
@@ -223,7 +159,7 @@ public class DrvTestMqtt {
         @Override
         public boolean attachOutput(String addr) {
             if ( mqtt != null && mqtt.isConnected() ) {
-                Debug.out.log(Level.INFO, "attachOutput addr={0} ... subscribe", new Object[]{addr});
+                JDebug.out.log(Level.INFO, "attachOutput addr={0} ... subscribe", new Object[]{addr});
                 return true;
             } else {
                 return false;
@@ -233,7 +169,7 @@ public class DrvTestMqtt {
         @Override
         public boolean detachOutput(String addr) {
             if ( mqtt != null && mqtt.isConnected() ) {
-                Debug.out.log(Level.INFO, "detachOutput addr={0} ... unsubscribe", new Object[]{addr});
+                JDebug.out.log(Level.INFO, "detachOutput addr={0} ... unsubscribe", new Object[]{addr});
                 return true;
             } else {
                 return false;
@@ -247,16 +183,16 @@ public class DrvTestMqtt {
 
             @Override
             public void connectionLost(Throwable thrwbl) {
-                Debug.out.info("mqtt connection lost");
+                JDebug.out.info("mqtt connection lost");
                 lostAllAddresses();
             }
 
             @Override
             public void messageArrived(String tag, MqttMessage mm) throws Exception {
-                //Debug.out.log(Level.INFO, "{0} => {1}", new Object[]{tag, new String(mm.getPayload())});
+                //JDebug.out.log(Level.INFO, "{0} => {1}", new Object[]{tag, new String(mm.getPayload())});
                 JDriverItem item = new JDriverItem(tag, mm.getPayload());
                 sendInputBlock(new JDriverItemList(item));
-                //Debug.out.log(Level.INFO, "{0} => done", new Object[]{tag});
+                //JDebug.out.log(Level.INFO, "{0} => done", new Object[]{tag});
                 
             }
 
@@ -266,7 +202,7 @@ public class DrvTestMqtt {
 
             @Override
             public void connectComplete(boolean reconnect, String url) {
-                Debug.out.info("mqtt connection complete reconnect="+reconnect+" url="+url);
+                JDebug.out.info("mqtt connection complete reconnect="+reconnect+" url="+url);
                 if (reconnect) {
                     attachAddresses();
                 }

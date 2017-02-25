@@ -1,5 +1,5 @@
 import at.rocworks.oa4j.jni.ExternHdlFunction;
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 import at.rocworks.oa4j.var.DynVar;
 import at.rocworks.oa4j.var.IntegerVar;
 import at.rocworks.oa4j.var.TextVar;
@@ -22,9 +22,9 @@ public class ApiTestExternHdl extends ExternHdlFunction {
      */
     @Override
     public DynVar execute(TextVar function, DynVar parameter) {
-        Debug.out.log(Level.INFO, "execute function={0} parameter={1}", new Object[] { function, parameter.formatValue() });
+        JDebug.out.log(Level.INFO, "execute function={0} parameter={1}", new Object[] { function, parameter.formatValue() });
         if (function.equals("TestDpTest")) {
-            Debug.out.info(function.toString());
+            JDebug.out.info(function.toString());
             callback("jEvalScript",
                     new DynVar(new TextVar("main() { dpSet($1, $2); }"),
                             new DynVar(
@@ -32,14 +32,14 @@ public class ApiTestExternHdl extends ExternHdlFunction {
                                     new TextVar("$2:0")),
                             new DynVar()));
         } else if (function.equals("NestedCall")) {
-                Debug.out.info(function.toString());
+                JDebug.out.info(function.toString());
                 TextVar script=new TextVar(
                         "main() { dyn_anytype out;"+
                         "int ret = javaCallAsync(\"ApiTestExternHdl\", \"Inside\", makeDynString(\"inside!\"), out);"+
                         "}");
                 callback("jEvalScript", new DynVar(script, new DynVar(), new DynVar()));
         } else {
-            Debug.out.info("unhandled: "+function.toString());
+            JDebug.out.info("unhandled: "+function.toString());
         }
 
 

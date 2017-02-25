@@ -1,6 +1,6 @@
 package at.rocworks.oa4j.jni;
 
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 import at.rocworks.oa4j.var.DynVar;
 import at.rocworks.oa4j.var.TextVar;
 import at.rocworks.oa4j.var.Variable;
@@ -28,7 +28,7 @@ abstract public class ExternHdlFunction implements Runnable {
      * @param parameter Parameters which will be passed to execute function
      */
     public void start(TextVar function, DynVar parameter) {
-        //Debug.out.log(Level.INFO, "start function={0} parameter={1}", new Object[] { function, parameter.formatValue() });
+        //JDebug.out.log(Level.INFO, "start function={0} parameter={1}", new Object[] { function, parameter.formatValue() });
 
         this.function=function;
         this.parameter=parameter;
@@ -84,7 +84,7 @@ abstract public class ExternHdlFunction implements Runnable {
         try {
             addResult(execute(function, parameter));
         } catch (Exception ex) {
-            Debug.StackTrace(Level.SEVERE, ex);
+            JDebug.StackTrace(Level.SEVERE, ex);
         }
         done = true;
     }

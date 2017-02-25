@@ -5,8 +5,6 @@
  */
 package at.rocworks.oa4j.base;
 
-import at.rocworks.oa4j.utils.Debug;
-import at.rocworks.oa4j.utils.SemaphoreDigital;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 
@@ -29,7 +27,7 @@ public abstract class JHotLinkWaitForAnswer implements Runnable {
     protected IAnswer cbAnswer;
     protected IHotLink cbHotlink;            
     
-    protected final SemaphoreDigital gotAnswer = new SemaphoreDigital(false);    
+    protected final JSemaphore gotAnswer = new JSemaphore(false);
     
     // async
     private boolean async = false;    
@@ -181,7 +179,7 @@ public abstract class JHotLinkWaitForAnswer implements Runnable {
         try {
             msgQueue.add(this.message);
         } catch ( IllegalStateException ex ) { // Queue Full
-            Debug.StackTrace(Level.SEVERE, ex);
+            JDebug.StackTrace(Level.SEVERE, ex);
         }    
     }
     
@@ -189,7 +187,7 @@ public abstract class JHotLinkWaitForAnswer implements Runnable {
     public void run() {
         try {        
             while (true) {
-                //Debug.out.log(Level.INFO, "run queue wait...");
+                //JDebug.out.log(Level.INFO, "run queue wait...");
                 JDpVCGroup msg;
                     msg = msgQueue.take();
                     if (msg instanceof JDpMsgAnswer) { 
@@ -200,13 +198,13 @@ public abstract class JHotLinkWaitForAnswer implements Runnable {
                         try {
                             hotlink((JDpHLGroup) msg);
                         } catch (Exception ex) {
-                            Debug.StackTrace(Level.SEVERE, ex);
+                            JDebug.StackTrace(Level.SEVERE, ex);
                         }
                     }                
             }
         } catch (InterruptedException ex) {
-            //Debug.out.log(Level.INFO, "run thread interrupted!");
+            //JDebug.out.log(Level.INFO, "run thread interrupted!");
         }                    
-        //Debug.out.log(Level.INFO, "run thread ended!");
+        //JDebug.out.log(Level.INFO, "run thread ended!");
     }
 }

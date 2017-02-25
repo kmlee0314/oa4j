@@ -66,12 +66,12 @@ public class TimeVar extends Variable {
     }       
     
     public TimeVar getLocalTime() {
-        //Debug.out.info("time="+this.toString()+" offset="+tz.getRawOffset()+" savings="+tz.getDSTSavings()+ " in="+tz.inDaylightTime(this.value) );
+        //JDebug.out.info("time="+this.toString()+" offset="+tz.getRawOffset()+" savings="+tz.getDSTSavings()+ " in="+tz.inDaylightTime(this.value) );
         return new TimeVar(new Date(this.getTime() + tz.getRawOffset() + (tz.inDaylightTime(this.value) ? tz.getDSTSavings() :0)));        
     }
     
     public TimeVar getUTCTime() {
-        //Debug.out.info("time="+this.toString()+" offset="+tz.getRawOffset()+" savings="+tz.getDSTSavings()+ " in="+tz.inDaylightTime(this.value) );        
+        //JDebug.out.info("time="+this.toString()+" offset="+tz.getRawOffset()+" savings="+tz.getDSTSavings()+ " in="+tz.inDaylightTime(this.value) );
         return new TimeVar(new Date(this.getTime() - tz.getRawOffset() - (tz.inDaylightTime(this.value) ? tz.getDSTSavings() :0)));        
     }
 }

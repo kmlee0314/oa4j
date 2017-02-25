@@ -10,7 +10,7 @@ import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.DynVar;
 import at.rocworks.oa4j.var.TimeVar;
 import at.rocworks.oa4j.var.Variable;
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 import java.util.Date;
 import java.util.logging.Level;
 
@@ -46,12 +46,12 @@ public class ApiTestDpQueryConnect {
     
     
     public void run() throws InterruptedException {        
-        Debug.out.info("dpQueryConnect...");
+        JDebug.out.info("dpQueryConnect...");
         JDpQueryConnect conn = JClient.dpQueryConnectSingle("SELECT '_online.._value','_online.._stime' FROM 'Epics_*.Input'")
                 .action((JDpMsgAnswer answer)->{
-//                    Debug.out.info("--- ANSWER BEG ---");
-//                    Debug.out.info(answer.toString());
-//                    Debug.out.info("--- ANSWER END ---");
+//                    JDebug.out.info("--- ANSWER BEG ---");
+//                    JDebug.out.info(answer.toString());
+//                    JDebug.out.info("--- ANSWER END ---");
                     
                 })
                 .action((JDpHLGroup hotlink)->{                
@@ -60,11 +60,11 @@ public class ApiTestDpQueryConnect {
                 })
                 .connect();
         
-        Debug.out.info("sleep...");
+        JDebug.out.info("sleep...");
         Thread.sleep(1000*10);
-        Debug.out.info("done");
+        JDebug.out.info("done");
         conn.disconnect();
-        Debug.out.info("end");   
+        JDebug.out.info("end");
         Thread.sleep(1000*10);        
     }              
     
@@ -77,7 +77,7 @@ public class ApiTestDpQueryConnect {
             t2=new Date();
             long ms;
             if ( (ms=t2.getTime()-t1.getTime()) >= 1000 && c.value > 0) {
-                Debug.out.log(Level.INFO, "v/s: {0}", c.value/(ms/1000));
+                JDebug.out.log(Level.INFO, "v/s: {0}", c.value/(ms/1000));
                 t1=t2;
                 c.value=0;
             }
@@ -85,7 +85,7 @@ public class ApiTestDpQueryConnect {
     }
 
     private void printHotlink(JDpHLGroup hotlink) {
-        Debug.out.log(Level.INFO, "--- HOTLINK BEG --- {0}", hotlink.getNumberOfItems());
+        JDebug.out.log(Level.INFO, "--- HOTLINK BEG --- {0}", hotlink.getNumberOfItems());
         // first item is the header, it is a dyn of the selected attributes
         if ( hotlink.getNumberOfItems() > 0 ) {
             // second item contains the result data
@@ -107,9 +107,9 @@ public class ApiTestDpQueryConnect {
                 Variable value = row.get(1);          // column one is the first colum '_online.._value'
                 TimeVar stime = (TimeVar) row.get(2); // column two is the second colum '_online.._stime'
                 
-                Debug.out.log(Level.INFO, "dp={0} value={1} stime={2}", new Object[]{dp, value.toString(), stime.toString()});
+                JDebug.out.log(Level.INFO, "dp={0} value={1} stime={2}", new Object[]{dp, value.toString(), stime.toString()});
             }
         }
-        Debug.out.log(Level.INFO, "--- HOTLINK END --- ");
+        JDebug.out.log(Level.INFO, "--- HOTLINK END --- ");
     }
 }

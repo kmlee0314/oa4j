@@ -10,7 +10,7 @@ import at.rocworks.oa4j.var.TimeVar;
 import at.rocworks.oa4j.base.JDpAttrAddrDirection;
 import at.rocworks.oa4j.jni.Transformation;
 import at.rocworks.oa4j.var.DpIdentifierVar;
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -105,7 +105,7 @@ public abstract class JDriverSimple extends JDriver {
                 outputCounter=0;
                 droppedInputItems=0;
                 t1=t2;
-                Debug.out.log(Level.INFO, "v/s in: {0} ({1}) out: {2} | queue in: {3} ({4}) out: {5} | time in: {6} out: {7}", 
+                JDebug.out.log(Level.INFO, "v/s in: {0} ({1}) out: {2} | queue in: {3} ({4}) out: {5} | time in: {6} out: {7}",
                         new Object[]{inputPerformance, inputPerformanceDropped, outputPerformance, 
                             inputQueue.size(), droppedInputBlocks, outputQueue.size(),
                             fmt.format(inputLastWorkTime), fmt.format(outputLastWorkTime),
@@ -123,7 +123,7 @@ public abstract class JDriverSimple extends JDriver {
             case 1001: return new JTransIntegerVar(name, type); 
             case 1002: return new JTransFloatVar(name, type); 
             default: 
-                Debug.out.log(Level.WARNING, "unhandled transformation type {0} for {1}", new Object[]{type, name});
+                JDebug.out.log(Level.WARNING, "unhandled transformation type {0} for {1}", new Object[]{type, name});
                 return null;
         }        
     }
@@ -165,7 +165,7 @@ public abstract class JDriverSimple extends JDriver {
 
     @Override
     public boolean writeData(String address, int trans, byte[] data, int subix, TimeVar time) {
-        //Debug.out.log(Level.INFO, "writeData: address={0} subix={1} orgTime={2} data={3} dlen={4}", new Object[]{address, subix, time.getTime(), data, data.length});      
+        //JDebug.out.log(Level.INFO, "writeData: address={0} subix={1} orgTime={2} data={3} dlen={4}", new Object[]{address, subix, time.getTime(), data, data.length});
         outputCounter++;
         outputLastWorkTime=new Date();
         currentOutput.addItem(newOutputItem(address, trans, data, time.getValue()));
@@ -175,10 +175,10 @@ public abstract class JDriverSimple extends JDriver {
     @Override
     public void flushHW() {
         try {
-            //Debug.out.log(Level.INFO, "flushHW "+currentOutput.getSize());  
+            //JDebug.out.log(Level.INFO, "flushHW "+currentOutput.getSize());
             outputQueue.add(currentOutput);
         } catch (IllegalStateException ex) { // Queue Full
-            Debug.StackTrace(Level.SEVERE, ex);
+            JDebug.StackTrace(Level.SEVERE, ex);
         }
         currentOutput=new JDriverItemList();
     }
@@ -231,7 +231,7 @@ public abstract class JDriverSimple extends JDriver {
     public abstract void sendOutputBlock(JDriverItemList data);
 
     public void attachAddresses() {
-        Debug.out.info("attachAddresses");
+        JDebug.out.info("attachAddresses");
         addrInPending.forEach((addr, count)->{
             if ( count > 0 ) {
                 handleAttachAddr(addrInAttached, addr, this::attachInput, count);
@@ -261,7 +261,7 @@ public abstract class JDriverSimple extends JDriver {
     @Override
     public void addDpPa(DpIdentifierVar dpid, String addr, JDpAttrAddrDirection direction) {
         try {
-            //Debug.out.log(Level.INFO, "addDpPa dpid={0} addr={1} direction={2}", new Object[]{dpid, addr, direction});        
+            //JDebug.out.log(Level.INFO, "addDpPa dpid={0} addr={1} direction={2}", new Object[]{dpid, addr, direction});
             switch (direction) {
             case INPUT_SPONT:
                 if (!handleAttachAddr(addrInAttached, addr, this::attachInput, 1))
@@ -273,14 +273,14 @@ public abstract class JDriverSimple extends JDriver {
                 break;
             }
         } catch (Exception ex) {
-            Debug.StackTrace(Level.SEVERE, ex);
+            JDebug.StackTrace(Level.SEVERE, ex);
         }                        
     }
 
     @Override
     public void clrDpPa(DpIdentifierVar dpid, String addr, JDpAttrAddrDirection direction) {
         try {
-            //Debug.out.log(Level.INFO, "clrDpPa dpid={0} addr={1} direction={2}", new Object[]{dpid, addr, direction});
+            //JDebug.out.log(Level.INFO, "clrDpPa dpid={0} addr={1} direction={2}", new Object[]{dpid, addr, direction});
             switch (direction) {
             case INPUT_SPONT:
                 if (!handleDetachAddr(addrInAttached, addr, this::detachInput, 1)) 
@@ -291,9 +291,9 @@ public abstract class JDriverSimple extends JDriver {
                     addrOutPending.put(addr, addrOutPending.getOrDefault(addr, 0)-1);                
                 break;              
             }
-            //Debug.out.log(Level.INFO, "clrDpPa {0} {1} ... done", new Object[]{dpid, addr});
+            //JDebug.out.log(Level.INFO, "clrDpPa {0} {1} ... done", new Object[]{dpid, addr});
         } catch (Exception ex) {
-            Debug.StackTrace(Level.SEVERE, ex);
+            JDebug.StackTrace(Level.SEVERE, ex);
         }              
     }    
 
@@ -321,15 +321,15 @@ public abstract class JDriverSimple extends JDriver {
                 try {
                     if ( updateAddressUsage(addr, count) && attach.apply(addr) ) {
                         pool.put(addr, count);
-                        //Debug.out.log(Level.INFO, "handleAttachAddr addr={0} ... connected", new Object[]{addr});
+                        //JDebug.out.log(Level.INFO, "handleAttachAddr addr={0} ... connected", new Object[]{addr});
                         done=true;
                     } 
                 } catch (Exception ex) {
-                    Debug.StackTrace(Level.SEVERE, ex);
+                    JDebug.StackTrace(Level.SEVERE, ex);
                 }
             } else {
                 pool.put(addr, c+count);
-                //Debug.out.log(Level.INFO, "handleAttachAddr addr={0} ... connect count={1}", new Object[]{addr, c+count});
+                //JDebug.out.log(Level.INFO, "handleAttachAddr addr={0} ... connect count={1}", new Object[]{addr, c+count});
                 done=true;
             }
             return done;
@@ -345,22 +345,22 @@ public abstract class JDriverSimple extends JDriver {
                 done=true;
             } else if ( c==0 ) {
                 pool.remove(addr);
-                //Debug.out.log(Level.INFO, "clrDpPa addr={0} ... removed", new Object[]{addr});
+                //JDebug.out.log(Level.INFO, "clrDpPa addr={0} ... removed", new Object[]{addr});
                 done=true;
             } else if ( c-count<=0 ) {
                 try {
                     if ( detach.apply(addr) ) {
                         pool.remove(addr);
-                        //Debug.out.log(Level.INFO, "clrDpPa addr={0} ... disconnected", new Object[]{addr});
+                        //JDebug.out.log(Level.INFO, "clrDpPa addr={0} ... disconnected", new Object[]{addr});
                         done=true;
                     } 
                 } catch (Exception ex) {
-                    Debug.StackTrace(Level.SEVERE, ex);
+                    JDebug.StackTrace(Level.SEVERE, ex);
                 }
             }
             else { // c>0
                 pool.put(addr, -count);
-                //Debug.out.log(Level.INFO, "clrDpPa addr={0} ... connect count={1}", new Object[]{addr, c});
+                //JDebug.out.log(Level.INFO, "clrDpPa addr={0} ... connect count={1}", new Object[]{addr, c});
                 done=true;
             }
             if (done) {

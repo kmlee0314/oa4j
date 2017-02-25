@@ -5,7 +5,7 @@
  */
 package at.rocworks.oa4j.driver;
 
-import at.rocworks.oa4j.utils.Debug;
+import at.rocworks.oa4j.base.JDebug;
 import at.rocworks.oa4j.var.IntegerVar;
 import at.rocworks.oa4j.var.Variable;
 import at.rocworks.oa4j.var.VariableType;
@@ -43,17 +43,17 @@ public class JTransIntegerVar extends JTransBaseVar {
     @Override
     public byte[] toPeriph(int dlen, Variable var, int subix) {
         try {
-//            Debug.out.log(Level.INFO, "toPeriph: dlen={0} var={1} subindex={2}", new Object[]{dlen, var.formatValue(), subix});
-            //Debug.sleep(100);
+//            JDebug.out.log(Level.INFO, "toPeriph: dlen={0} var={1} subindex={2}", new Object[]{dlen, var.formatValue(), subix});
+            //JDebug.sleep(100);
             if ( var.getIntegerVar() == null ) {
-                Debug.out.log(Level.WARNING, "toPeriph: Variable has no {0} value!", new Object[]{getVariableType().toString()});
+                JDebug.out.log(Level.WARNING, "toPeriph: Variable has no {0} value!", new Object[]{getVariableType().toString()});
                 return null;
             } else {
                 Integer val = var.getIntegerVar().getValue();
                 return toPeriph_(val);
             }
         } catch ( Exception ex) {
-            Debug.StackTrace(Level.SEVERE, ex);
+            JDebug.StackTrace(Level.SEVERE, ex);
             return null;
         }
     }   
@@ -61,14 +61,14 @@ public class JTransIntegerVar extends JTransBaseVar {
     @Override
     public Variable toVar(byte[] data, int dlen, int subix) {       
         try {                        
-//            Debug.out.log(Level.INFO, "toVar: data={0} dlen={1} subindex={2}", new Object[]{data.toString(), dlen, subix});
-//            Debug.sleep(100);
+//            JDebug.out.log(Level.INFO, "toVar: data={0} dlen={1} subindex={2}", new Object[]{data.toString(), dlen, subix});
+//            JDebug.sleep(100);
             Integer val = toVal_(data);
             IntegerVar var = new IntegerVar(val);
-//            Debug.out.log(Level.INFO, "toVar: data={0}", val);            
+//            JDebug.out.log(Level.INFO, "toVar: data={0}", val);
             return var;
         } catch ( Exception ex) {
-            Debug.StackTrace(Level.SEVERE, ex);
+            JDebug.StackTrace(Level.SEVERE, ex);
             return null;
         }        
     }

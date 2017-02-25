@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.rocworks.oa4j.utils;
+package at.rocworks.oa4j.base;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,21 +14,21 @@ import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
-import java.util.logging.LogRecord; 
+import java.util.logging.LogRecord;
 
 /**
  *
  * @author vogler
  */
-public class Debug {    
+public class JDebug {
     
-    public static final java.util.logging.Logger out = java.util.logging.Logger.getLogger(Debug.class.getName());
+    public static final java.util.logging.Logger out = java.util.logging.Logger.getLogger(JDebug.class.getName());
     public static final String fmtDate = "yyyy.MM.dd HH:mm:ss.SSS";
 
     private static class LogFormatter extends Formatter {
         @Override
         public String format(LogRecord record) {
-            SimpleDateFormat fmt = new SimpleDateFormat(Debug.fmtDate);
+            SimpleDateFormat fmt = new SimpleDateFormat(JDebug.fmtDate);
             String formattedMessage = formatMessage(record);
             return fmt.format(new Date()) + " " + String.format("%-60s %-7s", record.getSourceClassName() + "." + record.getSourceMethodName(), record.getLevel()) + ": " + formattedMessage + "\n";
         }
@@ -48,7 +48,7 @@ public class Debug {
     }    
     
     public static void setLevel(Level level) {
-        Debug.out.setLevel(level);
+        JDebug.out.setLevel(level);
     }    
     
     public static void StackTrace(Level level, Exception ex) {
@@ -56,7 +56,7 @@ public class Debug {
         for (StackTraceElement ste : ex.getStackTrace()) {
                 trace += "  " + ste.getClassName() + "." + ste.getMethodName() + ":" + ste.getLineNumber()+"\n";
         }
-        Debug.out.log(level, trace);
+        JDebug.out.log(level, trace);
     }    
     
     public static void StackTrace(Level level, String msg) {
@@ -64,14 +64,14 @@ public class Debug {
         for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
                 trace += "  " + ste.getClassName() + "." + ste.getMethodName() + ":" + ste.getLineNumber()+"\n";
         }
-        Debug.out.log(level, trace);
+        JDebug.out.log(level, trace);
     }        
     
     public static void sleep(int ms) {
         try {
             Thread.sleep(ms);
         } catch (InterruptedException ex) {
-            Debug.StackTrace(Level.SEVERE, ex);
+            JDebug.StackTrace(Level.SEVERE, ex);
         }
     }    
 }

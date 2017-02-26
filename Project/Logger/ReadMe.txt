@@ -1,42 +1,47 @@
-1) Java 8+ JRE must be installed
-   http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html
+This example is for MongoDB, but can be applied to other database backends. In that example we will 
+use a Frontend and a Backend manager. The Frontend manager will collect the values from WinCC OA by
+simple dpQueryConnects (which can be configured in the frontend.config file, also multiple connects
+and be definied). It will pack single value changes to blocks and offer that blocks by ZeroMQ to 
+Backend managers. The Backend manager(s) will get the blocks from ZeroMQ from the Frontend and will
+write the values to the database. Multiple Backend managers can be connected to one single Frontend
+manager. The Backend manager can buffer values and also store it on disk if there are too many blocks
+which cannot be written to the database (database to slow or down for some reason). 
 
-2) Add the path to the jvm.dll of your Java installation to the PATH environment variable 
-   e.g. PATH=C:\Program Files\Java\jre1.8.0_72\bin\server
-   you have to restart the pmon/console afterwards
+                WinCC OA ==> Frontend Manager ==> Backend Manager ==> Database
 
-3) C:\WinCC_OA_Proj\Example\bin + bin_<version>
-   Copy the bins from the "bin" directory to your project bin directory    
-   The files are already pre compiled for the WinCC OA version bin-<version>. 
-   The Manager Sources are compiled as .dll and additionall as .exe which is used by WinCC OA console for java startup
-   (to change the compilation target in Visual Studio go to: Project/Properties, Configuratoin Properties/General, Configuration Type)
+Offering values to ZeroMQ in the Frontend manager can also be replaced by writing values directly 
+to a database. ZeroMQ is one implementation of a "Data Sink", it can also be the Data Sink which 
+is used by the Backend Manager to write values to a database. The advantage of having Frontend and
+Backend managers is that many Backends can be connected to one Frontend manager, WinCC OA will only
+be affected by one manager instead of multiple managers.
 
-4) Copy the config.level file to your project directory (or include this example project as sub directory)
+*) Copy the content of the example project to your project or include the example as a sub project
+   Note: if you add it as a sub project you still have to copy the content of the bin directory, 
+         because Java does not know/care about the WinCC OA project hirarchy. Or set the "userDir"
+         in the WinCC OA config file to the example directory.
 
-5) Add a new manager "WCCOAjava" in the console with the parameter "-class ApiTestDpConnect"
-   or start the java program as a normal java program, see bin/Example.bat
-   (there needs to be a directory "log" below your working directory)
-   The program is connected to "ExampleDP_Trend1." and prints the value to the log.
+*) Configs:
+   - config/config.level => see section java_10 (Frontend) and java_11 (Backend MongoDB)
+   - config/frontend.config
+   - config/backend-MongoDB.config => set the mongodb.server.0.url to your MongoDB instance
 
-*) If you get a message "MSVCR100.dll is missing", then you need to install
-   Microsoft Visual C++ 2010 SP1 Redistributable Package (x64)
-   http://www.microsoft.com/en-us/download/details.aspx?id=13523
+*) Start Frontend Manager
+   WCCOAjava        | manual |      30 |        2 |        2 |-num 10 -c at/rocworks/oa4j/logger/logger/Frontend -logger config/frontend.config
 
-*) Add the following lines to the WinCC OA message catalouge "managers.cat"
-   WCCOAjava,Java Manager
-   WCCOAjavadrv,Java Driver
+*) Create MongoDB Collection
+    use pvss
+    db.createCollection("events");
+    db.events.createIndex({ts:1});
+    db.events.createIndex({tag:1,ns:1},{unique: true});
+    db.events.createIndex({tag:1,ts:1},{unique: false});  
 
-*) MQTT Example Driver
-   + Import the dplist "dplist\JavaDrv.dpl"
-   + Add a Java Driver to the console with the options:
-     WCCOAjavadrv -num 2 -class DrvTestMqtt -url tcp://<mqtt-host> -cid <client-id>
-   + Create some datapoint and add a peripherial address config "Sample Driver" to it
-     - Reference: e.g. "rpi2/temp" => mqtt tag name
-     - Driver-Number: 2 => the number of your java driver (-num 2)
-     - Transformation: Float => values in mqtt must be stored as a json document "{Value: 5.2132412}"
-     - Subindex: 0 => not used
-     - Direction: Input or Output
-     - Input-Mode: Spontaneous (Polling, Single-Query is not implemented)
-     - Low-Level-Compression: Yes or No
-     - Poll-Group: not used
-     - Active: Yes    
+   Note: ns ... nanoseconds since epoch
+         ts ... json/bson date datatype
+   ns is needed because ts can not store nano seconds
+
+*) Start Backend Manager
+   can be started from the console:
+   WCCOAjava        | manual |      30 |        2 |        2 |-num 11 -c at/rocworks/oa4j/logger/logger/Backend -logger config/backend-mongodb.config
+
+   or the backend can be started as an OA independent program from command line
+   CMD> Backend-MongoDB.bat

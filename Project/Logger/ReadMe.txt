@@ -15,7 +15,7 @@ Offering values to ZeroMQ in the Frontend manager can also be replaced by writin
    - config/backend-MongoDB.config => set the mongodb.server.0.url to your MongoDB instance
 
 *) Start Frontend Manager
-   WCCOAjava        | manual |      30 |        2 |        2 |-num 10 -c at/rocworks/oa4j/logger/logger/Frontend -logger config/frontend.config
+   WCCOAjava -num 10 -c at/rocworks/oa4j/logger/logger/Frontend -logger config/frontend.config
 
 *) Create MongoDB Collection
     use pvss
@@ -30,7 +30,7 @@ Offering values to ZeroMQ in the Frontend manager can also be replaced by writin
 
 *) Start Backend Manager
    can be started from the console:
-   WCCOAjava        | manual |      30 |        2 |        2 |-num 11 -c at/rocworks/oa4j/logger/logger/Backend -logger config/backend-mongodb.config
+   WCCOAjava -num 11 -c at/rocworks/oa4j/logger/logger/Backend -logger config/backend-mongodb.config
 
    or the backend can be started as an OA independent program from command line
    CMD> Backend-MongoDB.bat

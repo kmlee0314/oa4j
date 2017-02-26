@@ -35,7 +35,7 @@ public class JDebug {
     }
 
     public static void setOutput(String filename) throws IOException  {
-        FileHandler fileHandler = new FileHandler(filename+".%g.log", 5242880, 5, true);        
+        FileHandler fileHandler = new FileHandler(filename+".%g.log", 5242880, 5, true);
         fileHandler.setFormatter(new LogFormatter());
         out.addHandler(fileHandler);
         out.setUseParentHandlers(false);        

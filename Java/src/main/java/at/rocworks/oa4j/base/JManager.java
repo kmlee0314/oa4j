@@ -147,20 +147,20 @@ public class JManager extends Manager implements Runnable {
         try {   
             System.loadLibrary("WCCOAjava");
             apiEnabled=true;
-        } catch ( java.lang.UnsatisfiedLinkError ex ) {            
+        } catch ( java.lang.UnsatisfiedLinkError ex ) {
             errmsg=ex.getMessage();
-        }        
-      
-        // Set log file settings
-        try {
-            JDebug.setOutput(getLogFile());
-        } catch (IOException ex) {
-            JDebug.StackTrace(Level.SEVERE, ex);
-        } 
-        
+        }
+
         if ( !apiEnabled ) {
             JDebug.out.warning(errmsg);
-        }        
+        } else {
+            // Set log file settings
+            try {
+                JDebug.setOutput(getLogFile());
+            } catch (IOException ex) {
+                JDebug.StackTrace(Level.SEVERE, ex);
+            }
+        }
 
         return this;
     }    

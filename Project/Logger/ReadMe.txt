@@ -4,6 +4,8 @@ This Data Logger is a write only data logger for the SCADA System WinCC OA to wr
 
 Offering values by ZeroMQ can be replaced by writing values directly to a database. ZeroMQ is just one possible Plugin as Data Sink for the Frontend Manager. Other plugin's, which are also used by the Backend Manager, can be used in the Frontend Manager to write data directly to a database. The advantage of having Frontend and Backend managers is that many Backends can be connected to one Frontend manager, WinCC OA will only be affected by one manager instead of multiple managers.
 
+*) First follow the ReadMe.txt of the example project.
+
 *) Copy the content of the example project to your project or include the example as a sub project
    Note: if you add it as a sub project you still have to copy the content of the bin directory, 
          because Java does not know/care about the WinCC OA project hirarchy. Or set the "userDir"

@@ -37,7 +37,7 @@ public class ApiTestDpNames {
         
         // variant 2
         JDebug.out.info("--- DPNAMES BEG ---");
-        String[] dps2 = JClient.dpNames("*");   
+        String[] dps2 = JClient.dpNames("*.**");
         JDebug.out.log(Level.INFO, "found {0} datapoints.", dps2.length);
         JDebug.out.info("--- DPNAMES END ---");
 

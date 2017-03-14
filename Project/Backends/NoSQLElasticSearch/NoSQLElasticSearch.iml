@@ -62,5 +62,6 @@
     <orderEntry type="library" name="Maven: org.elasticsearch.plugin:lang-mustache-client:5.2.0" level="project" />
     <orderEntry type="library" name="Maven: com.github.spullara.mustache.java:compiler:0.9.3" level="project" />
     <orderEntry type="library" name="Maven: org.elasticsearch.plugin:percolator-client:5.2.0" level="project" />
+    <orderEntry type="library" name="WCCOAjava" level="project" />
   </component>
 </module>

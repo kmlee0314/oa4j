@@ -19,9 +19,12 @@ public class DynVar extends Variable implements Serializable, Iterable<Variable>
     private final ArrayList<Variable> value = new ArrayList<>();
 
     public DynVar(Variable... vars) {
-        for(Variable var: vars){
+        for(Variable var: vars)
             value.add(var);
-        }
+    }
+
+    public DynVar(Iterator<Variable> iterator) {
+        iterator.forEachRemaining((var)->value.add(var));
     }
        
     public void add(Variable value) {
@@ -60,7 +63,7 @@ public class DynVar extends Variable implements Serializable, Iterable<Variable>
     public List<Variable> asList() {
         return value;
     }
-    
+
     public Variable[][] asTable() {
         Variable[][] table = new Variable[value.size()][];
         for ( int rownr = 0; rownr<value.size(); rownr++ ) {
@@ -87,4 +90,7 @@ public class DynVar extends Variable implements Serializable, Iterable<Variable>
     public Iterator<Variable> iterator() {
         return asList().iterator();
     }
+
+    public boolean contains(Variable var) { return value.contains(var); }
+    public int indexOf(Variable var) { return value.indexOf(var); }
 }

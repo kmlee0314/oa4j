@@ -104,8 +104,8 @@ public class JManager extends Manager implements Runnable {
         return this.loopWaitUSec;
     }
         
-    public JManager init(String args[]) throws Exception {                
-        for ( int i=0; i<args.length; i++ ) { 
+    public JManager init(String args[]) throws Exception {
+        for ( int i=0; i<args.length; i++ ) {
             // projDir & configDir
             if ( args[i].equals("-path") && args.length>i+1 ) {
                 setProjPath(args[i+1]);        
@@ -123,7 +123,8 @@ public class JManager extends Manager implements Runnable {
             // managerType
             if ( args[i].equals("-db") ) {
                 setManType(DB_MAN);
-            }            
+            }
+
         }        
         return init();
     }
@@ -132,10 +133,10 @@ public class JManager extends Manager implements Runnable {
         setProjName(projName);        
         setManType(manType);
         setManNum(manNum);    
-        return init();        
+        return init();
     }    
-    
-    public JManager init() throws Exception {
+
+    private JManager init() throws Exception {
         if (JManager.instance == null) {
             JManager.instance = this;
         } else {
@@ -154,14 +155,13 @@ public class JManager extends Manager implements Runnable {
         if ( !apiEnabled ) {
             JDebug.out.warning(errmsg);
         } else {
-            // Set log file settings
-            try {
-                JDebug.setOutput(getLogFile());
-            } catch (IOException ex) {
-                JDebug.StackTrace(Level.SEVERE, ex);
-            }
+                // Set log file settings
+                try {
+                    JDebug.setOutput(getLogFile());
+                } catch (IOException ex) {
+                    JDebug.StackTrace(Level.SEVERE, ex);
+                }
         }
-
         return this;
     }    
             

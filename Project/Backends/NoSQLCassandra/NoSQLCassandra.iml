@@ -32,5 +32,6 @@
     <orderEntry type="library" name="Maven: com.github.jnr:jnr-x86asm:1.0.2" level="project" />
     <orderEntry type="library" name="Maven: com.github.jnr:jnr-posix:3.0.27" level="project" />
     <orderEntry type="library" name="Maven: com.github.jnr:jnr-constants:0.9.0" level="project" />
+    <orderEntry type="library" name="WCCOAjava" level="project" />
   </component>
 </module>

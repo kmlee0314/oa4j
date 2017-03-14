@@ -15,7 +15,6 @@ import java.util.Date;
  * @author vogler
  */
 public abstract class Variable implements Serializable {
-
     public abstract String formatValue();
 
     public abstract VariableType isA();
@@ -216,5 +215,16 @@ public abstract class Variable implements Serializable {
     public static <T> T nvl(T a, T b) {
         return (a == null || a.toString().isEmpty())?b:a;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if ( obj instanceof Variable )
+            return this.getValueObject().equals(((Variable) obj).getValueObject());
+        else
+            return this.getValueObject().equals(obj);
+    }
+
+    @Override
+    public int hashCode() { return this.getValueObject().hashCode(); }
 
 }

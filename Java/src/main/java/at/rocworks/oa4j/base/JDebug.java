@@ -40,7 +40,7 @@ public class JDebug {
         out.addHandler(fileHandler);
         out.setUseParentHandlers(false);        
         
-        File file = new File(filename+".err");
+        File file = new File(filename+".out");
         FileOutputStream fos = new FileOutputStream(file);
         PrintStream ps = new PrintStream(fos);
         System.setErr(ps);       

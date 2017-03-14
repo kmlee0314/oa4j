@@ -39,8 +39,4 @@ public class TextVar extends Variable {
     public Object getValueObject() {
         return value; 
     }
-
-    public boolean equals(String test) {
-        return value.equals(test);
-    }
 }

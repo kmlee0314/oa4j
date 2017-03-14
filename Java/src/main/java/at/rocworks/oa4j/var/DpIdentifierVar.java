@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
  */
 public class DpIdentifierVar extends Variable implements Serializable {
     String value;
+    String[] parts = null; // system : dpel : config
     
     public DpIdentifierVar() {
         this.value="";
@@ -37,6 +38,7 @@ public class DpIdentifierVar extends Variable implements Serializable {
     
     public void setName(String name) {
         this.value=name;
+        this.parts=null;
     }    
     
     @Override
@@ -50,48 +52,82 @@ public class DpIdentifierVar extends Variable implements Serializable {
     }
     
     public boolean isInternal() {
-        return this.value.contains(":_");
+        return getDp().startsWith("_");
     }
     
     @Override
     public Object getValueObject() {
         return value; 
     }
-    
+
+    private void splitName() {
+        if (parts==null) {
+            String[] arr = Pattern.compile(":").split(value);
+            String[] res = {"", "", ""};
+            if (arr.length == 1) {
+                res[1] = arr[0]; // dpel
+            } else if (arr.length == 2) {
+                if (arr[0].contains(".")) {
+                    res[1] = arr[0]; // dpel
+                    res[2] = arr[1]; // _config.._attribute
+                } else if (arr[1].contains(".")) {
+                    res[0] = arr[0]; // system
+                    res[1] = arr[1]; // dpel
+                }
+            } else if (arr.length == 3) {
+                res = arr;
+            }
+            parts=res;
+        }
+    }
+
     public String getSystem() {
-        Pattern p = Pattern.compile(":");
-        String[] s = p.split(this.value);
-        return s[0];
+        //Pattern p = Pattern.compile(":");
+        //String[] s = p.split(this.value);
+        //return s[0];
+        splitName();
+        return parts[0];
     }
 
     public String getDp() {
-        Pattern p = Pattern.compile(":|\\.");
-        String[] s = p.split(this.value);
-        return s[1];
+        //Pattern p = Pattern.compile(":|\\.");
+        //String[] s = p.split(this.value);
+        //return s[1];
+        splitName();
+        return parts[1];
     }
     
     public String getDpEl() {
-        Pattern p = Pattern.compile(":");
-        String[] s = p.split(this.value);
-        return s[1];
+        //Pattern p = Pattern.compile(":");
+        //String[] s = p.split(this.value);
+        //return s[1];
+        splitName();
+        return parts[2];
     }
     
     public String getSysDpEl() {
-        Pattern p = Pattern.compile(":");
-        String[] s = p.split(this.value);
-        return s[0]+":"+s[1];
+        //Pattern p = Pattern.compile(":");
+        //String[] s = p.split(this.value);
+        //return s[0]+":"+s[1];
+        splitName();
+        return parts[0]+":"+parts[1];
     }    
 
     public String getElement() {
-        int start = this.value.indexOf('.') + 1;
-        int end = this.value.indexOf(':', start);
-        return (end < 0 ? this.value.substring(start) : this.value.substring(start, end));
+        //int start = this.value.indexOf('.') + 1;
+        //int end = this.value.indexOf(':', start);
+        //return (end < 0 ? this.value.substring(start) : this.value.substring(start, end));
+        splitName();
+        int start = parts[1].indexOf('.') + 1;
+        return parts[1].substring(start);
     }
 
     public String getConfig() {
-        Pattern p = Pattern.compile(":");
-        String[] s = p.split(this.value);
-        return s.length == 3 ? s[2] : "";
+        //Pattern p = Pattern.compile(":");
+        //String[] s = p.split(this.value);
+        //return s.length == 3 ? s[2] : "";
+        splitName();
+        return parts[2];
     }    
     
     @Override
@@ -131,6 +167,6 @@ public class DpIdentifierVar extends Variable implements Serializable {
     }
 
     public static String addConfigIfNotExists(String dp, String config) {
-        return dp.contains(":") ? dp : dp+":"+config;
+        return new DpIdentifierVar(dp).getConfig().equals("") ? dp+":"+config : dp;
     }
 }

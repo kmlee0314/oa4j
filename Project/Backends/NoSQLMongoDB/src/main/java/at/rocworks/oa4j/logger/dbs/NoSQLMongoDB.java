@@ -23,12 +23,9 @@ import at.rocworks.oa4j.logger.data.DpAttr;
 import at.rocworks.oa4j.logger.data.base.EventItem;
 import at.rocworks.oa4j.logger.data.base.ValueItem;
 import at.rocworks.oa4j.logger.query.DpGetPeriodResult;
-import com.mongodb.Block;
+import com.mongodb.*;
 
 import org.bson.Document;
-import com.mongodb.MongoBulkWriteException;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -96,7 +93,7 @@ public class NoSQLMongoDB extends NoSQLServer {
     
     private void initStorage(String url, String db) {
         JDebug.out.info("mongodb init storage...");
-        MongoClientURI uri = new MongoClientURI(url);      
+        MongoClientURI uri = new MongoClientURI(url);
         client = new MongoClient(uri);
         database = client.getDatabase(db);
         evcoll = database.getCollection("events");

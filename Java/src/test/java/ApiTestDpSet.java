@@ -6,6 +6,9 @@ import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.FloatVar;
 import at.rocworks.oa4j.var.TextVar;
 import at.rocworks.oa4j.base.JDebug;
+import javafx.util.Pair;
+
+import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 
@@ -53,5 +56,10 @@ public class ApiTestDpSet {
                 .getRetCode();
         JDebug.out.log(Level.INFO, "retCode={0}", ret);
         JDebug.out.info("--- DPSETTIMED END ---");
+
+        JDebug.out.info("--- DPSET ARRAY BEG ---");
+        ret = JClient.dpSet(Arrays.asList(new Pair("ExampleDP_Trend1.", 1.0), new Pair("ExampleDP_SumAlert.", "hello world"))).await().getRetCode();
+        JDebug.out.log(Level.INFO, "retCode={0}", ret);
+        JDebug.out.info("--- DPSET ARRAY END ---");
     }    
 }

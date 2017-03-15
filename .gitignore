@@ -1,6 +1,7 @@
 /Java/.idea
 /Java/target
 /Java/out
+/Java/log
 /Scala/log
 /Scala/out
 /Scala/.idea
@@ -22,5 +23,11 @@
 /Native/CtrlExt/JavaCtrlExt.sdf
 /Native/CtrlExt/JavaCtrlExt.opensdf
 /Native/CtrlExt/JavaCtrlExt.v12.suo
+/Project/Example/db
+/Project/Example/log
 /Project/Logger/out
 /Project/Logger/target
+/Project/Telegram/log
+/Project/Telegram/out
+/Project/Telegram/target
+/Project/Telegram/project

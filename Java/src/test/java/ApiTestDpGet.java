@@ -7,6 +7,9 @@ import at.rocworks.oa4j.base.JManager;
 import at.rocworks.oa4j.var.Variable;
 import at.rocworks.oa4j.var.VariablePtr;
 import at.rocworks.oa4j.base.JDebug;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 
 /*
@@ -57,11 +60,9 @@ public class ApiTestDpGet {
         }
         JDebug.out.info("--- DPGET END ---");
         
-        
-        
         JDebug.out.info("--- DPGET BEG ---");
         VariablePtr res1 = new VariablePtr();
-        VariablePtr res2 = new  VariablePtr();        
+        VariablePtr res2 = new VariablePtr();
         JClient.dpGet()
                 .add("System1:ExampleDP_Trend1.:_online.._value", res1)
                 .add("System1:ExampleDP_SumAlert.:_online.._value", res2)
@@ -69,8 +70,12 @@ public class ApiTestDpGet {
         JDebug.out.log(Level.INFO, "res1 is a {0} value={1}", new Object[] {res1.get().isA(), res1.get()});
         JDebug.out.log(Level.INFO, "res2 is a {0} value={1}", new Object[] {res2.get().isA(), res2.get()});
         JDebug.out.info("--- DPGET END ---");
-        
-        
+
+        JDebug.out.info("--- DPGET BEG ARRAY ---");
+        List<Variable> res3 = JClient.dpGet(Arrays.asList("ExampleDP_Trend1.", "ExampleDP_SumAlert."));
+        res3.forEach((v)->JDebug.out.log(Level.INFO, "res3 is a {0} value={1}", new Object[] {v.isA(), v.formatValue()}));
+        JDebug.out.info("--- DPGET END ARRAY ---");
+
 //        int i=0;
 //        String oldc="", newc="";
 //        while ( true ) {

@@ -1,12 +1,8 @@
-import at.rocworks.oa4j.driver.JDriverSimple;
-import at.rocworks.oa4j.driver.JDriverItem;
-import at.rocworks.oa4j.driver.JDriverItemList;
-import at.rocworks.oa4j.driver.JTransFloatVarJson;
-import at.rocworks.oa4j.driver.JTransIntegerVarJson;
-import at.rocworks.oa4j.driver.JTransTextVar;
+import java.util.logging.Level;
+
+import at.rocworks.oa4j.driver.*;
 import at.rocworks.oa4j.jni.Transformation;
 import at.rocworks.oa4j.base.JDebug;
-import java.util.logging.Level;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -16,38 +12,33 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- *
- * @author vogler
+ * Created by vogler on 3/25/2017.
  */
-public class DrvTestMqtt {
-    public static void main(String[] args) throws Exception {                        
-        new DrvTestMqtt().start(args);
-    }            
-    
-    public void start(String[] args) {       
+public class Main {
+    public static void main(String[] args) throws Exception {
+        new Main().start(args);
+    }
+
+    public void start(String[] args) {
         try {
-            MyDriver driver = new MyDriver(args);
+            MqttDriver driver = new MqttDriver(args);
             JDebug.setLevel(Level.INFO);
             driver.startup();
+            JDebug.out.info("ok");
         } catch ( Exception ex ) {
             JDebug.StackTrace(Level.SEVERE, ex);
         }
     }
-    
-    public class MyDriver extends JDriverSimple {         
+
+    public class MqttDriver extends JDriverSimple {
 
         private MqttClient mqtt;
         private String url; // connect url (e.g. tcp://iot.eclipse.org)
-        private String cid; // client id 
-        
-        public MyDriver(String[] args) throws Exception {
+        private String cid; // client id
+        private Boolean json = false;
+
+        public MqttDriver(String[] args) throws Exception {
             super(args, 10);
             url="";
             cid="";
@@ -57,48 +48,51 @@ public class DrvTestMqtt {
                 }
                 if (args[i].equals("-cid") && args.length>i+1) {
                     cid=args[i+1];
-                }                
-            }            
+                }
+                if (args[i].equals("-json")) {
+                    json=true;
+                }
+            }
         }
-        
+
         @Override
         public Transformation newTransformation(String name, int type) {
             switch (type) {
                 case 1000:
                     return new JTransTextVar(name, type);
                 case 1001:
-                    return new JTransIntegerVarJson(name, type);
+                    return json ? new JTransIntegerVarJson(name, type) : new JTransIntegerVar(name, type);
                 case 1002:
-                    return new JTransFloatVarJson(name, type);
+                    return json ? new JTransFloatVarJson(name, type) : new JTransFloatVar(name, type);
                 default:
                     JDebug.out.log(Level.WARNING, "unhandled transformation type {0} for {1}", new Object[]{type, name});
                     return null;
             }
-        }        
+        }
 
         @Override
         public boolean start() {
             try {
                 JDebug.out.log(Level.INFO, "connect to mqtt...{0}", System.getProperty("java.io.tmpdir"));
-                MqttDefaultFilePersistence dataStore = new MqttDefaultFilePersistence(System.getProperty("java.io.tmpdir"));                           
+                MqttDefaultFilePersistence dataStore = new MqttDefaultFilePersistence(System.getProperty("java.io.tmpdir"));
                 mqtt = new MqttClient(url, cid, dataStore);
-               
+
                 // receive values
                 mqtt.setCallback(new MqttCallbackImpl());
-                                
+
                 // connect to mqtt
-                MqttConnectOptions options  = new MqttConnectOptions();     
+                MqttConnectOptions options  = new MqttConnectOptions();
                 options.setAutomaticReconnect(true);
                 mqtt.connect(options);
                 JDebug.out.info("connect to mqtt...done");
-                
+
                 return super.start();
             } catch (MqttException ex) {
                 JDebug.StackTrace(Level.SEVERE, ex);
                 return false;
             }
         }
-        
+
         @Override
         public void sendOutputBlock(JDriverItemList data) {
             JDriverItem item;
@@ -110,8 +104,8 @@ public class DrvTestMqtt {
                 } catch (MqttException ex) {
                     JDebug.StackTrace(Level.SEVERE, ex);
                 }
-            }        
-        }        
+            }
+        }
 
         @Override
         public void stop() {
@@ -122,8 +116,8 @@ public class DrvTestMqtt {
                 JDebug.StackTrace(Level.SEVERE, ex);
             }
             JDebug.out.info("disconnect to mqtt...done");
-        }                                                             
-        
+        }
+
         @Override
         public boolean attachInput(String addr) {
             if ( mqtt != null && mqtt.isConnected() ) {
@@ -136,8 +130,8 @@ public class DrvTestMqtt {
                     return false;
                 }
             } else {
-                return false;                   
-            }            
+                return false;
+            }
         }
 
         @Override
@@ -173,8 +167,8 @@ public class DrvTestMqtt {
                 return true;
             } else {
                 return false;
-            }                
-        }        
+            }
+        }
 
         private class MqttCallbackImpl implements MqttCallbackExtended {
 
@@ -193,7 +187,7 @@ public class DrvTestMqtt {
                 JDriverItem item = new JDriverItem(tag, mm.getPayload());
                 sendInputBlock(new JDriverItemList(item));
                 //JDebug.out.log(Level.INFO, "{0} => done", new Object[]{tag});
-                
+
             }
 
             @Override
@@ -208,5 +202,5 @@ public class DrvTestMqtt {
                 }
             }
         }
-    }             
+    }
 }

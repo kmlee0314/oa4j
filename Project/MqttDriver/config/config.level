@@ -1,0 +1,2 @@
+[javadrv]
+classPath="bin;bin/WCCOAjava.jar;bin/json-simple-1.1.1.jar;bin/org.eclipse.paho.client.mqttv3-1.1.1.jar"

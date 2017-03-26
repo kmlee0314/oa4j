@@ -1,3 +1,4 @@
+#include <../LibJava/Java.hxx>
 #include <WCCOAJavaDrv.hxx>
 #include <WCCOAJavaResources.hxx>
 
@@ -55,8 +56,8 @@ int main(int argc, char **argv)
 	// java.class.path
 	{
 		CharString *s = new CharString(CharString("-Djava.class.path=./bin") + CLASS_PATH_SEPARATOR + CharString("./bin/WCCOAjava.jar"));
-		iLibPathSet = ++idx;
-		options[iLibPathSet].optionString = (char*)s->c_str();
+		iClassPathSet = ++idx;
+		options[iClassPathSet].optionString = (char*)s->c_str();
 		std::cout << "default: " << options[idx].optionString << std::endl;
 	}
 
@@ -207,8 +208,8 @@ int main(int argc, char **argv)
 
 	// check if classname was given
 	if (className == nil) {
-		std::cout << "parameter -class missing!" << std::endl;
-		return -1;
+		std::cout << "class Main will be used (no parameter -class given)" << std::endl;
+		className = "Main";
 	}
 
 	jclass javaMainClass = env->FindClass(className);
@@ -225,6 +226,7 @@ int main(int argc, char **argv)
 	
 	std::cout << "Java Driver..." << std::endl;
 	env->CallStaticVoidMethod(javaMainClass, javaMainMethod, jargv);
+	Java::CheckException(env, "Main Method Exception");
 
 	//std::cout << "MainProcedure WinCCOA Driver..." << std::endl;
 	//WCCOAJavaDrv::thisManager = new WCCOAJavaDrv;

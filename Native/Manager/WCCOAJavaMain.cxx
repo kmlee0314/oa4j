@@ -1,11 +1,4 @@
-/*
-  Example of an API manager
-  This will copy the values from one datapoint to another.
-  To do this the manager will connect to the first datapoint and
-  for every hotlink it receives it will set the second one.
-  The names of both datapoints can be given in the config file.
-*/
-
+#include <../LibJava/Java.hxx>
 #include <WCCOAJavaManager.hxx>
 #include <WCCOAJavaResources.hxx>
 #include <at_rocworks_oa4j_jni_Manager.h>
@@ -58,8 +51,8 @@ int main(int argc, char *argv[])
 	// java.class.path
 	{		
 		CharString *s = new CharString(CharString("-Djava.class.path=./bin") + CLASS_PATH_SEPARATOR + CharString("./bin/WCCOAjava.jar"));
-		iLibPathSet = ++idx;
-		options[iLibPathSet].optionString = (char*)s->c_str();
+		iClassPathSet = ++idx;
+		options[iClassPathSet].optionString = (char*)s->c_str();
 		std::cout << "default: " << options[idx].optionString << std::endl;
 	}
 
@@ -211,9 +204,9 @@ int main(int argc, char *argv[])
 
 	//=============== Call Main Method ==========================================
 	// check if classname was given
-	if (className == 0) {
-		std::cout << "parameter -class missing!" << std::endl;
-		return -1;
+	if (className == nil) {
+		std::cout << "class Main will be used (no parameter -class given)" << std::endl;
+		className = "Main";
 	}
 
 	jclass javaMainClass = env->FindClass(className);
@@ -229,6 +222,7 @@ int main(int argc, char *argv[])
 	}
 
 	env->CallStaticVoidMethod(javaMainClass, javaMainMethod, jargv);
+	Java::CheckException(env, "Main Method Exception");
 
 	jvm->DestroyJavaVM();
 

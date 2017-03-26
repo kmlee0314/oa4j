@@ -17,7 +17,6 @@
     <ClCompile Include="WCCOAJavaDrvIntDp.cxx" />
     <ClCompile Include="WCCOAJavaHWMapper.cxx" />
     <ClCompile Include="WCCOAJavaHWService.cxx" />
-    <ClCompile Include="WCCOAJavaMain.cxx" />
     <ClCompile Include="WCCOAJavaResources.cxx" />
     <ClCompile Include="WCCOAJavaTrans.cxx" />
     <ClCompile Include="WCCOAJavaConnection.cxx" />

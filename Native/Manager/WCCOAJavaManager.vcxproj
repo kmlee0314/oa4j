@@ -29,7 +29,6 @@
     <ClCompile Include="at_rocworks_oa4j_jni_SysMsg.cpp" />
     <ClCompile Include="WCCOAJavaAlertHotLinkWaitForAnswer.cpp" />
     <ClCompile Include="WCCOAJavaHotLinkWaitForAnswer.cpp" />
-    <ClCompile Include="WCCOAJavaMain.cxx" />
     <ClCompile Include="WCCOAJavaManager.cxx" />
     <ClCompile Include="WCCOAJavaResources.cxx" />
   </ItemGroup>

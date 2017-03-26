@@ -5,9 +5,9 @@
    e.g. PATH=C:\Program Files\Java\jre1.8.0_<version>\bin\server
    you have to restart the pmon/console afterwards
 
-*) Download and extract the WinCC OA Java Bundle to your project bin directory
+*) Copy the oa4j/Bundle to your project bin directory
 
-*) Unzip the content of MqttDriver.zip to your project directory
+*) Copy the directories bin,config,dplist to your project directory
 
 *) Import the JavaDrv.dpl file with the ASCII Manager from the dplist directory 
 

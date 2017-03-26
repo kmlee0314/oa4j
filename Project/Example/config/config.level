@@ -6,7 +6,7 @@
 #libraryPath = "<project-dir>/bin" 
 
 # java class path (-Djava.class.path), defaults to project/bin directory
-classPath = "./bin;./bin/WCCOAjava.jar"
+classPath = "bin;bin/WCCOAjava.jar"
 
 # if you have long class paths you can use a file
 #configFile = "config.java"
@@ -19,15 +19,15 @@ classPath = "./bin;./bin/WCCOAjava.jar"
 #libraryPath = "<project-dir>/bin" 
 
 # java class path (-Djava.class.path), defaults to project/bin directory
-classPath = "./bin;./bin/WCCOAjava.jar;./bin/gson-2.7.jar;./bin/json-simple-1.1.1.jar;./bin/org.eclipse.paho.client.mqttv3-1.1.0.jar"
+classPath = "bin;bin/WCCOAjava.jar;bin/gson-2.7.jar;bin/json-simple-1.1.1.jar;bin/org.eclipse.paho.client.mqttv3-1.1.0.jar"
 
 # if you have long class paths you can use a file
 #configFile = "config.javadrv"
 
 [java_10] # Logger Frontend
 userDir = "C:/Workspace/oa4j/Project/Example"
-classPath = "./bin;./bin/WCCOAjava.jar;./bin/gson-2.7.jar;./bin/json-simple-1.1.1.jar;./bin/jeromq-0.3.5.jar;./bin/Logger.jar"
+classPath = "bin;bin/WCCOAjava.jar;bin/gson-2.7.jar;bin/json-simple-1.1.1.jar;bin/jeromq-0.3.5.jar;bin/Logger.jar"
 
 [java_11] # Logger Backend MongoDB
 userDir = "C:/Workspace/oa4j/Project/Example"
-classPath = "./bin;./bin/WCCOAjava.jar;./bin/gson-2.7.jar;./bin/json-simple-1.1.1.jar;./bin/jeromq-0.3.5.jar;./bin/protobuf-java-2.6.1.jar;./bin/je-5.0.73.jar;./bin/Logger.jar;../Backends/NoSQLMongoDB/target/classes;./bin/mongo-java-driver-3.2.2.jar"
+classPath = "bin;bin/WCCOAjava.jar;bin/gson-2.7.jar;bin/json-simple-1.1.1.jar;bin/jeromq-0.3.5.jar;bin/protobuf-java-2.6.1.jar;bin/je-5.0.73.jar;bin/Logger.jar;../Backends/NoSQLMongoDB/target/classes;bin/mongo-java-driver-3.2.2.jar"

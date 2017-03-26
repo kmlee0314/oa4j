@@ -11,56 +11,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(API_ROOT)\addVerInfo.cxx" />
     <ClCompile Include="..\LibJava\Java.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_AnswerGroup.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpIdValueList.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgAnswer.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgComplexVC.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgHotLink.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgRequest.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgValueChange.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpVCGroup.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpVCItem.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_Manager.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_Msg.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_RequestGroup.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_RequestItem.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_SysMsg.cpp" />
-    <ClCompile Include="WCCOAJavaAlertHotLinkWaitForAnswer.cpp" />
-    <ClCompile Include="WCCOAJavaHotLinkWaitForAnswer.cpp" />
     <ClCompile Include="WCCOAJavaMain.cxx" />
-    <ClCompile Include="WCCOAJavaManager.cxx" />
     <ClCompile Include="WCCOAJavaResources.cxx" />
+    <ClCompile Include="$(API_ROOT)\addVerInfo.cxx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\LibJava\Java.hxx" />
-    <ClInclude Include="at_rocworks_oa4j_jni_AnswerGroup.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpIdValueList.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsg.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgAnswer.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgComplexVC.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgHotLink.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgRequest.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgValueChange.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpVCGroup.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpVCItem.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_Manager.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_Msg.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_RequestGroup.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_RequestItem.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_SysMsg.h" />
-    <ClInclude Include="WCCOAJavaAlertHotLinkWaitForAnswer.hxx" />
-    <ClInclude Include="WCCOAJavaHotLinkWaitForAnswer.hxx" />
-    <ClInclude Include="WCCOAJavaManager.hxx" />
     <ClInclude Include="WCCOAJavaResources.hxx" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="VersInfo.rc" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E6F5163E-4D03-486C-8F05-387BFFE4F148}</ProjectGuid>
+    <ProjectGuid>{DB3F2A94-F6BF-44A5-BCB8-E103DC4077AD}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <TargetName>WCCOAjava</TargetName>
+    <TargetName>WCCOAjavadrv</TargetName>
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -68,10 +36,10 @@
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <TargetName>WCCOAjava</TargetName>
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <TargetName>WCCOAjavadrv</TargetName>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
@@ -86,7 +54,6 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(JDK_HOME)\include</IncludePath>
     <OutDir>$(SolutionDir)\bin\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -95,10 +62,10 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(API_INCL)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>$(API_ROOT)/include/winnt/win32.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <AdditionalOptions>$(VC8_DEFS) $(D_PVSS_VER) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;IS_MSWIN__;_EXCURSION;bcm_boolean_h;FUNCPROTO;_NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(API_INCL)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(API_ROOT)\include\winnt\win32.h</ForcedIncludeFiles>
+      <AdditionalOptions>$(VC8_DEFS) $(D_PVSS_VER) %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -123,7 +90,6 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>$(API_LIB);kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -2,6 +2,7 @@
 #define WCCOAJavaDRV_H_
 
 #include <DrvManager.hxx>
+#include <WCCOAJavaDrvIntDp.hxx>
 #include <WCCOAJavaTrans.hxx>
 #include <jni.h>
 
@@ -53,6 +54,8 @@ private:
 	static const char *ManagerClassName;
 	static const char *TransformationClassName;
 	jclass javaManagerClass;
+
+	WCCOAJavaDrvIntDp drvIntDp;
 };
 
 #endif

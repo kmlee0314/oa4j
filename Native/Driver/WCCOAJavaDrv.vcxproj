@@ -13,7 +13,7 @@
   <ItemGroup>
     <ClCompile Include="..\LibJava\Java.cpp" />
     <ClCompile Include="at_rocworks_oa4j_jni_Driver.cpp" />
-    <ClCompile Include="WCCOAJavaDRV.cxx" />
+    <ClCompile Include="WCCOAJavaDrv.cxx" />
     <ClCompile Include="WCCOAJavaDrvIntDp.cxx" />
     <ClCompile Include="WCCOAJavaHWMapper.cxx" />
     <ClCompile Include="WCCOAJavaHWService.cxx" />
@@ -27,13 +27,13 @@
   <ItemGroup>
     <ClInclude Include="..\LibJava\Java.hxx" />
     <ClInclude Include="at_rocworks_oa4j_jni_Driver.h" />
-    <ClInclude Include="WCCOAJavaDRV.hxx" />
+    <ClInclude Include="WCCOAJavaDrv.hxx" />
     <ClInclude Include="WCCOAJavaDrvIntDp.hxx" />
     <ClInclude Include="WCCOAJavaHWMapper.hxx" />
     <ClInclude Include="WCCOAJavaHWService.hxx" />
-    <ClInclude Include="WCCOAJavaResources.hxx" />
     <ClInclude Include="WCCOAJavaConnection.hxx" />
     <ClInclude Include="WCCOAJavaAlertService.hxx" />
+    <ClInclude Include="WCCOAJavaResources.hxx" />
     <ClInclude Include="WCCOAJavaTrans.hxx" />
   </ItemGroup>
   <ItemGroup>

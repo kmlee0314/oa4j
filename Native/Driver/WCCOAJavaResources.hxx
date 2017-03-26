@@ -7,7 +7,6 @@
 //  - Be an interface to internal datapoints
 
 #include <DrvRsrce.hxx>
-#include <WCCOAJavaDrvIntDp.hxx>
 
 class WCCOAJavaResources : public DrvRsrce
 {
@@ -31,7 +30,6 @@ private:
 	static CharString jvmClassPath;
 	static CharString jvmLibraryPath;
 	static CharString jvmConfigFile;
-	WCCOAJavaDrvIntDp drvIntDp;
 
 public:
 	static CharString drvDpName;

@@ -11,7 +11,6 @@ CharString WCCOAJavaResources::jvmLibraryPath = "";
 CharString WCCOAJavaResources::jvmConfigFile = "";
 CharString WCCOAJavaResources::drvDpName = CharString("_JavaDrv");
 
-
 //-------------------------------------------------------------------------------
 // init is a wrapper around begin, readSection and end
 

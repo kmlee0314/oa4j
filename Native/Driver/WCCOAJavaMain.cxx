@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 
 	// java.class.path
 	{
-		CharString *s = new CharString(CharString("-Djava.class.path=./bin") + CLASS_PATH_SEPARATOR + CharString("./bin/WCCOAjava.jar"));
+		CharString *s = new CharString(CharString("-Djava.class.path=bin") + CLASS_PATH_SEPARATOR + CharString("bin/WCCOAjava.jar"));
 		iClassPathSet = ++idx;
 		options[iClassPathSet].optionString = (char*)s->c_str();
 		std::cout << "default: " << options[idx].optionString << std::endl;
@@ -161,19 +161,26 @@ int main(int argc, char **argv)
 	std::cout << ((ver >> 16) & 0x0f) << "." << (ver & 0x0f) << std::endl;
 
 	//=============== Arguments ===========================================
-	int i;
+	int i = 0;
 	jstring str;
-	jobjectArray jargv = env->NewObjectArray(argc + 6, env->FindClass("java/lang/String"), 0);
+	jobjectArray jargv = env->NewObjectArray(argc + 7, env->FindClass("java/lang/String"), 0);
+
+	str = env->NewStringUTF("-exe");
+	env->SetObjectArrayElement(jargv, i, str);
+	i++;
+
 	int classIdx = -1;
 	char *className = 0;
 	// pass arguments through
-	for (i = 0; i<argc; i++)
+	for (int j = 0; j<argc; j++)
 	{
-		str = env->NewStringUTF(argv[i]);
+		str = env->NewStringUTF(argv[j]);
 		env->SetObjectArrayElement(jargv, i, str);
 
-		if (strcmp(argv[i], "-class") == 0 || strcmp(argv[i], "-c") == 0) classIdx = i + 1;
-		if (classIdx == i) className = argv[i];
+		if (strcmp(argv[j], "-class") == 0 || strcmp(argv[j], "-c") == 0) classIdx = i + 1;
+		if (classIdx == i) className = argv[j];
+
+		i++;
 	}
 
 	// add project name to argument list
@@ -207,19 +214,19 @@ int main(int argc, char **argv)
 	i++;
 
 	// check if classname was given
-	if (className == nil) {
+	if (className == 0) {
 		std::cout << "class Main will be used (no parameter -class given)" << std::endl;
 		className = "Main";
 	}
 
 	jclass javaMainClass = env->FindClass(className);
-	if (javaMainClass == nil) {
+	if (javaMainClass == 0) {
 		std::cout << "class " << className << " not found!" << std::endl;
 		return -2;
 	}
 
 	jmethodID javaMainMethod = env->GetStaticMethodID(javaMainClass, "main", "([Ljava/lang/String;)V");
-	if (javaMainMethod == nil) {
+	if (javaMainMethod == 0) {
 		std::cout << "java main method not found!" << std::endl;
 		return -3;
 	}
@@ -227,10 +234,6 @@ int main(int argc, char **argv)
 	std::cout << "Java Driver..." << std::endl;
 	env->CallStaticVoidMethod(javaMainClass, javaMainMethod, jargv);
 	Java::CheckException(env, "Main Method Exception");
-
-	//std::cout << "MainProcedure WinCCOA Driver..." << std::endl;
-	//WCCOAJavaDrv::thisManager = new WCCOAJavaDrv;
-	//WCCOAJavaDrv::thisManager->mainProcedure(argc, argv);
 
 	jvm->DestroyJavaVM();
 

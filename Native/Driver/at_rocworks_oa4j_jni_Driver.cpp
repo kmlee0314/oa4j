@@ -26,12 +26,12 @@ JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Driver_apiGetDataPath
 
 //------------------------------------------------------------------------------------------------
 // JAVA JNI startup
-
 JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Driver_apiStartup
 (JNIEnv *env, jobject obj, jobjectArray jargv)
 {
 	int argc = env->GetArrayLength(jargv);
 	char **argv = (char **)malloc(argc * sizeof(char *));
+
 	for (int i = 0; i < argc; i++)
 	{
 		jobject jstr = env->GetObjectArrayElement(jargv, i);
@@ -39,15 +39,19 @@ JNIEXPORT void JNICALL Java_at_rocworks_oa4j_jni_Driver_apiStartup
 		env->DeleteLocalRef(jstr);
 	}
 
-	std::cout << "InitResources..." << std::endl;
-	WCCOAJavaResources resources;
-	resources.init(argc, argv);
+	if (argc < 1 || strcmp(argv[0], "-exe") != 0) {
+		std::cout << "Java Driver must be started from WCCOAjavadrv executable!" << std::endl;
+	} else {
+		std::cout << "InitResources..." << std::endl;
+		WCCOAJavaResources resources;
+		resources.init(argc, argv);
 
-	std::cout << "InitDriver..." << std::endl;
-	WCCOAJavaDrv::thisManager = new WCCOAJavaDrv;
-	WCCOAJavaDrv::thisManager->javaInitialize(env, obj);
+		std::cout << "InitDriver..." << std::endl;
+		WCCOAJavaDrv::thisManager = new WCCOAJavaDrv;
+		WCCOAJavaDrv::thisManager->javaInitialize(env, obj);
 
-	std::cout << "MainProcedure..." << std::endl;
-	WCCOAJavaDrv::thisManager->mainProcedure(argc, argv);
+		std::cout << "MainProcedure..." << std::endl;
+		WCCOAJavaDrv::thisManager->mainProcedure(argc, argv);
+	}
 }
 

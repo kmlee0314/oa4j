@@ -13,50 +13,15 @@
   <ItemGroup>
     <ClCompile Include="$(API_ROOT)\addVerInfo.cxx" />
     <ClCompile Include="..\LibJava\Java.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_AnswerGroup.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpIdValueList.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgAnswer.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgComplexVC.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgHotLink.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgRequest.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpMsgValueChange.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpVCGroup.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_DpVCItem.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_Manager.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_Msg.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_RequestGroup.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_RequestItem.cpp" />
-    <ClCompile Include="at_rocworks_oa4j_jni_SysMsg.cpp" />
-    <ClCompile Include="WCCOAJavaAlertHotLinkWaitForAnswer.cpp" />
-    <ClCompile Include="WCCOAJavaHotLinkWaitForAnswer.cpp" />
     <ClCompile Include="WCCOAJavaMain.cxx" />
-    <ClCompile Include="WCCOAJavaManager.cxx" />
     <ClCompile Include="WCCOAJavaResources.cxx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\LibJava\Java.hxx" />
-    <ClInclude Include="at_rocworks_oa4j_jni_AnswerGroup.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpIdValueList.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsg.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgAnswer.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgComplexVC.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgHotLink.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgRequest.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpMsgValueChange.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpVCGroup.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_DpVCItem.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_Manager.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_Msg.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_RequestGroup.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_RequestItem.h" />
-    <ClInclude Include="at_rocworks_oa4j_jni_SysMsg.h" />
-    <ClInclude Include="WCCOAJavaAlertHotLinkWaitForAnswer.hxx" />
-    <ClInclude Include="WCCOAJavaHotLinkWaitForAnswer.hxx" />
-    <ClInclude Include="WCCOAJavaManager.hxx" />
     <ClInclude Include="WCCOAJavaResources.hxx" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E6F5163E-4D03-486C-8F05-387BFFE4F148}</ProjectGuid>
+    <ProjectGuid>{F849B28A-2E86-423C-8A47-FB299CE19D1D}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -69,7 +34,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <TargetName>WCCOAjava</TargetName>
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>

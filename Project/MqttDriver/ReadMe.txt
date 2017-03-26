@@ -7,7 +7,7 @@
 
 *) Copy the oa4j/Bundle to your project bin directory
 
-*) Copy the directories bin,config,dplist to your project directory
+*) Copy the directories of this project to your project directory
 
 *) Import the JavaDrv.dpl file with the ASCII Manager from the dplist directory 
 

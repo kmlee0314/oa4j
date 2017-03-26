@@ -36,4 +36,4 @@ The control extension JavaCtrlExt must be loaded and a Subclass of ExternHdlFunc
 ```
 
 ## Driver (oa4j/Native/Driver <-> at.rocworks.oa4j.driver)<br>
-There is also an API and framework to implement a WinCC OA driver program in Java. A driver program is used to connect WinCC OA to peripherial devices and exchange data. There is a driver class driver.JDriver and a driver.JDriverSimple class, which can be used to implement a driver. An example driver can be found in test/java/DrvTestMqtt.java <br>
+There is also an API and framework to implement a WinCC OA driver program in Java. A driver program is used to connect WinCC OA to peripherial devices and exchange data. There is a driver class driver.JDriver and a driver.JDriverSimple class, which can be used to implement a driver. An example driver can be found in Project/MqttDriver. <br>

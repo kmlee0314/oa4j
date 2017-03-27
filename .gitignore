@@ -28,6 +28,8 @@
 /Project/Logger/out
 /Project/Logger/target
 /Project/Backends/target
+/Project/MqttDriver/out
+/Project/Telegram
 /Project/Telegram/log
 /Project/Telegram/out
 /Project/Telegram/target

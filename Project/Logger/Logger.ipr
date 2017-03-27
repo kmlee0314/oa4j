@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ArtifactManager">
     <artifact type="jar" name="Logger:jar">
-      <output-path>$PROJECT_DIR$/out/artifacts/Logger_jar</output-path>
+      <output-path>$PROJECT_DIR$/bin</output-path>
       <root id="archive" name="Logger.jar">
         <element id="module-output" name="Logger" />
       </root>
@@ -232,7 +232,7 @@
     </library>
     <library name="WCCOAjava">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../Java/target/WCCOAjava.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../Java/bin/WCCOAjava.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

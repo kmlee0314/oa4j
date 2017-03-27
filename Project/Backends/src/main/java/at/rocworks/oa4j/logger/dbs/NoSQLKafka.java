@@ -51,7 +51,6 @@ public class NoSQLKafka extends NoSQLServer {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, broker);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        //props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, "com.etm.nga.dbs.NoSQLKafkaPartitioner");
         props.put(ProducerConfig.ACKS_CONFIG, "1");
         
         JDebug.out.log(Level.INFO, "kafka init storage...{0} topic={1}", new Object[]{broker, this.topic}); 

@@ -257,10 +257,14 @@ PVSSboolean WCCOAJavaDrv::writeData(HWObject *objPtr)
 
 void WCCOAJavaDrv::flushHW()
 {
-	//jclass cls = g_env->GetObjectClass(g_obj);
 	jmethodID jm = g_env->GetMethodID(g_objClass, "flushHW", "()V");
 	g_env->CallVoidMethod(g_obj, jm);
-	//g_env->DeleteLocalRef(cls);
+}
+
+void WCCOAJavaDrv::notifyDisableCommands(PVSSboolean dc)
+{
+	jmethodID jm = g_env->GetMethodID(g_objClass, "notifyDisableCommands", "(Z)V");
+	g_env->CallVoidMethod(g_obj, jm, (jboolean)dc);
 }
 
 // ------------------------------------------------------------------------------------------------------------------

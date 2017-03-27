@@ -87,6 +87,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(JDK_HOME)\include</IncludePath>
     <OutDir>$(SolutionDir)\bin\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\dll\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

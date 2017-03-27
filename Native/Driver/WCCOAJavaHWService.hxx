@@ -12,6 +12,7 @@ class WCCOAJavaHWService : public HWService
     virtual void workProc();
     virtual PVSSboolean writeData(HWObject *objPtr);
 	virtual void flushHW();
+	virtual void notifyDisableCommands(PVSSboolean dc);
 };
 
 #endif

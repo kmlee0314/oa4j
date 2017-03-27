@@ -28,7 +28,13 @@ public abstract class JDriver extends Driver implements Runnable {
     private String projName="<unknown>";
     private String projDir=".";        
     private String confDir=".";
-    private int manNum=1;  
+    private int manNum=1;
+
+    public boolean isOutputDisabled() {
+        return outputDisabled;
+    }
+
+    private volatile boolean outputDisabled = false;
         
     public JDriver(String args[]) throws Exception {         
         initArgs(args);
@@ -174,5 +180,10 @@ public abstract class JDriver extends Driver implements Runnable {
     }
     
     protected abstract void addDpPa(DpIdentifierVar dpid, String addr, JDpAttrAddrDirection direction);
-    protected abstract void clrDpPa(DpIdentifierVar dpid, String addr, JDpAttrAddrDirection direction);   
+    protected abstract void clrDpPa(DpIdentifierVar dpid, String addr, JDpAttrAddrDirection direction);
+
+    protected void notifyDisableCommands(boolean dc) {
+        this.outputDisabled=dc;
+    }
+
 }

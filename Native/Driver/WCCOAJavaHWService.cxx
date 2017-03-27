@@ -96,5 +96,17 @@ PVSSboolean WCCOAJavaHWService::writeData(HWObject *objPtr)
 void WCCOAJavaHWService::flushHW()
 {
 	//std::cout << "flushHW" << std::endl;
-	return WCCOAJavaDrv::thisManager->flushHW();
+	WCCOAJavaDrv::thisManager->flushHW();
+}
+
+//----------------------------------------------------------------------------
+// funktion is called after driver changes between aktive and passive state
+// driver calls notify function for all devices
+// in:   dc  ... true = Connection closing vor all devices
+//              false= Connection opening vor all devices
+//----------------------------------------------------------------------------
+void WCCOAJavaHWService::notifyDisableCommands(PVSSboolean dc)
+{
+	//std::cout << "notifyDisableCommands(" << dc << ")" << std::endl;
+	WCCOAJavaDrv::thisManager->notifyDisableCommands(dc);
 }

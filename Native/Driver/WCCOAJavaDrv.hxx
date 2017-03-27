@@ -32,6 +32,7 @@ public:
 	bool workProc(HWObject *hw);
 	PVSSboolean writeData(HWObject *objPtr);
 	void flushHW();
+	void notifyDisableCommands(PVSSboolean dc);
 
 	// HWMapper
 	void JavaAddDpPa(DpIdentifier &dpid, PeriphAddr *confPtr);

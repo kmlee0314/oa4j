@@ -27,6 +27,7 @@ public abstract class Driver {
     public abstract HWObject readData();
     public abstract boolean writeData(String address, int trans, byte[] data, int subix, TimeVar time);
     public abstract void flushHW();
+    public abstract void notifyDisableCommands();
     
     public abstract Transformation newTransformation(String name, int type);
     

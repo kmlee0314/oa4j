@@ -11,16 +11,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WCCOAJavaDrvExe", "WCCOAJav
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Release|Win32 = Release|Win32
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{12BAFA7D-6164-4FB2-AE00-4E03FA3B4ACD}.Release|Win32.ActiveCfg = Release|Win32
-		{12BAFA7D-6164-4FB2-AE00-4E03FA3B4ACD}.Release|Win32.Build.0 = Release|Win32
 		{12BAFA7D-6164-4FB2-AE00-4E03FA3B4ACD}.Release|x64.ActiveCfg = Release|x64
 		{12BAFA7D-6164-4FB2-AE00-4E03FA3B4ACD}.Release|x64.Build.0 = Release|x64
-		{DB3F2A94-F6BF-44A5-BCB8-E103DC4077AD}.Release|Win32.ActiveCfg = Release|Win32
-		{DB3F2A94-F6BF-44A5-BCB8-E103DC4077AD}.Release|Win32.Build.0 = Release|Win32
 		{DB3F2A94-F6BF-44A5-BCB8-E103DC4077AD}.Release|x64.ActiveCfg = Release|x64
 		{DB3F2A94-F6BF-44A5-BCB8-E103DC4077AD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection

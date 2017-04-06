@@ -18,7 +18,7 @@ import java.util.List;
 public class JClient {
     
     public static boolean isConnected() {
-        return JManager.getInstance().isConnected();
+        return JManager.getInstance()!=null && JManager.getInstance().isConnected();
     }
 
     // dpGet

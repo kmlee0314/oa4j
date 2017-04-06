@@ -24,6 +24,15 @@ JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetDataPath
   (JNIEnv *, jobject);
 
 /*
+* Class:     at_rocworks_oa4j_jni_Manager
+* Method:    apiGetConfigValue
+* Signature: (Ljava/lang/String)Ljava/lang/String;
+*/
+JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetConfigValue
+(JNIEnv *, jobject, jstring);
+
+
+/*
  * Class:     at_rocworks_oa4j_jni_Manager
  * Method:    apiStartup
  * Signature: (I[Ljava/lang/String;ZZ)I

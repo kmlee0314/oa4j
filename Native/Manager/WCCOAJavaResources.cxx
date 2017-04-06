@@ -9,6 +9,8 @@ CharString  WCCOAJavaResources::jvmClassPath = "";
 CharString  WCCOAJavaResources::jvmLibraryPath = "";
 CharString  WCCOAJavaResources::jvmConfigFile = "";
 
+map<string, const char*> WCCOAJavaResources::m;
+
 // Wrapper to read config file
 void  WCCOAJavaResources::init(int &argc, char *argv[])
 {
@@ -62,16 +64,24 @@ PVSSboolean  WCCOAJavaResources::readSection()
 		cfgStream >> jvmLibraryPath;                   // read the value
 	else if (!keyWord.icmp("configFile"))             // It matches
 		cfgStream >> jvmConfigFile;                   // read the value
-    else if (!readGeneralKeyWords())            // keywords handled in Resources
-    {
-      ErrHdl::error(ErrClass::PRIO_WARNING,     // not that bad
+	else {
+		string *k = new string(keyWord);
+		CharString *v = new CharString(); cfgStream >> *v;
+		m.insert(pair<string, const char*>(*k, v->c_str()));
+	}
+
+	/*
+	else if (!readGeneralKeyWords())            // keywords handled in Resources
+    {	
+		ErrHdl::error(ErrClass::PRIO_WARNING,     // not that bad
                     ErrClass::ERR_PARAM,        // wrong parametrization
                     ErrClass::ILLEGAL_KEYWORD,  // illegal Keyword in Res.
                     keyWord);
 
-      // Signal error, so we stop later
-      cfgError = PVSS_TRUE;
+		// Signal error, so we stop later
+		cfgError = PVSS_TRUE;	
     }
+	*/
 
     getNextEntry();
   }

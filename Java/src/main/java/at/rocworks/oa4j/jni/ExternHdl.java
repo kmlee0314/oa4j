@@ -38,7 +38,7 @@ public class ExternHdl {
             case 7: name="api"; break;
             default: name="java";
         }
-        JDebug.setOutput(apiGetLogDir()+"/WCCOA"+name+apiGetManNum()+"java");
+        JDebug.setOutput(apiGetLogDir(), "WCCOA"+name+apiGetManNum()+"java");
         //JDebug.out.info("java ExternHdl init done. ");
     }            
 }

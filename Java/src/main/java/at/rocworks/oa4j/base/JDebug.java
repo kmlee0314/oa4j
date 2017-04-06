@@ -5,16 +5,13 @@
  */
 package at.rocworks.oa4j.base;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+
+import java.io.*;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.FileHandler;
-import java.util.logging.Formatter;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
+import java.util.logging.*;
 
 /**
  *
@@ -34,18 +31,33 @@ public class JDebug {
         }
     }
 
-    public static void setOutput(String filename) throws IOException  {
-        FileHandler fileHandler = new FileHandler(filename+".%g.log", 5242880, 5, true);
-        fileHandler.setFormatter(new LogFormatter());
-        out.addHandler(fileHandler);
-        out.setUseParentHandlers(false);        
-        
-        File file = new File(filename+".out");
-        FileOutputStream fos = new FileOutputStream(file);
-        PrintStream ps = new PrintStream(fos);
-        System.setErr(ps);       
-        System.setOut(ps);
-    }    
+    public static boolean setOutput(String fqn)  {
+
+        try {
+            FileHandler fh = new FileHandler(fqn + ".%g.log", 5242880, 5, true);
+            fh.setFormatter(new LogFormatter());
+            out.addHandler(fh);
+            out.setUseParentHandlers(false);
+        } catch (IOException e) {
+            return false;
+        }
+
+//        try {
+//            File file = new File(fqn + ".log");
+//            FileOutputStream fos = new FileOutputStream(file);
+//            PrintStream ps = new PrintStream(fos);
+//            System.setErr(ps);
+//            System.setOut(ps);
+//        } catch (FileNotFoundException e) {
+//            return false;
+//        }
+        return true;
+    }
+
+    public static void setOutput(String path, String filename)  {
+        if (!setOutput(path+filename))
+            setOutput(filename);
+    }
     
     public static void setLevel(Level level) {
         JDebug.out.setLevel(level);

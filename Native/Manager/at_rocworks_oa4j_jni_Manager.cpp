@@ -179,6 +179,15 @@ JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetDataPath
 	return js;
 }
 
+JNIEXPORT jstring JNICALL Java_at_rocworks_oa4j_jni_Manager_apiGetConfigValue
+(JNIEnv *env, jobject obj, jstring jkey)
+{
+	CharString *key = Java::convertJString(env, jkey);
+	const char *value = WCCOAJavaResources::getConfigValue(key->c_str());
+	jstring js = env->NewStringUTF(value);
+	delete key;
+	return js;
+}
 
 //------------------------------------------------------------------------------------------------
 // JAVA JNI DpMsgHotLink

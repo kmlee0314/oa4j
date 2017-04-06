@@ -85,6 +85,7 @@ public class JManager extends Manager implements Runnable {
     public String getConfigDir() { return confDir; }
     public String getLogDir() { return apiGetLogPath(); }
     public String getLogFile() { return getLogDir()+getManName(); }
+    public String getConfigValue(String key) { return apiGetConfigValue(key); }
     
     public boolean isEnabled() { return apiEnabled; }
     public boolean isConnected() { return apiConnected; }
@@ -155,12 +156,9 @@ public class JManager extends Manager implements Runnable {
         if ( !apiEnabled ) {
             JDebug.out.warning(errmsg);
         } else {
-                // Set log file settings
-                try {
-                    JDebug.setOutput(getLogFile());
-                } catch (IOException ex) {
-                    JDebug.StackTrace(Level.SEVERE, ex);
-                }
+            // Set log file settings
+            JDebug.setOutput(getLogDir(), getManName());
+
         }
         return this;
     }    

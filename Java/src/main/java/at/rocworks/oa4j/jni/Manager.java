@@ -20,6 +20,7 @@ import at.rocworks.oa4j.var.Variable;
 public abstract class Manager {
     public native String apiGetLogPath();
     public native String apiGetDataPath();
+    public native String apiGetConfigValue(String key);
     
     public int apiStartup(int manType, String[] argv) { return apiStartup(manType, argv, true, true); }
     public native int apiStartup(int manType, String[] argv, boolean connectToData, boolean connectToEvent);

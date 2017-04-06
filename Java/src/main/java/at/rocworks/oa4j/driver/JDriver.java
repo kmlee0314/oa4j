@@ -59,7 +59,7 @@ public abstract class JDriver extends Driver implements Runnable {
     
     public String getConfigDir() { return confDir; }
     public String getLogDir() { return apiGetLogPath(); }
-    public String getLogFile() { return getLogDir()+getManName(); }
+    //public String getLogFile() { return getLogDir()+getManName(); }
     
     public boolean isEnabled() { return apiEnabled; }    
     
@@ -103,11 +103,7 @@ public abstract class JDriver extends Driver implements Runnable {
         }
 
         // Set log file settings
-        try {
-            JDebug.setOutput(getLogFile());
-        } catch (IOException ex) {
-            JDebug.StackTrace(Level.SEVERE, ex);
-        }
+        JDebug.setOutput(getLogDir(), getManName());
 
         if ( !apiEnabled ) {
             JDebug.out.warning(errmsg);

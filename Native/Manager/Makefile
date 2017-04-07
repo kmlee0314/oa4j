@@ -11,24 +11,22 @@ MYOBJS = WCCOAJavaMain.o \
          WCCOAJavaManager.o \
          WCCOAJavaResources.o \
          ../LibJava/Java.o \
-         com_etm_api_jni_AnswerGroup.o \
-         com_etm_api_jni_DpIdValueList.o \
-         com_etm_api_jni_DpMsgAnswer.o \
-         com_etm_api_jni_DpMsgComplexVC.o \
-         com_etm_api_jni_DpMsgHotLink.o \
-         com_etm_api_jni_DpMsgRequest.o \
-         com_etm_api_jni_DpMsgValueChange.o \
-         com_etm_api_jni_DpVCGroup.o \
-         com_etm_api_jni_DpVCItem.o \
-         com_etm_api_jni_Manager.o \
-         com_etm_api_jni_Msg.o \
-         com_etm_api_jni_RequestGroup.o \
-         com_etm_api_jni_RequestItem.o \
-         com_etm_api_jni_SysMsg.o \
-         com_etm_nosql_logger_LoggerManager.o \
+         at_rocworks_oa4j_jni_AnswerGroup.o \
+         at_rocworks_oa4j_jni_DpIdValueList.o \
+         at_rocworks_oa4j_jni_DpMsgAnswer.o \
+         at_rocworks_oa4j_jni_DpMsgComplexVC.o \
+         at_rocworks_oa4j_jni_DpMsgHotLink.o \
+         at_rocworks_oa4j_jni_DpMsgRequest.o \
+         at_rocworks_oa4j_jni_DpMsgValueChange.o \
+         at_rocworks_oa4j_jni_DpVCGroup.o \
+         at_rocworks_oa4j_jni_DpVCItem.o \
+         at_rocworks_oa4j_jni_Manager.o \
+         at_rocworks_oa4j_jni_Msg.o \
+         at_rocworks_oa4j_jni_RequestGroup.o \
+         at_rocworks_oa4j_jni_RequestItem.o \
+         at_rocworks_oa4j_jni_SysMsg.o \
          WCCOAJavaAlertHotLinkWaitForAnswer.o \
-         WCCOAJavaHotLinkWaitForAnswer.o \
-         WCCOAJavaHotLinkWaitForAnswerLOGGER.o
+         WCCOAJavaHotLinkWaitForAnswer.o 
 
 PVSS00WCCOAJava: $(MYOBJS)
 	@rm -f addVerInfo.o

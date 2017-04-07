@@ -7,17 +7,17 @@ LIBS = $(COMDRV_LIBS) $(LINKLIB) $(JDK_HOME)/jre/lib/amd64/server/libjvm.so
 
 OBJS = $(COMDRV_OBJS)
 
-MYOBJS = WCCOAJavaMain.o \
-         WCCOAJavaDrv.o \
-         WCCOAJavaResources.o \
-         ../LibJava/Java.o \
-         com_etm_api_jni_Driver.o \
+MYOBJS = ../LibJava/Java.o \
+         at_rocworks_oa4j_jni_Driver.o \
          WCCOAJavaAlertService.o \
          WCCOAJavaConnection.o \
+         WCCOAJavaDrv.o \
          WCCOAJavaDrvIntDp.o \
          WCCOAJavaHWMapper.o \
          WCCOAJavaHWService.o \
-         WCCOAJavaTrans.o 
+         WCCOAJavaMain.o \
+         WCCOAJavaResources.o \
+         WCCOAJavaTrans.o
 
 PVSS00WCCOAJava: $(MYOBJS)
 	@rm -f addVerInfo.o

@@ -31,8 +31,15 @@ public class JDebug {
         }
     }
 
-    public static boolean setOutput(String fqn)  {
+    public static boolean setConsole() {
+        ConsoleHandler handler = new ConsoleHandler();
+        handler.setFormatter(new LogFormatter());
+        out.addHandler(handler);
+        out.setUseParentHandlers(false);
+        return true;
+    }
 
+    public static boolean setOutput(String fqn)  {
         try {
             FileHandler fh = new FileHandler(fqn + ".%g.log", 5242880, 5, true);
             fh.setFormatter(new LogFormatter());
@@ -41,7 +48,6 @@ public class JDebug {
         } catch (IOException e) {
             return false;
         }
-
 //        try {
 //            File file = new File(fqn + ".log");
 //            FileOutputStream fos = new FileOutputStream(file);

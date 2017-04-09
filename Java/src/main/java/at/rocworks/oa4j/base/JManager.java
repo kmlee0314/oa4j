@@ -157,12 +157,20 @@ public class JManager extends Manager implements Runnable {
             JDebug.out.warning(errmsg);
         } else {
             // Set log file settings
-            JDebug.setOutput(getLogDir(), getManName());
+            //JDebug.setOutput(getLogDir(), getManName());
 
         }
         return this;
-    }    
-            
+    }
+
+    public void setDebugOutput() {
+        JDebug.setOutput(getLogDir(), getManName());
+    }
+
+    public void setDebugConsole() {
+        JDebug.setConsole();
+    }
+
     public String getManName() {
         return "WCCOAjava"+manNum;
     }
